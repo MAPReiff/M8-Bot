@@ -12,7 +12,7 @@ client.on('message', msg => {
   }
   if (msg.content == "!live"){
     if (msg.author.id == "145367010489008128"){
-        msg.channel.sendMessage('Hey guys, Comixs is live! http://beam.pro/comixsty, http://twitch.tv/comixsty & http://gaming.youtube.com/c/CoolComixs/live!');
+        msg.channel.sendMessage('Hey @here, Comixs is live! http://beam.pro/comixsty, http://twitch.tv/comixsty & http://gaming.youtube.com/c/CoolComixs/live!');
     }
     else {
       msg.reply('You are not a registered streamer! If you wish for your stream to be added, please message Comixs!');
