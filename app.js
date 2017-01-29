@@ -6,12 +6,15 @@ client.on('ready', () => {
   console.log(`Logged in as ${client.user.username}!`);
 });
 
+var cts_channel = #275344557674201089;
+
 client.on('message', msg => {
   if (msg.content === 'ping') {
     msg.reply('Pong!');
   }
   if (msg.content == "!live"){
     if (msg.author.id == "145367010489008128"){
+    //  msg.channel.sendMessage(channel, "Hello");
         msg.channel.sendMessage('Hey @here, Comixs is live! http://beam.pro/comixsty, http://twitch.tv/comixsty & http://gaming.youtube.com/c/CoolComixs/live!');
     }
     else {
