@@ -1,17 +1,17 @@
-# com-bot [![NPM version][npm-image]][npm-url] [![Build Status][travis-image]][travis-url] [![Dependency Status][daviddm-image]][daviddm-url] [![Coverage percentage][coveralls-image]][coveralls-url]
+# ComBot [![NPM version][npm-image]][npm-url] [![Build Status][travis-image]][travis-url] [![Dependency Status][daviddm-image]][daviddm-url] [![Coverage percentage][coveralls-image]][coveralls-url]
 > Basic Discord Bot
 
 ## Installation
 
 Clone this repository, and run:
 ```sh
-$ npm install
+$ npm install discord.js
 ```
 
 ## Usage
 
 ```js
-$ npm run bot
+$ npm app.js
 ```
 ## License
 
