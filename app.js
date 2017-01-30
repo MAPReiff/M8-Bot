@@ -24,6 +24,7 @@ client.on('message', msg => {
   if (msg.content.startsWith("!live")){
     let args = msg.content.split(" ").slice(1);
     let beam = args[0];
+    console.log(msg.author + " sent the live command!")
     var registered = users.includes(msg.author.id);
     if (registered == true){
       var request = require('request');
