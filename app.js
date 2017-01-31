@@ -1,6 +1,6 @@
 //Invite link https://discordapp.com/oauth2/authorize?client_id=272756283038236673&scope=bot&permissions=37223488
 
-var version = "0.2";
+var version = "0.2.1";
 var website = "http://comixsyt.space";
 
 
@@ -61,8 +61,8 @@ client.on("message", msg => {
   if (msg.content == "!comstatus"){
     msg.channel.sendMessage("Combot Status: \nVersion - " + version + "\nWebsite - " + website + ".\nThe bot is on " + serverCount + " servers.\nThere are currently " + userCount + " registered streamers.");
   }
-  if (msg.content == "!help"){
-    msg.reply("Com Bot Commands \n!help - shows this message \n!live - sends out a live message for streamerrs; command requires a beam username with it \nping - replies pong to test if the bot is online \npong - same as ping (Gam3Pr0 was butthurt about it not existing) \n !comstatus - status info about the bot");
+  if (msg.content == "!help combot"){
+    msg.channel.sendMessage("Com Bot Commands \n!help combot - shows this message \n!live - sends out a live message for streamerrs; command requires a beam username with it \nping - replies pong to test if the bot is online \npong - same as ping (Gam3Pr0 was butthurt about it not existing) \n !comstatus - status info about the bot");
   }
 });
 
