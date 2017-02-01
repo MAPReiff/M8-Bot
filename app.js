@@ -1,6 +1,6 @@
 //Invite link https://discordapp.com/oauth2/authorize?client_id=272756283038236673&scope=bot&permissions=37223488
 
-var version = "0.2.3";
+var version = "0.2.4";
 var website = "http://comixsyt.space";
 
 
@@ -48,7 +48,7 @@ client.on("message", msg => {
            if (beamInfo.online == true){
              //msg.channel.sendMessage(beam + " is currently live @ http://beam.pro/" + beam);
              for (i=0; i < chats.length; i++){
-               client.channels.get(chats[i]).sendMessage("@here, " + beam + " is live @ http://beam.pro/" + beam + "!");
+               client.channels.get(chats[i]).sendMessage("@here, " + beam + " is live @ http://beam.pro/" + beam);
              }
            }
         }
