@@ -1,8 +1,7 @@
 //Invite link https://discordapp.com/oauth2/authorize?client_id=272756283038236673&scope=bot&permissions=37223488
 
-var version = "0.2.4";
+var version = "0.3.0";
 var website = "http://comixsyt.space";
-var token = fs.readFileSync("./token.txt", "utf-8");
 
 const Discord = require("discord.js");
 const client = new Discord.Client();
@@ -65,5 +64,7 @@ client.on("message", msg => {
     msg.channel.sendMessage("**Com Bot Commands:** \n!help combot - shows this message \n!live - sends out a live message for streamerrs; command requires a beam username with it \nping - replies pong to test if the bot is online \npong - same as ping (Gam3Pr0 was butthurt about it not existing) \n!comstatus - status info about the bot");
   }
 });
+
+var token = fs.readFileSync("./token.txt", "utf-8");
 
 client.login(token);
