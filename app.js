@@ -2,7 +2,7 @@
 
 var version = "0.2.4";
 var website = "http://comixsyt.space";
-
+var token = fs.readFileSync("./token.txt", "utf-8");
 
 const Discord = require("discord.js");
 const client = new Discord.Client();
@@ -66,4 +66,4 @@ client.on("message", msg => {
   }
 });
 
-client.login("MjcyNzU2MjgzMDM4MjM2Njcz.C2xUHA.RenWSL0Q_wVd6leerg95JQ48q7Y");
+client.login(token);
