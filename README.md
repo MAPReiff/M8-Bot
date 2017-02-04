@@ -1,28 +1,11 @@
-# ComBot [![NPM version][npm-image]][npm-url] [![Build Status][travis-image]][travis-url] [![Dependency Status][daviddm-image]][daviddm-url] [![Coverage percentage][coveralls-image]][coveralls-url]
-> Basic Discord Bot
+# Com Bot
 
-## Installation
+Com Bot is a Discord chat bot designed for [ComixsYT] (a close friend). It contains a few commands, including a way for livestreamers to better spread their message. Commands currently include:
+  - Ping/Pong - a simple command to test if the bot is listening
+  - !help combot - shows a help message with command list
+  - !comstatus - shows a status report with server count and streamer counts
 
-Clone this repository, and run:
-```sh
-$ npm install discord.js
-```
+# Powered by
+[![](https://camo.githubusercontent.com/40129aa4640399b5e65cc3c101361a6a0b5d6467/68747470733a2f2f646973636f72642e6a732e6f72672f7374617469632f6c6f676f2e737667)](https://discord.js.org)
 
-## Usage
-
-```js
-$ npm app.js
-```
-## License
-
-MIT © [MAPReiff](mreiff.space)
-
-
-[npm-image]: https://badge.fury.io/js/com-bot.svg
-[npm-url]: https://npmjs.org/package/com-bot
-[travis-image]: https://travis-ci.org/MAPReiff/com-bot.svg?branch=master
-[travis-url]: https://travis-ci.org/MAPReiff/com-bot
-[daviddm-image]: https://david-dm.org/MAPReiff/com-bot.svg?theme=shields.io
-[daviddm-url]: https://david-dm.org/MAPReiff/com-bot
-[coveralls-image]: https://coveralls.io/repos/MAPReiff/com-bot/badge.svg
-[coveralls-url]: https://coveralls.io/r/MAPReiff/com-bot
+   [ComixsYT]: <https://comixsyt.space>
