@@ -1,6 +1,6 @@
 //Invite link https://discordapp.com/oauth2/authorize?client_id=272756283038236673&scope=bot&permissions=37223488
 
-var version = "0.3.0";
+var version = "0.4.0";
 var website = "http://comixsyt.space";
 
 const Discord = require("discord.js");
@@ -12,16 +12,6 @@ client.on("ready", () => {
 });
 
 var fs = require("fs");
-var usersRaw = fs.readFileSync("./users.txt", "utf-8");
-var users = usersRaw.split(", ");
-console.log(users.length + " users");
-
-var chatsRaw = fs.readFileSync("./chats.txt", "utf-8");
-var chats = chatsRaw.split(", ");
-console.log(chats.length + " chats");
-
-var serverCount = chats.length;
-var userCount = users.length;
 
 client.on("message", msg => {
   if (msg.content === "ping") {
@@ -30,35 +20,80 @@ client.on("message", msg => {
   if (msg.content === "pong") {
     msg.reply("Ping!");
   }
+  if (msg.content == ("!claim")){
+    var ownerID = msg.author.id;
+    var chatID = msg.channel.id;
+    //console.log(chatID + " " + ownerID);
+    if (fs.existsSync("./servers/" + chatID + ".txt")) {
+        msg.reply("This server has already been claimed!");
+      }
+    else{
+      fs.writeFile("./servers/" + chatID + ".txt", ownerID);
+    }
+  }
+  if (msg.content == ("!add-streamer")){
+    msg.reply("You need to specify a streamer's discord ID. For example '!add-streamer STREAMER_ID'.");
+  }
+  if (msg.content.startsWith("!add-streamer")){
+    let args = msg.content.split(" ").slice(1);
+    let streamer = args[0];
+    var chatID = msg.channel.id;
+    if (fs.existsSync("./servers/" + chatID + ".txt")){
+      var ownerRaw = fs.readFileSync("./servers/" + chatID + ".txt", "utf-8");
+      var owner = ownerRaw.split(", ");
+      if (owner == msg.author.id){
+        //msg.reply("You own this server man " + owner);
+        if (!fs.existsSync("./users/" + streamer + ".txt")){
+          fs.writeFile("./users/" + streamer + ".txt", chatID);
+        }
+        if (fs.existsSync("./users/" + streamer + ".txt")){
+          var currentServers = fs.readFileSync("./users/" + streamer + ".txt", "utf-8");
+          var registered = currentServers.includes(chatID);
+          if (registered === true){
+            msg.reply("the streamer " + streamer + " is already registered!");
+          }
+          if (registered === false){
+            fs.writeFile("./users/" + streamer + ".txt", currentServers + ", " + chatID);
+            msg.reply("you have added  " + streamer + " to your server!");
+          }
+        }
+      }
+      else{
+        msg.reply("You do not own this server; please do not try to add a streamer!");
+      }
+    }
+  }
+  if (msg.content == ("!live")){
+    msg.reply("you need to specify a beam streamer; for example - '!live STREAMER NAME'.");
+  }
   if (msg.content.startsWith("!live")){
     let args = msg.content.split(" ").slice(1);
     let beam = args[0];
-    console.log(msg.author + " sent the live command!")
-    var registered = users.includes(msg.author.id);
-    if (registered == true){
+    if (fs.existsSync("./users/" + msg.author.id + ".txt")){
       var request = require("request");
       request("https://beam.pro/api/v1/channels/" + beam, function (error, response, body) {
         if (!error && response.statusCode == 200) {
            var beamInfo = JSON.parse(body);
-           //msg.reply(beamInfo.online);
            if (beamInfo.online == false){
              msg.channel.sendMessage(beam + " is not live right now.")
            }
            if (beamInfo.online == true){
              //msg.channel.sendMessage(beam + " is currently live @ http://beam.pro/" + beam);
-             for (i=0; i < chats.length; i++){
-               client.channels.get(chats[i]).sendMessage("@here, " + beam + " is live @ http://beam.pro/" + beam);
+             var serversAllowedRaw = fs.readFileSync("./users/" + msg.author.id + ".txt", "utf-8");
+             var serversAllowed = serversAllowedRaw.split(", ");
+             for (i=0; i < serversAllowed.length; i++){
+               client.channels.get(serversAllowed[i]).sendMessage("@here, " + beam + " is live @ http://beam.pro/" + beam + " & is streaming " + beamInfo.type.name + "!");
              }
            }
-        }
-      });
-    }
-      else{
-        msg.reply("You are not a registered streamer! Please contact ComixsYT to be added.")
-      }
-    }
+         }
+         });
+       }
+       else{
+         msg.reply("You are not a registered streamer! Please contact ComixsYT to be added.");
+       }
+     }
   if (msg.content == "!comstatus"){
-    msg.channel.sendMessage("**Com Bot Status:** \nVersion - " + version + "\nWebsite - " + website + ".\nThe bot is on " + serverCount + " servers.\nThere are currently " + userCount + " registered streamers.");
+    msg.channel.sendMessage("**Com Bot Status:** \nVersion - " + version + "\nWebsite - " + website);
   }
   if (msg.content == "!help combot"){
     msg.channel.sendMessage("**Com Bot Commands:** \n!help combot - shows this message \n!live - sends out a live message for streamerrs; command requires a beam username with it \nping - replies pong to test if the bot is online \npong - same as ping (Gam3Pr0 was butthurt about it not existing) \n!comstatus - status info about the bot");
