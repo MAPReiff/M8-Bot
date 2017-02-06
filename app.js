@@ -1,6 +1,6 @@
 //Invite link https://discordapp.com/oauth2/authorize?client_id=272756283038236673&scope=bot&permissions=37223488
 
-var version = "0.4.0";
+var version = "0.4.1";
 var website = "http://comixsyt.space";
 
 const Discord = require("discord.js");
@@ -9,6 +9,10 @@ const client = new Discord.Client();
 client.on("ready", () => {
   console.log(`Logged in as ${client.user.username}!`);
   console.log("Version " + version);
+  serverCount = client.guilds.size;
+  userCount = client.users.size
+  console.log("Bot is on " + serverCount + " servers!");
+  console.log("Those " + serverCount + " servers have a total of " + userCount + " members!");
 });
 
 var fs = require("fs");
@@ -92,7 +96,9 @@ client.on("message", msg => {
        }
      }
   if (msg.content == "!comstatus"){
-    msg.channel.sendMessage("**Com Bot Status:** \nVersion - " + version + "\nWebsite - " + website);
+    msg.channel.sendMessage("**Com Bot Status:** \nVersion - " + version + "\nWebsite - " + website +
+                "\nThe Bot is on " + serverCount + " servers! \nIn total, those " + serverCount +
+                " servers have a total of " + userCount + " users, wow!");
   }
   if (msg.content == "!help combot"){
     msg.channel.sendMessage("**Com Bot Commands:** \n!help combot - shows this message \n!live - sends out a live message for streamerrs; command requires a beam username with it \nping - replies pong to test if the bot is online \npong - same as ping (Gam3Pr0 was butthurt about it not existing) \n!comstatus - status info about the bot");
