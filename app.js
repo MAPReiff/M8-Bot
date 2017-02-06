@@ -42,7 +42,6 @@ client.on("message", msg => {
       var ownerRaw = fs.readFileSync("./servers/" + chatID + ".txt", "utf-8");
       var owner = ownerRaw.split(", ");
       if (owner == msg.author.id){
-        //msg.reply("You own this server man " + owner);
         if (!fs.existsSync("./users/" + streamer + ".txt")){
           fs.writeFile("./users/" + streamer + ".txt", chatID);
         }
