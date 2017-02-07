@@ -1,10 +1,13 @@
 //Invite link https://discordapp.com/oauth2/authorize?client_id=272756283038236673&scope=bot&permissions=37223488
 
-var version = "0.4.1";
+var version = "0.5.0";
 var website = "http://comixsyt.space";
+
+var fs = require("fs");
 
 const Discord = require("discord.js");
 const client = new Discord.Client();
+
 
 client.on("ready", () => {
   console.log(`Logged in as ${client.user.username}!`);
@@ -15,16 +18,17 @@ client.on("ready", () => {
   console.log("Those " + serverCount + " servers have a total of " + userCount + " members!");
 });
 
-var fs = require("fs");
-
 client.on("message", msg => {
   if (msg.content === "ping") {
+    msg.delete(1000);
     msg.reply("Pong!");
   }
   if (msg.content === "pong") {
+    msg.delete(1000);
     msg.reply("Ping!");
   }
   if (msg.content == ("!claim")){
+    msg.delete(1000);
     var ownerID = msg.author.id;
     var chatID = msg.channel.id;
     //console.log(chatID + " " + ownerID);
@@ -36,9 +40,11 @@ client.on("message", msg => {
     }
   }
   if (msg.content == ("!add-streamer")){
+    msg.delete(1000);
     msg.reply("You need to specify a streamer's discord ID. For example '!add-streamer STREAMER_ID'.");
   }
   if (msg.content.startsWith("!add-streamer")){
+    msg.delete(1000);
     let args = msg.content.split(" ").slice(1);
     let streamer = args[0];
     var chatID = msg.channel.id;
@@ -67,9 +73,11 @@ client.on("message", msg => {
     }
   }
   if (msg.content == ("!live")){
+    msg.delete(1000);
     msg.reply("you need to specify a beam streamer; for example - '!live STREAMER NAME'.");
   }
   if (msg.content.startsWith("!live")){
+    msg.delete(1000);
     let args = msg.content.split(" ").slice(1);
     let beam = args[0];
     if (fs.existsSync("./users/" + msg.author.id + ".txt")){
@@ -81,11 +89,30 @@ client.on("message", msg => {
              msg.channel.sendMessage(beam + " is not live right now.")
            }
            if (beamInfo.online == true){
+            if (beamInfo.type == null){
+              var game = "[API ERROR]";
+            }
+            else{
+              var game = beamInfo.type.name;
+            }
              //msg.channel.sendMessage(beam + " is currently live @ http://beam.pro/" + beam);
+             const NAME = new Discord.RichEmbed()
+               .setTitle(beam + "\'s Stream")
+               .setAuthor(beam)
+               .setColor(128, 0, 128)
+               .setDescription("Hey guys, " + beam + " is live right now! Click above to watch!")
+               .setFooter("Sent via Com Bot", "https://github.com/MAPReiff/Discord-Bot")
+               .setThumbnail(beamInfo.user.avatarUrl)
+               .setTimestamp()
+               .setURL("http://beam.pro/" + beam)
+               .addField("Streaming", game, true)
+               .addField("Followers", beamInfo.numFollowers, true)
              var serversAllowedRaw = fs.readFileSync("./users/" + msg.author.id + ".txt", "utf-8");
              var serversAllowed = serversAllowedRaw.split(", ");
              for (i=0; i < serversAllowed.length; i++){
-               client.channels.get(serversAllowed[i]).sendMessage("@here, " + beam + " is live @ http://beam.pro/" + beam + " & is streaming " + beamInfo.type.name + "!");
+               //client.channels.get(serversAllowed[i]).sendMessage("@here, " + beam + " is live @ http://beam.pro/" + beam + " & is streaming " + beamInfo.type.name + "!");
+               //client.channels.get(serversAllowed[i]).sendMessage("@here");
+               client.channels.get(serversAllowed[i]).sendEmbed(NAME, "@here");
              }
            }
          }
@@ -96,11 +123,13 @@ client.on("message", msg => {
        }
      }
   if (msg.content == "!comstatus"){
+    msg.delete(1000);
     msg.channel.sendMessage("**Com Bot Status:** \nVersion - " + version + "\nWebsite - " + website +
                 "\nThe Bot is on " + serverCount + " servers! \nIn total, those " + serverCount +
                 " servers have a total of " + userCount + " users, wow!");
   }
   if (msg.content == "!help combot"){
+    msg.delete(1000);
     msg.channel.sendMessage("**Com Bot Commands:** \n!help combot - shows this message \n!live - sends out a live message for streamerrs; command requires a beam username with it \nping - replies pong to test if the bot is online \npong - same as ping (Gam3Pr0 was butthurt about it not existing) \n!comstatus - status info about the bot");
   }
 });
