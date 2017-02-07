@@ -1,6 +1,6 @@
 //Invite link https://discordapp.com/oauth2/authorize?client_id=278362996349075456&scope=bot&permissions=37223488
 
-var version = "0.6.0";
+var version = "0.6.1";
 var website = "http://comixsyt.space";
 
 var fs = require("fs");
@@ -101,7 +101,7 @@ client.on("message", msg => {
                .setAuthor(beam)
                .setColor(0x9900FF)
                .setDescription("Hey guys, " + beam + " is live right now! Click above to watch!")
-               .setFooter("Sent via M8 Bot", "https://github.com/MAPReiff/Discord-Bot")
+               .setFooter("Sent via M8 Bot", "https://cdn.discordapp.com/app-icons/278362996349075456/ce8868a4a1ccbe2f3f746d864f61a206.jpg")
                .setThumbnail(beamInfo.user.avatarUrl)
                .setTimestamp()
                .setURL("http://beam.pro/" + beam)
@@ -130,7 +130,7 @@ client.on("message", msg => {
             .setTitle("M8 Bot Status")
             .setAuthor("M8 Bot")
             .setColor(0x9900FF)
-            .setFooter("Sent via M8 Bot", "https://github.com/MAPReiff/Discord-Bot")
+            .setFooter("Sent via M8 Bot", "https://cdn.discordapp.com/app-icons/278362996349075456/ce8868a4a1ccbe2f3f746d864f61a206.jpg")
             .setThumbnail("https://cdn.discordapp.com/app-icons/278362996349075456/ce8868a4a1ccbe2f3f746d864f61a206.jpg")
             .setTimestamp()
             .addField("Version", version, true)
@@ -144,7 +144,18 @@ client.on("message", msg => {
   }
   if (msg.content == "!help m8bot"){
     msg.delete(1000);
-    msg.channel.sendMessage("**M8 Bot Commands:** \n!help m8bot - shows this message \n!live - sends out a live message for streamerrs; command requires a beam username with it \nping - replies pong to test if the bot is online \npong - same as ping (Gam3Pr0 was butthurt about it not existing) \n!m8status - status info about the bot");
+    //msg.channel.sendMessage("**M8 Bot Commands:** \n!help m8bot - shows this message \n!live - sends out a live message for streamerrs; command requires a beam username with it \nping - replies pong to test if the bot is online \npong - same as ping (Gam3Pr0 was butthurt about it not existing) \n!m8status - status info about the bot");
+    const helpEmbed = new Discord.RichEmbed()
+      .setTitle("M8 Bot Help")
+      .setColor(0x9900FF)
+      .setFooter("Sent via M8 Bot", "https://cdn.discordapp.com/app-icons/278362996349075456/ce8868a4a1ccbe2f3f746d864f61a206.jpg")
+      .setThumbnail("https://cdn.discordapp.com/app-icons/278362996349075456/ce8868a4a1ccbe2f3f746d864f61a206.jpg")
+      .setTimestamp()
+      .addField("!help", "Sends this Help Message")
+      .addField("ping/pong", "Send ping or pong to test if the bot is listening")
+      .addField("!live", "Sends out a fancy live message if you are a registered streamer")
+      .addField("!m8status", "Sends a status report of the bot");
+      msg.channel.sendEmbed(helpEmbed);
   }
 });
 
