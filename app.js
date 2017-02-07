@@ -1,6 +1,6 @@
-//Invite link https://discordapp.com/oauth2/authorize?client_id=272756283038236673&scope=bot&permissions=37223488
+//Invite link https://discordapp.com/oauth2/authorize?client_id=278362996349075456&scope=bot&permissions=37223488
 
-var version = "0.5.0";
+var version = "0.6.0";
 var website = "http://comixsyt.space";
 
 var fs = require("fs");
@@ -96,23 +96,25 @@ client.on("message", msg => {
               var game = beamInfo.type.name;
             }
              //msg.channel.sendMessage(beam + " is currently live @ http://beam.pro/" + beam);
-             const NAME = new Discord.RichEmbed()
+             const liveEmbed = new Discord.RichEmbed()
                .setTitle(beam + "\'s Stream")
                .setAuthor(beam)
-               .setColor(128, 0, 128)
+               .setColor(0x9900FF)
                .setDescription("Hey guys, " + beam + " is live right now! Click above to watch!")
-               .setFooter("Sent via Com Bot", "https://github.com/MAPReiff/Discord-Bot")
+               .setFooter("Sent via M8 Bot", "https://github.com/MAPReiff/Discord-Bot")
                .setThumbnail(beamInfo.user.avatarUrl)
                .setTimestamp()
                .setURL("http://beam.pro/" + beam)
                .addField("Streaming", game, true)
                .addField("Followers", beamInfo.numFollowers, true)
+               .addField("Viewers", beamInfo.viewersCurrent, true)
+               .addField("Total Views", beamInfo.viewersTotal, true)
              var serversAllowedRaw = fs.readFileSync("./users/" + msg.author.id + ".txt", "utf-8");
              var serversAllowed = serversAllowedRaw.split(", ");
              for (i=0; i < serversAllowed.length; i++){
                //client.channels.get(serversAllowed[i]).sendMessage("@here, " + beam + " is live @ http://beam.pro/" + beam + " & is streaming " + beamInfo.type.name + "!");
                //client.channels.get(serversAllowed[i]).sendMessage("@here");
-               client.channels.get(serversAllowed[i]).sendEmbed(NAME, "@here");
+               client.channels.get(serversAllowed[i]).sendEmbed(liveEmbed, "@here");
              }
            }
          }
@@ -122,15 +124,27 @@ client.on("message", msg => {
          msg.reply("You are not a registered streamer! Please contact ComixsYT to be added.");
        }
      }
-  if (msg.content == "!comstatus"){
+  if (msg.content == "!m8status"){
     msg.delete(1000);
-    msg.channel.sendMessage("**Com Bot Status:** \nVersion - " + version + "\nWebsite - " + website +
-                "\nThe Bot is on " + serverCount + " servers! \nIn total, those " + serverCount +
-                " servers have a total of " + userCount + " users, wow!");
+          const statusEmbed = new Discord.RichEmbed()
+            .setTitle("M8 Bot Status")
+            .setAuthor("M8 Bot")
+            .setColor(0x9900FF)
+            .setFooter("Sent via M8 Bot", "https://github.com/MAPReiff/Discord-Bot")
+            .setThumbnail("https://cdn.discordapp.com/app-icons/272756283038236673/39ab2deb034364f82de0d7769417eaf2.jpg")
+            .setTimestamp()
+            .addField("Version", version, true)
+            .addField("Website", "http://comixsyt.space", true)
+            .addField("Servers", serverCount, true)
+            .addField("Users", userCount, true);
+            msg.channel.sendEmbed(statusEmbed);
+    // msg.channel.sendMessage("**M8 Bot Status:** \nVersion - " + version + "\nWebsite - " + website +
+    //             "\nThe Bot is on " + serverCount + " servers! \nIn total, those " + serverCount +
+    //             " servers have a total of " + userCount + " users, wow!");
   }
-  if (msg.content == "!help combot"){
+  if (msg.content == "!help m8bot"){
     msg.delete(1000);
-    msg.channel.sendMessage("**Com Bot Commands:** \n!help combot - shows this message \n!live - sends out a live message for streamerrs; command requires a beam username with it \nping - replies pong to test if the bot is online \npong - same as ping (Gam3Pr0 was butthurt about it not existing) \n!comstatus - status info about the bot");
+    msg.channel.sendMessage("**M8 Bot Commands:** \n!help m8bot - shows this message \n!live - sends out a live message for streamerrs; command requires a beam username with it \nping - replies pong to test if the bot is online \npong - same as ping (Gam3Pr0 was butthurt about it not existing) \n!m8status - status info about the bot");
   }
 });
 
