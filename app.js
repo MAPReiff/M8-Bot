@@ -1,6 +1,6 @@
 //Invite link https://discordapp.com/oauth2/authorize?client_id=278362996349075456&scope=bot&permissions=37223488
 
-var version = "0.7.1";
+var version = "0.7.2";
 var website = "http://comixsyt.space";
 
 var fs = require("fs");
@@ -84,6 +84,8 @@ client.on("message", msg => {
       if (owner == msg.author.id){
         if (!fs.existsSync("./users/" + streamer + ".txt")){
           fs.writeFile("./users/" + streamer + ".txt", chatID);
+          var currentStreamers = fs.readFileSync("./streamers.txt", "utf-8");
+          fs.writeFile("./streamers.txt", currentStreamers + ", " + streamer);
         }
         if (fs.existsSync("./users/" + streamer + ".txt")){
           var currentServers = fs.readFileSync("./users/" + streamer + ".txt", "utf-8");
@@ -95,11 +97,6 @@ client.on("message", msg => {
             fs.writeFile("./users/" + streamer + ".txt", currentServers + ", " + chatID);
             msg.reply("you have added  " + streamer + " to your server!");
           }
-          var currentStreamers = fs.readFileSync("./streamers.txt", "utf-8");
-          var validStreamer = currentStreamers.includes(streamer);
-          if (validStreamer === false){
-          fs.writeFile("./streamers.txt", currentStreamers + ", " + streamer);
-        }
         }
       }
       else{
