@@ -1,6 +1,6 @@
 //Invite link https://discordapp.com/oauth2/authorize?client_id=278362996349075456&scope=bot&permissions=37223488
 
-var version = "0.7";
+var version = "0.7.1";
 var website = "http://comixsyt.space";
 
 var fs = require("fs");
@@ -22,9 +22,7 @@ client.on("ready", () => {
 
 setInterval(liveCheck, 60000); //1 min = 60000
 function liveCheck(){
-  //client.message.channels.get("275344557674201089").sendMessage("test");
-  //var time = new Date().getTime();
-  //console.log(time);
+
   var streamersRaw = fs.readFileSync("./streamers.txt", "utf-8");
   var streamers = streamersRaw.split(", ");
   var streamerCount = streamers.length;
@@ -97,6 +95,11 @@ client.on("message", msg => {
             fs.writeFile("./users/" + streamer + ".txt", currentServers + ", " + chatID);
             msg.reply("you have added  " + streamer + " to your server!");
           }
+          var currentStreamers = fs.readFileSync("./streamers.txt", "utf-8");
+          var validStreamer = currentStreamers.includes(streamer);
+          if (validStreamer === false){
+          fs.writeFile("./streamers.txt", currentStreamers + ", " + streamer);
+        }
         }
       }
       else{
