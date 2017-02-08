@@ -1,6 +1,6 @@
 //Invite link https://discordapp.com/oauth2/authorize?client_id=278362996349075456&scope=bot&permissions=37223488
 
-var version = "0.6.1";
+var version = "0.7";
 var website = "http://comixsyt.space";
 
 var fs = require("fs");
@@ -8,6 +8,8 @@ var fs = require("fs");
 const Discord = require("discord.js");
 const client = new Discord.Client();
 
+var hookIDRaw = fs.readFileSync("./hook.txt", "utf-8");
+var hookID = hookIDRaw.split(", ");
 
 client.on("ready", () => {
   console.log(`Logged in as ${client.user.username}!`);
@@ -17,6 +19,36 @@ client.on("ready", () => {
   console.log("Bot is on " + serverCount + " servers!");
   console.log("Those " + serverCount + " servers have a total of " + userCount + " members!");
 });
+
+setInterval(liveCheck, 60000); //1 min = 60000
+function liveCheck(){
+  //client.message.channels.get("275344557674201089").sendMessage("test");
+  //var time = new Date().getTime();
+  //console.log(time);
+  var streamersRaw = fs.readFileSync("./streamers.txt", "utf-8");
+  var streamers = streamersRaw.split(", ");
+  var streamerCount = streamers.length;
+
+  for (i=0; i < streamerCount; i++){
+    //console.log(streamers[i]);
+    var request = require("request");
+    request("https://beam.pro/api/v1/channels/" + streamers[i], function (error, response, body) {
+      if (!error && response.statusCode == 200) {
+         var beamInfo = JSON.parse(body);
+         var onTime = beamInfo.updatedAt;
+         var d = new Date(onTime);
+         var millis = d.getTime();
+         var diff = new Date().getTime() -  millis;
+         //console.log(diff);
+         if (diff<=60000){
+           const hook = new Discord.WebhookClient(hookID[0], hookID[1]);
+           hook.sendMessage("live " + beamInfo.token);
+         }
+       }
+    });
+    }
+  }
+
 
 client.on("message", msg => {
   if (msg.content === "ping") {
@@ -153,10 +185,73 @@ client.on("message", msg => {
       .setTimestamp()
       .addField("!help", "Sends this Help Message")
       .addField("ping/pong", "Send ping or pong to test if the bot is listening")
-      .addField("!live", "Sends out a fancy live message if you are a registered streamer")
+      //.addField("!live", "Sends out a fancy live message if you are a registered streamer")
       .addField("!m8status", "Sends a status report of the bot");
       msg.channel.sendEmbed(helpEmbed);
   }
+  if (msg.content.startsWith("live") && msg.author.id == hookID[0]){
+    let args = msg.content.split(" ").slice(1);
+    let beam = args[0];
+    if (fs.existsSync("./users/" + beam + ".txt")){
+      var request = require("request");
+      request("https://beam.pro/api/v1/channels/" + beam, function (error, response, body) {
+        if (!error && response.statusCode == 200) {
+           var beamInfo = JSON.parse(body);
+           if (beamInfo.online == false){
+             msg.channel.sendMessage(beam + " is not live right now.");
+             const liveEmbed = new Discord.RichEmbed()
+               .setTitle(beam + "\'s Stream")
+               .setAuthor(beam)
+               .setColor(0x9900FF)
+               .setDescription("Hey guys, " + beam + " is live right now! Click above to watch!")
+               .setFooter("Sent via M8 Bot", "https://cdn.discordapp.com/app-icons/278362996349075456/ce8868a4a1ccbe2f3f746d864f61a206.jpg")
+               .setThumbnail(beamInfo.user.avatarUrl)
+               .setTimestamp()
+               .setURL("http://beam.pro/" + beam)
+               .addField("Streaming", game, true)
+               .addField("Followers", beamInfo.numFollowers, true)
+               .addField("Viewers", beamInfo.viewersCurrent, true)
+               .addField("Total Views", beamInfo.viewersTotal, true)
+             var serversAllowedRaw = fs.readFileSync("./users/" + beam + ".txt", "utf-8");
+             var serversAllowed = serversAllowedRaw.split(", ");
+             for (i=0; i < serversAllowed.length; i++){
+               client.channels.get(serversAllowed[i]).sendEmbed(liveEmbed, "@here");
+             }
+           }
+           if (beamInfo.online == true){
+            if (beamInfo.type == null){
+              var game = "[API ERROR]";
+            }
+            else{
+              var game = beamInfo.type.name;
+            }
+             //msg.channel.sendMessage(beam + " is currently live @ http://beam.pro/" + beam);
+             const liveEmbed = new Discord.RichEmbed()
+               .setTitle(beam + "\'s Stream")
+               .setAuthor(beam)
+               .setColor(0x9900FF)
+               .setDescription("Hey guys, " + beam + " is live right now! Click above to watch!")
+               .setFooter("Sent via M8 Bot", "https://cdn.discordapp.com/app-icons/278362996349075456/ce8868a4a1ccbe2f3f746d864f61a206.jpg")
+               .setThumbnail(beamInfo.user.avatarUrl)
+               .setTimestamp()
+               .setURL("http://beam.pro/" + beam)
+               .addField("Streaming", game, true)
+               .addField("Followers", beamInfo.numFollowers, true)
+               .addField("Viewers", beamInfo.viewersCurrent, true)
+               .addField("Total Views", beamInfo.viewersTotal, true)
+             var serversAllowedRaw = fs.readFileSync("./users/" + beam + ".txt", "utf-8");
+             var serversAllowed = serversAllowedRaw.split(", ");
+             for (i=0; i < serversAllowed.length; i++){
+               //client.channels.get(serversAllowed[i]).sendMessage("@here, " + beam + " is live @ http://beam.pro/" + beam + " & is streaming " + beamInfo.type.name + "!");
+               //client.channels.get(serversAllowed[i]).sendMessage("@here");
+               client.channels.get(serversAllowed[i]).sendEmbed(liveEmbed, "@here");
+             }
+           }
+         }
+     });
+    }
+  }
+
 });
 
 var token = fs.readFileSync("./token.txt", "utf-8");
