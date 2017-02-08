@@ -1,6 +1,6 @@
 //Invite link https://discordapp.com/oauth2/authorize?client_id=278362996349075456&scope=bot&permissions=37223488
 
-var version = "0.7.2";
+var version = "0.7.3";
 var website = "http://comixsyt.space";
 
 var fs = require("fs");
@@ -38,10 +38,12 @@ function liveCheck(){
          var millis = d.getTime();
          var diff = new Date().getTime() -  millis;
          //console.log(diff);
-         if (diff<=60000){
-           const hook = new Discord.WebhookClient(hookID[0], hookID[1]);
-           hook.sendMessage("live " + beamInfo.token);
-         }
+         if (beamInfo.online == true){}
+          if (diff<=60000){
+            const hook = new Discord.WebhookClient(hookID[0], hookID[1]);
+            hook.sendMessage("live " + beamInfo.token);
+          }
+        }
        }
     });
     }
@@ -199,23 +201,6 @@ client.on("message", msg => {
            var beamInfo = JSON.parse(body);
            if (beamInfo.online == false){
              msg.channel.sendMessage(beam + " is not live right now.");
-             const liveEmbed = new Discord.RichEmbed()
-               .setTitle(beam + "\'s Stream")
-               .setAuthor(beam)
-               .setColor(0x9900FF)
-               .setDescription("Hey guys, " + beam + " is live right now! Click above to watch!")
-               .setFooter("Sent via M8 Bot", "https://cdn.discordapp.com/app-icons/278362996349075456/ce8868a4a1ccbe2f3f746d864f61a206.jpg")
-               .setThumbnail(beamInfo.user.avatarUrl)
-               .setTimestamp()
-               .setURL("http://beam.pro/" + beam)
-               .addField("Streaming", game, true)
-               .addField("Followers", beamInfo.numFollowers, true)
-               .addField("Viewers", beamInfo.viewersCurrent, true)
-               .addField("Total Views", beamInfo.viewersTotal, true)
-             var serversAllowedRaw = fs.readFileSync("./users/" + beam + ".txt", "utf-8");
-             var serversAllowed = serversAllowedRaw.split(", ");
-             for (i=0; i < serversAllowed.length; i++){
-               client.channels.get(serversAllowed[i]).sendEmbed(liveEmbed, "@here");
              }
            }
            if (beamInfo.online == true){
