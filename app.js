@@ -1,6 +1,6 @@
 //Invite link https://discordapp.com/oauth2/authorize?client_id=278362996349075456&scope=bot&permissions=37223488
 
-var version = "0.7.3";
+var version = "0.7.4";
 var website = "http://comixsyt.space";
 
 var fs = require("fs");
@@ -38,12 +38,10 @@ function liveCheck(){
          var millis = d.getTime();
          var diff = new Date().getTime() -  millis;
          //console.log(diff);
-         if (beamInfo.online == true){}
-          if (diff<=60000){
-            const hook = new Discord.WebhookClient(hookID[0], hookID[1]);
-            hook.sendMessage("live " + beamInfo.token);
-          }
-        }
+         if (diff<=60000){
+           const hook = new Discord.WebhookClient(hookID[0], hookID[1]);
+           hook.sendMessage("live " + beamInfo.token);
+         }
        }
     });
     }
@@ -73,7 +71,7 @@ client.on("message", msg => {
   }
   if (msg.content == ("!add-streamer")){
     msg.delete(1000);
-    msg.reply("You need to specify a streamer's discord ID. For example '!add-streamer STREAMER_ID'.");
+    msg.reply("You need to specify a streamer's beam ID. For example '!add-streamer STREAMER_ID'.");
   }
   if (msg.content.startsWith("!add-streamer")){
     msg.delete(1000);
@@ -201,7 +199,6 @@ client.on("message", msg => {
            var beamInfo = JSON.parse(body);
            if (beamInfo.online == false){
              msg.channel.sendMessage(beam + " is not live right now.");
-             }
            }
            if (beamInfo.online == true){
             if (beamInfo.type == null){
