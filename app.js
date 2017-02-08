@@ -1,6 +1,6 @@
 //Invite link https://discordapp.com/oauth2/authorize?client_id=278362996349075456&scope=bot&permissions=37223488
 
-var version = "0.7.5";
+var version = "0.8.0";
 var website = "http://comixsyt.space";
 
 var fs = require("fs");
@@ -60,7 +60,7 @@ client.on("message", msg => {
     msg.delete(1000);
     msg.reply("Ping!");
   }
-  if (msg.content == ("!add-streamer")){
+  if (msg.content == "!add-streamer"){
     msg.delete(1000);
     msg.reply("You need to specify a streamer's beam ID. For example '!add-streamer STREAMER_ID'.");
   }
@@ -165,6 +165,32 @@ client.on("message", msg => {
            }
          }
      });
+    }
+  }
+  if (msg.content == "!server"){
+    if (msg.guild.available){
+      if (msg.guild.iconURL = null){
+        var iconURL = "https://newagesoldier.com/wp-content/uploads/2016/12/masbot.png";
+      }
+      else{
+        var iconURL = msg.guild.iconURL;
+      }
+    const serverEmbed = new Discord.RichEmbed()
+        .setTitle(msg.guild.name)
+        .setColor(0x9900FF)
+        .setFooter("Sent via M8 Bot", "https://cdn.discordapp.com/app-icons/278362996349075456/ce8868a4a1ccbe2f3f746d864f61a206.jpg")
+        .setThumbnail(iconURL)
+        .setTimestamp()
+        .addField("Server ID", msg.guild.id, true)
+        .addField("Region", msg.guild.region, true)
+        .addField("Owner", msg.guild.owner, true)
+        .addField("Members", msg.guild.memberCount, true)
+        .addField("Roles", msg.guild.roles.size, true)
+        .addField("Channels", msg.guild.channels.size, true)
+        .addField("Created At", msg.guild.createdAt)
+        .addField("Joined Server At", msg.guild.joinedAt)
+        msg.channel.sendEmbed(serverEmbed);
+        //msg.channel.sendMessage();
     }
   }
 
