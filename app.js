@@ -1,6 +1,6 @@
 //Invite link https://discordapp.com/oauth2/authorize?client_id=278362996349075456&scope=bot&permissions=37223488
 
-var version = "0.8.0";
+var version = "v0.8.1";
 var website = "http://comixsyt.space";
 
 var fs = require("fs");
@@ -16,6 +16,7 @@ client.on("ready", () => {
   console.log("Version " + version);
   serverCount = client.guilds.size;
   userCount = client.users.size
+  client.user.setGame(version);
   console.log("Bot is on " + serverCount + " servers!");
   console.log("Those " + serverCount + " servers have a total of " + userCount + " members!");
 });
