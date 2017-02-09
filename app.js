@@ -1,6 +1,6 @@
 //Invite link https://discordapp.com/oauth2/authorize?client_id=278362996349075456&scope=bot&permissions=37223488
 
-var version = "v0.8.1";
+var version = "v0.8.2";
 var website = "http://comixsyt.space";
 
 var fs = require("fs");
@@ -38,6 +38,8 @@ function liveCheck(){
          var d = new Date(onTime);
          var millis = d.getTime();
          var diff = new Date().getTime() -  millis;
+        //  const hook = new Discord.WebhookClient(hookID[0], hookID[1]);
+        //  hook.sendMessage(beamInfo.token + " last updated " + diff);
          //console.log(diff);
          if (diff<=60000){
            const hook = new Discord.WebhookClient(hookID[0], hookID[1]);
