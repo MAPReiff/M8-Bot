@@ -1,6 +1,6 @@
 //Invite link https://discordapp.com/oauth2/authorize?client_id=278362996349075456&scope=bot&permissions=37223488
 
-var version = "v0.8.2";
+var version = "v0.9.0";
 var website = "http://comixsyt.space";
 
 var fs = require("fs");
@@ -52,9 +52,6 @@ function liveCheck(){
 
 
 client.on("message", msg => {
-  if (msg.content == "guild"){
-    msg.reply(msg.guild.ownerID);
-  }
   if (msg.content === "ping") {
     msg.delete(1000);
     msg.reply("Pong!");
@@ -123,7 +120,8 @@ client.on("message", msg => {
       .addField("!help", "Sends this Help Message")
       .addField("ping/pong", "Send ping or pong to test if the bot is listening")
       //.addField("!live", "Sends out a fancy live message if you are a registered streamer")
-      .addField("!m8status", "Sends a status report of the bot");
+      .addField("!m8status", "Sends a status report of the bot")
+      .addField("!me", "Sends user info about themself")
       msg.channel.sendEmbed(helpEmbed);
   }
   if (msg.content.startsWith("live") && msg.author.id == hookID[0]){
@@ -195,6 +193,19 @@ client.on("message", msg => {
         msg.channel.sendEmbed(serverEmbed);
         //msg.channel.sendMessage();
     }
+  }
+
+  if (msg.content == "!me"){
+    const meEmbed = new Discord.RichEmbed()
+      .setTitle(msg.author.username)
+      .setColor(0x9900FF)
+      .setFooter("Sent via M8 Bot", "https://cdn.discordapp.com/app-icons/278362996349075456/ce8868a4a1ccbe2f3f746d864f61a206.jpg")
+      .setThumbnail(msg.author.displayAvatarURL)
+      .setTimestamp()
+      .addField("ID", msg.author.id, true)
+      .addField("Bot", msg.author.bot, true)
+      .addField("Registered", msg.author.createdAt)
+      msg.channel.sendEmbed(meEmbed);
   }
 
 });
