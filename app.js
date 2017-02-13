@@ -1,6 +1,6 @@
 //Invite link https://discordapp.com/oauth2/authorize?client_id=278362996349075456&scope=bot&permissions=37223488
 
-var version = "B 0.9.3";
+var version = "B 1.0.0";
 var website = "http://comixsyt.space";
 
 var fs = require("fs");
@@ -127,6 +127,7 @@ client.on("message", msg => {
       //.addField("!live", "Sends out a fancy live message if you are a registered streamer")
       .addField("!m8status", "Sends a status report of the bot")
       .addField("!me", "Sends user info about themself")
+      .addField("!pun or !dadjoke", "Sends a funny pun courtesy of murfGUY's dadjoke database")
       msg.channel.sendEmbed(helpEmbed);
   }
   if (msg.content.startsWith("live") && msg.author.id == hookID[0]){
@@ -212,7 +213,15 @@ client.on("message", msg => {
       .addField("Registered", msg.author.createdAt)
       msg.channel.sendEmbed(meEmbed);
   }
-
+  if(msg.content == "!pun" || msg.content == "!dadjoke"){
+    var request = require("request");
+    request("http://www.murfguy.com/puns.php", function (error, response, body) {
+      if (!error && response.statusCode == 200) {
+        var pun = body;
+        msg.channel.sendMessage(pun);
+      }
+    });
+  }
 });
 
 var token = fs.readFileSync("./token.txt", "utf-8");
