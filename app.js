@@ -148,10 +148,6 @@ client.on("message", msg => {
       request("https://beam.pro/api/v1/channels/" + beam, function (error, response, body) {
         if (!error && response.statusCode == 200) {
            var beamInfo = JSON.parse(body);
-           if (beamInfo.online == false){
-             msg.channel.sendMessage(beam + " is not live right now.");
-           }
-           if (beamInfo.online == true){
             if (beamInfo.type == null){
               var game = "[API ERROR]";
             }
@@ -180,10 +176,9 @@ client.on("message", msg => {
                client.channels.get(serversAllowed[i]).sendEmbed(liveEmbed, "@here");
              }
            }
-         }
-     });
+       });
+      }
     }
-  }
   if (msg.content == "!server"){
     if (msg.guild.available){
       if (msg.guild.iconURL = null){
