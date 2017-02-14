@@ -1,14 +1,18 @@
 //Invite link https://discordapp.com/oauth2/authorize?client_id=278362996349075456&scope=bot&permissions=37223488
 
-var version = "B 1.0.0";
+var version = "Beta 2.0.0";
 var website = "http://comixsyt.space";
 
 var fs = require("fs");
 
 const Discord = require("discord.js");
-
 const client = new Discord.Client();
 
+const Carina = require('carina').Carina;
+const ws = require('ws');
+
+Carina.WebSocket = ws;
+const ca = new Carina({ isBot: true }).open();
 
 var hookIDRaw = fs.readFileSync("./hook.txt", "utf-8");
 var hookID = hookIDRaw.split(", ");
@@ -23,35 +27,27 @@ client.on("ready", () => {
   console.log("Those " + serverCount + " servers have a total of " + userCount + " members!");
 });
 
-setInterval(liveCheck, 60000); //1 min = 60000
-function liveCheck(){
+var streamersRaw = fs.readFileSync("./streamers.txt", "utf-8");
+var streamers = streamersRaw.split(", ");
+var streamerCount = streamers.length;
 
-  var streamersRaw = fs.readFileSync("./streamers.txt", "utf-8");
-  var streamers = streamersRaw.split(", ");
-  var streamerCount = streamers.length;
-
-  for (i=0; i < streamerCount; i++){
-    //console.log(streamers[i]);
-    var request = require("request");
-    request("https://beam.pro/api/v1/channels/" + streamers[i], function (error, response, body) {
-      if (!error && response.statusCode == 200) {
-         var beamInfo = JSON.parse(body);
-         var onTime = beamInfo.updatedAt;
-         var d = new Date(onTime);
-         var millis = d.getTime();
-         var diff = new Date().getTime() -  millis;
-        //  const hook = new Discord.WebhookClient(hookID[0], hookID[1]);
-        //  hook.sendMessage(beamInfo.token + " last updated " + diff);
-         //console.log(diff);
-         if (diff<=60000 && beamInfo.online == true){
+for (i=0; i<streamerCount; i++){
+  var request = require("request");
+  request("https://beam.pro/api/v1/channels/" + streamers[i], function (error, response, body) {
+    if (!error && response.statusCode == 200) {
+       var beamInfo = JSON.parse(body);
+       const beamID = beamInfo.id;
+       ca.subscribe(`channel:${beamID}:update`, data => {
+         var beamStatus = data.online
+         //console.log(data);
+         if (beamStatus == true){
            const hook = new Discord.WebhookClient(hookID[0], hookID[1]);
-           hook.sendMessage("live " + beamInfo.token + " with a diff or " + diff);
+           hook.sendMessage("live " + beamInfo.token);
          }
-       }
-    });
-    }
-  }
-
+       })
+     }
+   });
+ }
 
 client.on("message", msg => {
   if (msg.content === "ping") {
