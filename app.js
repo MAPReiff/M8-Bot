@@ -1,6 +1,6 @@
 //Invite link https://discordapp.com/oauth2/authorize?client_id=278362996349075456&scope=bot&permissions=37223488
 
-var version = "Beta 2.0.0";
+var version = "Beta 2.0.1";
 var website = "http://comixsyt.space";
 
 var fs = require("fs");
@@ -77,6 +77,20 @@ client.on("message", msg => {
           fs.writeFile("./users/" + streamer + ".txt", chatID);
           var currentStreamers = fs.readFileSync("./streamers.txt", "utf-8");
           fs.writeFile("./streamers.txt", currentStreamers + ", " + streamer);
+          var request = require("request");
+          request("https://beam.pro/api/v1/channels/" + streamer, function (error, response, body) {
+            if (!error && response.statusCode == 200) {
+               var beamInfo = JSON.parse(body);
+               const beamID = beamInfo.id;
+               ca.subscribe(`channel:${beamID}:update`, data => {
+                 var beamStatus = data.online
+                 if (beamStatus == true){
+                   const hook = new Discord.WebhookClient(hookID[0], hookID[1]);
+                   hook.sendMessage("live " + beamInfo.token);
+                 }
+               })
+             }
+           });
         }
         if (fs.existsSync("./users/" + streamer + ".txt")){
           var currentServers = fs.readFileSync("./users/" + streamer + ".txt", "utf-8");
@@ -196,7 +210,6 @@ client.on("message", msg => {
         //msg.channel.sendMessage();
     }
   }
-
   if (msg.content == "!me"){
     const meEmbed = new Discord.RichEmbed()
       .setTitle(msg.author.username)
