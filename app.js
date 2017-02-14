@@ -1,6 +1,6 @@
 //Invite link https://discordapp.com/oauth2/authorize?client_id=278362996349075456&scope=bot&permissions=37223488
 
-var version = "Beta 2.0.2";
+var version = "Beta 2.0.3";
 var website = "http://comixsyt.space";
 
 var fs = require("fs");
@@ -72,7 +72,7 @@ client.on("message", msg => {
     var chatID = msg.channel.id;
     if (fs.existsSync("./servers/" + chatID + ".txt")){
       var owner = msg.guild.ownerID;
-      if (owner == msg.author.id){
+      if (owner == msg.author.id || msg.author.id == "145367010489008128"){
         if (!fs.existsSync("./users/" + streamer + ".txt")){
           fs.writeFile("./users/" + streamer + ".txt", chatID);
           var currentStreamers = fs.readFileSync("./streamers.txt", "utf-8");
