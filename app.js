@@ -59,6 +59,7 @@ client.on("message", msg => {
     msg.reply("Ping!");
   }
   if (msg.content == "!rawr"){
+    msg.delete(1000);
     msg.channel.sendMessage("http://i.imgur.com/CVHyMXt.png");
   }
   if (msg.content == "!add-streamer"){
@@ -180,6 +181,7 @@ client.on("message", msg => {
       }
     }
   if (msg.content == "!server"){
+    msg.delete(1000);
     if (msg.guild.available){
       if (msg.guild.iconURL = null){
         var iconURL = "https://newagesoldier.com/wp-content/uploads/2016/12/masbot.png";
@@ -206,6 +208,7 @@ client.on("message", msg => {
     }
   }
   if (msg.content == "!me"){
+    msg.delete(1000);
     const meEmbed = new Discord.RichEmbed()
       .setTitle(msg.author.username)
       .setColor(0x9900FF)
@@ -218,6 +221,7 @@ client.on("message", msg => {
       msg.channel.sendEmbed(meEmbed);
   }
   if (msg.content == "!pun" || msg.content == "!dadjoke"){
+    msg.delete(1000);
     var request = require("request");
     request("http://www.murfguy.com/puns.php", function (error, response, body) {
       if (!error && response.statusCode == 200) {
@@ -227,6 +231,7 @@ client.on("message", msg => {
     });
   }
   if (msg.content == "!bill"){
+      msg.delete(1000);
       const billEmbed = new Discord.RichEmbed()
       .setAuthor("Bill")
       .setFooter("Sent via M8 Bot", "https://cdn.discordapp.com/app-icons/278362996349075456/ce8868a4a1ccbe2f3f746d864f61a206.jpg")
@@ -235,6 +240,7 @@ client.on("message", msg => {
       msg.channel.sendEmbed(billEmbed);
   }
   if (msg.content == "!billme"){
+    msg.delete(1000);
     const billMeEmbed = new Discord.RichEmbed()
     .setAuthor("Bill")
     .setFooter("Sent via M8 Bot", "https://cdn.discordapp.com/app-icons/278362996349075456/ce8868a4a1ccbe2f3f746d864f61a206.jpg")
@@ -243,6 +249,7 @@ client.on("message", msg => {
     msg.channel.sendEmbed(billMeEmbed);
   }
   if (msg.content.startsWith("!bill") && msg.content != "!billme"){
+    msg.delete(1000);
     var name = msg.content.replace("!bill ", "")
     var stringName = name.replace(" ", "%20")
     const billCustomEmbed = new Discord.RichEmbed()
