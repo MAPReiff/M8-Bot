@@ -1,6 +1,6 @@
 //Invite link https://discordapp.com/oauth2/authorize?client_id=278362996349075456&scope=bot&permissions=37223488
 
-var version = "Beta 2.1.4";
+var version = "Beta 2.1.5";
 var website = "http://comixsyt.space";
 
 var fs = require("fs");
@@ -174,7 +174,7 @@ client.on("message", msg => {
              for (i=0; i < serversAllowed.length; i++){
                //client.channels.get(serversAllowed[i]).sendMessage("@here, " + beam + " is live @ http://beam.pro/" + beam + " & is streaming " + beamInfo.type.name + "!");
                //client.channels.get(serversAllowed[i]).sendMessage("@here");
-               client.channels.get(serversAllowed[i]).sendEmbed(liveEmbed, "@here");
+               client.channels.get(serversAllowed[i]).sendEmbed(liveEmbed, "@here, " + beam + " is live!");
              }
            }
        });
