@@ -1,6 +1,6 @@
 //Invite link https://discordapp.com/oauth2/authorize?client_id=278362996349075456&scope=bot&permissions=37223488
 
-var version = "Beta 2.1.2";
+var version = "Beta 2.1.3";
 var website = "http://comixsyt.space";
 
 var fs = require("fs");
@@ -242,7 +242,7 @@ client.on("message", msg => {
   if (msg.content == "!billme"){
     msg.delete(1000);
     const billMeEmbed = new Discord.RichEmbed()
-    .setAuthor("Bill")
+    .setAuthor(msg.author.username)
     .setFooter("Sent via M8 Bot", "https://cdn.discordapp.com/app-icons/278362996349075456/ce8868a4a1ccbe2f3f746d864f61a206.jpg")
     .setTimestamp()
     .setImage("http://belikebill.azurewebsites.net/billgen-API.php?default=1&name=" + msg.author.username + "&")
@@ -253,7 +253,7 @@ client.on("message", msg => {
     var name = msg.content.replace("!bill ", "")
     var stringName = name.replace(" ", "%20")
     const billCustomEmbed = new Discord.RichEmbed()
-    .setAuthor("Bill")
+    .setAuthor(stringName)
     .setFooter("Sent via M8 Bot", "https://cdn.discordapp.com/app-icons/278362996349075456/ce8868a4a1ccbe2f3f746d864f61a206.jpg")
     .setTimestamp()
     .setImage("http://belikebill.azurewebsites.net/billgen-API.php?default=1&name=" + stringName + "&")
