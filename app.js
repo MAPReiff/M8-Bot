@@ -1,6 +1,6 @@
 //Invite link https://discordapp.com/oauth2/authorize?client_id=278362996349075456&scope=bot&permissions=37223488
 
-var version = "Beta 2.0.4";
+var version = "Beta 2.1.0";
 var website = "http://comixsyt.space";
 
 var fs = require("fs");
@@ -131,12 +131,13 @@ client.on("message", msg => {
       .setFooter("Sent via M8 Bot", "https://cdn.discordapp.com/app-icons/278362996349075456/ce8868a4a1ccbe2f3f746d864f61a206.jpg")
       .setThumbnail("https://cdn.discordapp.com/app-icons/278362996349075456/ce8868a4a1ccbe2f3f746d864f61a206.jpg")
       .setTimestamp()
-      .addField("!help", "Sends this Help Message")
+      .addField("!help m8bot", "Sends this Help Message")
       .addField("ping/pong", "Send ping or pong to test if the bot is listening")
       //.addField("!live", "Sends out a fancy live message if you are a registered streamer")
       .addField("!m8status", "Sends a status report of the bot")
       .addField("!me", "Sends user info about themself")
       .addField("!pun or !dadjoke", "Sends a funny pun courtesy of murfGUY's dadjoke database")
+      .addField("!bill, !billme & !bill NAME", "Creates a be like bill meme. If you do !billme, your name will be in there. If you do !bill NAME, the name you put will be in there.")
       msg.channel.sendEmbed(helpEmbed);
   }
   if (msg.content.startsWith("live") && msg.author.id == hookID[0]){
@@ -216,7 +217,7 @@ client.on("message", msg => {
       .addField("Registered", msg.author.createdAt)
       msg.channel.sendEmbed(meEmbed);
   }
-  if(msg.content == "!pun" || msg.content == "!dadjoke"){
+  if (msg.content == "!pun" || msg.content == "!dadjoke"){
     var request = require("request");
     request("http://www.murfguy.com/puns.php", function (error, response, body) {
       if (!error && response.statusCode == 200) {
@@ -225,6 +226,33 @@ client.on("message", msg => {
       }
     });
   }
+  if (msg.content == "!bill"){
+      const billEmbed = new Discord.RichEmbed()
+      .setAuthor("Bill")
+      .setFooter("Sent via M8 Bot", "https://cdn.discordapp.com/app-icons/278362996349075456/ce8868a4a1ccbe2f3f746d864f61a206.jpg")
+      .setTimestamp()
+      .setImage("http://belikebill.azurewebsites.net/billgen-API.php?default=1")
+      msg.channel.sendEmbed(billEmbed);
+  }
+  if (msg.content == "!billme"){
+    const billMeEmbed = new Discord.RichEmbed()
+    .setAuthor("Bill")
+    .setFooter("Sent via M8 Bot", "https://cdn.discordapp.com/app-icons/278362996349075456/ce8868a4a1ccbe2f3f746d864f61a206.jpg")
+    .setTimestamp()
+    .setImage("http://belikebill.azurewebsites.net/billgen-API.php?default=1&name=" + msg.author.username + "&")
+    msg.channel.sendEmbed(billMeEmbed);
+  }
+  if (msg.content.startsWith("!bill") && msg.content != "!billme"){
+    var name = msg.content.replace("!bill ", "")
+    var stringName = name.replace(" ", "%20")
+    const billCustomEmbed = new Discord.RichEmbed()
+    .setAuthor("Bill")
+    .setFooter("Sent via M8 Bot", "https://cdn.discordapp.com/app-icons/278362996349075456/ce8868a4a1ccbe2f3f746d864f61a206.jpg")
+    .setTimestamp()
+    .setImage("http://belikebill.azurewebsites.net/billgen-API.php?default=1&name=" + stringName + "&")
+    msg.channel.sendEmbed(billCustomEmbed);
+  }
+
 });
 
 var token = fs.readFileSync("./token.txt", "utf-8");
