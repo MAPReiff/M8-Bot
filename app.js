@@ -1,6 +1,6 @@
 //Invite link https://discordapp.com/oauth2/authorize?client_id=278362996349075456&scope=bot&permissions=37223488
 
-var version = "Beta 2.1.1";
+var version = "Beta 2.1.2";
 var website = "http://comixsyt.space";
 
 var fs = require("fs");
@@ -248,7 +248,7 @@ client.on("message", msg => {
     .setImage("http://belikebill.azurewebsites.net/billgen-API.php?default=1&name=" + msg.author.username + "&")
     msg.channel.sendEmbed(billMeEmbed);
   }
-  if (msg.content.startsWith("!bill") && msg.content != "!billme"){
+  if (msg.content.startsWith("!bill") && msg.content != "!billme" && msg.content != "bill"){
     msg.delete(1000);
     var name = msg.content.replace("!bill ", "")
     var stringName = name.replace(" ", "%20")
