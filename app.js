@@ -1,6 +1,6 @@
 //Invite link https://discordapp.com/oauth2/authorize?client_id=278362996349075456&scope=bot&permissions=37223488
 
-var version = "Beta 2.3.0";
+var version = "Beta 2.3.1";
 var website = "http://comixsyt.space";
 
 var fs = require("fs");
@@ -264,10 +264,10 @@ client.on("message", msg => {
   if (msg.content == "!avatar" || msg.content == "!icon"){
     msg.delete(1000);
     var rn = require('random-number');
-    var random = rn();
+    var random = rn(0,9999999999999999);
     const avatarEmbed = new Discord.RichEmbed()
       .setTitle(msg.author.username + "'s new avatar!")
-      .setImage("https://api.adorable.io/avatars/" + random + msg.author.username)
+      .setImage("https://api.adorable.io/avatars/" + random)
       .setFooter("Sent via M8 Bot", "https://cdn.discordapp.com/app-icons/278362996349075456/ce8868a4a1ccbe2f3f746d864f61a206.jpg")
       .setTimestamp()
       msg.channel.sendEmbed(avatarEmbed);
