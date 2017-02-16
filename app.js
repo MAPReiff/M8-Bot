@@ -1,6 +1,6 @@
 //Invite link https://discordapp.com/oauth2/authorize?client_id=278362996349075456&scope=bot&permissions=37223488
 
-var version = "Beta 2.2.0";
+var version = "Beta 2.3.0";
 var website = "http://comixsyt.space";
 
 var fs = require("fs");
@@ -140,6 +140,7 @@ client.on("message", msg => {
       .addField("!pun or !dadjoke", "Sends a funny pun courtesy of murfGUY's dadjoke database")
       .addField("!bill, !billme & !bill NAME", "Creates a be like bill meme. If you do !billme, your name will be in there. If you do !bill NAME, the name you put will be in there.")
       .addField("!avatar", "Generate a new profile avatar via the adorable.io api!")
+      .addField("!cn or !chuck or !chucknorris", "Pulls a random Chun Norris fact!")
       msg.channel.sendEmbed(helpEmbed);
   }
   if (msg.content.startsWith("live") && msg.author.id == hookID[0]){
@@ -270,6 +271,16 @@ client.on("message", msg => {
       .setFooter("Sent via M8 Bot", "https://cdn.discordapp.com/app-icons/278362996349075456/ce8868a4a1ccbe2f3f746d864f61a206.jpg")
       .setTimestamp()
       msg.channel.sendEmbed(avatarEmbed);
+  }
+  if (msg.content == "!cn" || msg.content == "!chuck" || msg.content == "!chucknorris"){
+    msg.delete(1000);
+    var request = require("request");
+    request("https://api.chucknorris.io/jokes/random", function (error, response, body) {
+      if (!error && response.statusCode == 200) {
+        var info = JSON.parse(body);
+        msg.channel.sendMessage("**Chuck Norris Fact:** " + info.value);
+      }
+    });
   }
 
 });
