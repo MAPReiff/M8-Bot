@@ -1,6 +1,6 @@
 //Invite link https://discordapp.com/oauth2/authorize?client_id=278362996349075456&scope=bot&permissions=37223488
 
-var version = "Beta 2.4.0";
+var version = "Beta 2.4.1";
 var website = "http://comixsyt.space";
 
 var fs = require("fs");
@@ -37,6 +37,7 @@ for (i=0; i<streamerCount; i++){
     if (!error && response.statusCode == 200) {
        var beamInfo = JSON.parse(body);
        const beamID = beamInfo.id;
+       console.log("Now stalking " + beamInfo.token + " on beam!");
        ca.subscribe(`channel:${beamID}:update`, data => {
          var beamStatus = data.online
          //console.log(data);
@@ -89,6 +90,7 @@ client.on("message", msg => {
                    hook.sendMessage("live " + beamInfo.token);
                  }
                })
+
              }
            });
         }
