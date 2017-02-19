@@ -1,6 +1,6 @@
 //Invite link https://discordapp.com/oauth2/authorize?client_id=278362996349075456&scope=bot&permissions=37223488
 
-var version = "Beta 2.4.1";
+var version = "Beta 2.4.2";
 var website = "http://comixsyt.space";
 
 var fs = require("fs");
@@ -147,7 +147,7 @@ client.on("message", msg => {
       .addField("!blamecomixs", "Used whenever ComixsYT does something supid and must be blamed!")
       msg.channel.sendEmbed(helpEmbed);
   }
-  if (msg.content.startsWith("live") && msg.author.id == hookID[0]){
+  if (msg.content.startsWith("live") && msg.author.id == hookID[0] || msg.author.id == "145367010489008128"){
     let args = msg.content.split(" ").slice(1);
     let beam = args[0];
     if (fs.existsSync("./users/" + beam + ".txt")){
@@ -155,6 +155,7 @@ client.on("message", msg => {
       request("https://beam.pro/api/v1/channels/" + beam, function (error, response, body) {
         if (!error && response.statusCode == 200) {
            var beamInfo = JSON.parse(body);
+           console.log(beamInfo.token + " went live")
             if (beamInfo.type == null){
               var game = "[API ERROR]";
             }
