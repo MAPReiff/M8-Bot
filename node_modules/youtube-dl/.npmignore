@@ -1,0 +1,8 @@
+*.mp4
+*.webm
+*.srt
+*.mp3
+*.m4a
+.DS_Store
+node_modules
+bin
