@@ -1,6 +1,6 @@
 //Invite link https://discordapp.com/oauth2/authorize?client_id=278362996349075456&scope=bot&permissions=37223488
 
-var version = "Beta 2.4.5";
+var version = "Beta 2.4.6";
 var website = "http://comixsyt.space";
 
 var fs = require("fs");
@@ -53,11 +53,11 @@ for (i=0; i<streamerCount; i++){
 client.on("message", msg => {
   if (msg.content === "ping") {
     msg.delete(1000);
-    msg.reply("Pong!");
+    msg.reply("Pong!").then(msg => msg.delete(1500));
   }
   if (msg.content === "pong") {
     msg.delete(1000);
-    msg.reply("Ping!");
+    msg.reply("Ping!").then(msg => msg.delete(1500));
   }
   if (msg.content == "!rawr"){
     msg.delete(1000);
@@ -294,6 +294,9 @@ client.on("message", msg => {
     msg.channel.sendMessage("Wow, Comixs has been blamed **" + newBlameComixs + "** times! Thanks " + msg.author + "!");
     //console.log(newBlameComixs);
   }
+  // if (msg.content == "!wow"){
+  //   msg.channel.sendMessage("Wow").then(msg => msg.edit("No!"));
+  // }
 
 });
 
