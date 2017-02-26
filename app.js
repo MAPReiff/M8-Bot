@@ -1,6 +1,5 @@
 //Invite link https://discordapp.com/oauth2/authorize?client_id=278362996349075456&scope=bot&permissions=37223488
 
-
 var version = "Beta 2.4.6";
 var website = "http://comixsyt.space";
 
@@ -8,7 +7,6 @@ var fs = require("fs");
 
 const Discord = require("discord.js");
 const client = new Discord.Client();
-const music = require("discord.js-music");
 
 const Carina = require('carina').Carina;
 const ws = require('ws');
@@ -27,12 +25,6 @@ client.on("ready", () => {
   client.user.setGame(version);
   console.log("Bot is on " + serverCount + " servers!");
   console.log("Those " + serverCount + " servers have a total of " + userCount + " members!");
-});
-
-music(client, {
-	prefix: '!',     // Prefix of '-'.
-	global: false,   // Server-specific queues.
-	maxQueueSize: 100 // Maximum queue size of 10.
 });
 
 var streamersRaw = fs.readFileSync("./streamers.txt", "utf-8");
@@ -153,11 +145,6 @@ client.on("message", msg => {
       .addField("!avatar", "Generate a new profile avatar via the adorable.io api!")
       .addField("!cn or !chuck or !chucknorris", "Pulls a random Chun Norris fact!")
       .addField("!blamecomixs", "Used whenever ComixsYT does something supid and must be blamed!")
-      .addField("!play SONG-LINK", "Used to have the bot play music, you must be in a voice chat and supply a youtube link.")
-      .addField("!skip", "Skip current track.", true)
-      .addField("!queue", "Show's currnt music queue.", true)
-      .addField("!pause", "Pause current track.", true)
-      .addField("!resume", "Resume current track.", true)
       msg.channel.sendEmbed(helpEmbed);
   }
   if (msg.content.startsWith("live") && msg.author.id == hookID[0] || msg.author.id == "145367010489008128"){
