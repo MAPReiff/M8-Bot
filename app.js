@@ -1,10 +1,7 @@
 //Invite link https://discordapp.com/oauth2/authorize?client_id=278362996349075456&scope=bot&permissions=37223488
 
-<<<<<<< HEAD
+
 var version = "Beta 2.4.6";
-=======
-var version = "Beta 2.5.0";
->>>>>>> origin/master
 var website = "http://comixsyt.space";
 
 var fs = require("fs");
