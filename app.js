@@ -1,6 +1,6 @@
 //Invite link https://discordapp.com/oauth2/authorize?client_id=278362996349075456&scope=bot&permissions=37223488
 
-var version = "Beta 2.4.6";
+var version = "Beta 2.4.7";
 var website = "http://comixsyt.space";
 
 var fs = require("fs");
@@ -100,7 +100,7 @@ client.on("message", msg => {
           if (registered === true){
             msg.reply("the streamer " + streamer + " is already registered!");
           }
-          if (registered === false){
+          if (registered === false && !currentServers.includes(chatID)){
             fs.writeFile("./users/" + streamer + ".txt", currentServers + ", " + chatID);
             msg.reply("you have added  " + streamer + " to your server!");
           }
@@ -174,7 +174,7 @@ client.on("message", msg => {
                .setURL("http://beam.pro/" + beam)
                .addField("Streaming", game, true)
                .addField("Followers", beamInfo.numFollowers, true)
-               .addField("Viewers", beamInfo.viewersCurrent, true)
+               .addField("Beam Level", beamInfo.user.level, true)
                .addField("Total Views", beamInfo.viewersTotal, true)
              var serversAllowedRaw = fs.readFileSync("./users/" + beam + ".txt", "utf-8");
              var serversAllowed = serversAllowedRaw.split(", ");
@@ -306,7 +306,7 @@ client.on("guildMemberAdd", member => {
   var guildGeneral = member.guild.defaultChannel.id;
   //console.log(guildGeneral);
   //console.log(guildID);
-  if (guildID == "250354580926365697"){ //Chill Spot Guild ID
+  if (guildID == "250354580926365697"){ //Meme M8s Guild ID
     member.addRole(guild.roles.find('name', 'Lil Meme'));
     //client.channels.get(guildGeneral).sendMessage("Hey " + member.displayName + ", welcome to the **Chill Spot**! You are now a Lil Meme. Please read #welcome and enjoy your stay!");
   }
