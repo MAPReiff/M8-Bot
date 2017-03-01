@@ -1,6 +1,6 @@
 //Invite link https://discordapp.com/oauth2/authorize?client_id=278362996349075456&scope=bot&permissions=37223488
 
-var version = "Beta 2.4.7";
+var version = "Beta 2.4.8";
 var website = "http://comixsyt.space";
 
 var fs = require("fs");
@@ -309,6 +309,9 @@ client.on("guildMemberAdd", member => {
   if (guildID == "250354580926365697"){ //Meme M8s Guild ID
     member.addRole(guild.roles.find('name', 'Lil Meme'));
     //client.channels.get(guildGeneral).sendMessage("Hey " + member.displayName + ", welcome to the **Chill Spot**! You are now a Lil Meme. Please read #welcome and enjoy your stay!");
+  }
+  if (guildID == "169960109072449536"){ //Innovative Studios Guild ID
+    member.addRole(guild.roles.find('name', 'Citizens of Townsville'));
   }
 });
 
