@@ -263,6 +263,7 @@ client.on("message", msg => {
     .setAuthor(stringName)
     .setFooter("Sent via M8 Bot", "https://cdn.discordapp.com/app-icons/278362996349075456/ce8868a4a1ccbe2f3f746d864f61a206.jpg")
     .setTimestamp()
+    .setColor(0x9900FF)
     .setImage("http://belikebill.azurewebsites.net/billgen-API.php?default=1&name=" + stringName + "&")
     msg.channel.sendEmbed(billCustomEmbed);
   }
@@ -297,6 +298,17 @@ client.on("message", msg => {
   // if (msg.content == "!wow"){
   //   msg.channel.sendMessage("Wow").then(msg => msg.edit("No!"));
   // }
+  if (msg.content == "!bday" && msg.author.id == "145367010489008128"){
+    msg.delete(1000);
+    const bDayEmbed = new Discord.RichEmbed()
+      .setTitle("ComixsYT\'s Birthday!")
+      .setFooter("Sent via M8 Bot", "https://cdn.discordapp.com/app-icons/278362996349075456/ce8868a4a1ccbe2f3f746d864f61a206.jpg")
+      .setTimestamp()
+      .setColor(0x9900FF)
+      .setThumbnail("http://i.imgur.com/WkMgJ1Q.png")
+      .addField("What is this?", "I don\'t know about you, but I care about my master, ComixsYT. \nSo in this automated message, I would like to wish my master a \nsuper fantabulous birthday!");
+      msg.channel.sendEmbed(bDayEmbed, "Hey @here");
+  }
 
 });
 
