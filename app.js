@@ -145,6 +145,7 @@ client.on("message", msg => {
       .addField("!avatar", "Generate a new profile avatar via the adorable.io api!")
       .addField("!cn or !chuck or !chucknorris", "Pulls a random Chun Norris fact!")
       .addField("!blamecomixs", "Used whenever ComixsYT does something supid and must be blamed!")
+      .addField("!lenny", "( ͡° ͜ʖ ͡°)")
       msg.channel.sendEmbed(helpEmbed);
   }
   if (msg.content.startsWith("live") && msg.author.id == hookID[0] || msg.author.id == "145367010489008128"){
