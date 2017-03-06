@@ -1,6 +1,6 @@
 //Invite link https://discordapp.com/oauth2/authorize?client_id=278362996349075456&scope=bot&permissions=37223488
 
-var version = "Beta 2.4.8";
+var version = "Beta 2.4.9";
 var website = "http://comixsyt.space";
 
 var fs = require("fs");
@@ -308,6 +308,10 @@ client.on("message", msg => {
       .setThumbnail("http://i.imgur.com/WkMgJ1Q.png")
       .addField("What is this?", "I don\'t know about you, but I care about my master, ComixsYT. \nSo in this automated message, I would like to wish my master a \nsuper fantabulous birthday!");
       msg.channel.sendEmbed(bDayEmbed, "Hey @here");
+  }
+  if (msg.content == "!lenny"){
+    msg.delete(1000);
+    msg.channel.sendMessage("( ͡° ͜ʖ ͡°)");
   }
 
 });
