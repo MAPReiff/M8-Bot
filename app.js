@@ -1,6 +1,6 @@
 //Invite link https://discordapp.com/oauth2/authorize?client_id=278362996349075456&scope=bot&permissions=37223488
 
-var version = "Beta 2.5";
+var version = "Beta 2.5.1";
 var website = "http://comixsyt.space";
 
 var fs = require("fs");
@@ -350,7 +350,7 @@ client.on("message", msg => {
     request("https://artii.herokuapp.com/make?text=" + input, function (error, response, body) {
       if (!error && response.statusCode == 200) {
         var ascii = body;
-        msg.channel.sendMessage("```\n " + msg.author.username + " as requested \"" + input + "\" in ASCII from! \n" + ascii + "```");
+        msg.channel.sendMessage("```\n " + msg.author.username + " has requested \"" + input + "\" in ASCII from! \n" + ascii + "```");
       }
     });
   }
