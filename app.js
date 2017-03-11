@@ -1,6 +1,6 @@
 //Invite link https://discordapp.com/oauth2/authorize?client_id=278362996349075456&scope=bot&permissions=37223488
 
-var version = "Beta 2.4.9";
+var version = "Beta 2.5";
 var website = "http://comixsyt.space";
 
 var fs = require("fs");
@@ -31,19 +31,33 @@ var streamersRaw = fs.readFileSync("./streamers.txt", "utf-8");
 var streamers = streamersRaw.split(", ");
 var streamerCount = streamers.length;
 
-for (i=0; i<streamerCount; i++){
-  var request = require("request");
-  request("https://beam.pro/api/v1/channels/" + streamers[i], function (error, response, body) {
-    if (!error && response.statusCode == 200) {
-       var beamInfo = JSON.parse(body);
-       const beamID = beamInfo.id;
-       console.log("Now stalking " + beamInfo.token + " on beam!");
-       ca.subscribe(`channel:${beamID}:update`, data => {
-         var beamStatus = data.online
-         //console.log(data);
-         if (beamStatus == true){
-           const hook = new Discord.WebhookClient(hookID[0], hookID[1]);
-           hook.sendMessage("live " + beamInfo.token);
+for (i=0; i<streamerCount; i++){  //Run for the # of streamers
+  var halfHour = 1800000; //time in milis that is 30min
+  var bootTime = (new Date).getTime(); //get the time the bot booted up
+  var halfHourAgo = bootTime - 1800000; //get the time 30min before the boot
+  fs.writeFile("./user_time/" + streamers[i] + "_time.txt", halfHourAgo); //write a file with
+  var request = require("request"); //the var to request details on the streamer
+  request("https://beam.pro/api/v1/channels/" + streamers[i], function (error, response, body) { //ste info for the streamer in JSON
+    if (!error && response.statusCode == 200) { //if there is no error checking
+       var beamInfo = JSON.parse(body); //setting a var for the JSON info
+       const beamID = beamInfo.id; //getting the ID of the streamer
+       console.log("Now stalking " + beamInfo.token + " on beam!"); //logs that the bot is watching for the streamer to go live
+       ca.subscribe(`channel:${beamID}:update`, data => { //subscribing to the streamer
+         var beamStatus = data.online //checks if they are online (its a double check just incase the above line miss fires)
+         if (beamStatus == true){ //if the bam info JSON says they are live
+           var liveTime = (new Date).getTime(); //time the bot sees they went live
+           var lastLiveTime = fs.readFileSync("./user_time/" + beamInfo.token + "_time.txt", "utf-8"); //checks the last live time
+           var timeDiff = liveTime - lastLiveTime; //gets the diff of urrent and last live times
+          //console.log(timeDiff);
+           if (timeDiff >= halfHour){ //if its been 30min or more
+             console.log(beamInfo.token + " went live, as its been more tha 30min!"); //log that they went live
+             const hook = new Discord.WebhookClient(hookID[0], hookID[1]); //sets info about a webhook
+             hook.sendMessage("live " + beamInfo.token); //tells the webhook to send a message to a private channel that M8Bot is listening to
+           }
+           if (timeDiff < halfHour){ //if its been less than 30min
+             console.log(beamInfo.token + " attempted to go live, but its been under 30min!"); //log that its been under 30min
+           }
+           fs.writeFile("./user_time/" + beamInfo.token + "_time.txt", liveTime); //update last live time regardless if they went live or not
          }
        })
      }
@@ -67,49 +81,64 @@ client.on("message", msg => {
     msg.delete(1000);
     msg.reply("You need to specify a streamer's beam ID. For example '!add-streamer STREAMER_ID'.");
   }
-  if (msg.content.startsWith("!add-streamer")){
-    msg.delete(1000);
-    let args = msg.content.split(" ").slice(1);
-    let streamer = args[0];
-    var chatID = msg.channel.id;
-      var owner = msg.guild.ownerID;
-      if (owner == msg.author.id || msg.author.id == "145367010489008128"){
-        if (!fs.existsSync("./users/" + streamer + ".txt")){
-          fs.writeFile("./users/" + streamer + ".txt", chatID);
-          var currentStreamers = fs.readFileSync("./streamers.txt", "utf-8");
-          fs.writeFile("./streamers.txt", currentStreamers + ", " + streamer);
-          var request = require("request");
-          request("https://beam.pro/api/v1/channels/" + streamer, function (error, response, body) {
-            if (!error && response.statusCode == 200) {
-               var beamInfo = JSON.parse(body);
-               const beamID = beamInfo.id;
-               ca.subscribe(`channel:${beamID}:update`, data => {
-                 var beamStatus = data.online
-                 if (beamStatus == true){
-                   const hook = new Discord.WebhookClient(hookID[0], hookID[1]);
-                   hook.sendMessage("live " + beamInfo.token);
+  if (msg.content.startsWith("!add-streamer")){ //if an owner adds a streamer
+    msg.delete(1000); //delete the message they sent
+    let args = msg.content.split(" ").slice(1); //divide the message into args
+    let streamer = args[0]; //arg 0 is the streamer's name
+    var chatID = msg.channel.id; //gets the chat ID that they added the streamer to
+      var owner = msg.guild.ownerID; //gets the server owner's id
+      if (owner == msg.author.id || msg.author.id == "145367010489008128"){ //if the person who added the streamer is the owner or ComixsYT
+        if (fs.existsSync("./users/" + streamer + ".txt")){ //if they are already in our database
+          var currentServers = fs.readFileSync("./users/" + streamer + ".txt", "utf-8"); //get the current allowed servers from their file
+          var registered = currentServers.includes(chatID); //checks if the server they are being added to already has them
+          if (registered === true){ //if they are already registered on the server
+            msg.reply("the streamer " + streamer + " is already registered!"); //tell the server owner they are alreayd on
+          }
+          if (registered === false && !currentServers.includes(chatID)){ //if they arent on the server alreayd
+            fs.writeFile("./users/" + streamer + ".txt", currentServers + ", " + chatID); //adds the new server ID to their list
+            msg.reply("you have added the streamer " + streamer + " to your server!"); //tells the server owner that the streamer was added
+          }
+        }
+        if (!fs.existsSync("./users/" + streamer + ".txt")){ //if they are not in our database yet
+          fs.writeFile("./users/" + streamer + ".txt", chatID); //makes a new file with the chat ID
+          var currentStreamers = fs.readFileSync("./streamers.txt", "utf-8"); //gets the current total streamer list
+          fs.writeFile("./streamers.txt", currentStreamers + ", " + streamer); //updates the total list with the new streamer added
+          var halfHour = 1800000; //time in milis that is 30min
+          var addedTime = (new Date).getTime(); //get the time the bot added the streamer
+          var halfHourAgo = addedTime - 1800000; //get the time 30min before they were added
+          fs.writeFile("./user_time/" + streamer + "_time.txt", halfHourAgo); //write a file with
+          var request = require("request"); //the var to request details on the streamer
+          request("https://beam.pro/api/v1/channels/" + streamer, function (error, response, body) { //ste info for the streamer in JSON
+            if (!error && response.statusCode == 200) { //if there is no error checking
+               var beamInfo = JSON.parse(body); //setting a var for the JSON info
+               const beamID = beamInfo.id; //getting the ID of the streamer
+               console.log("Now stalking " + beamInfo.token + " on beam!"); //logs that the bot is watching for the streamer to go live
+               ca.subscribe(`channel:${beamID}:update`, data => { //subscribing to the streamer
+                 var beamStatus = data.online //checks if they are online (its a double check just incase the above line miss fires)
+                 if (beamStatus == true){ //if the bam info JSON says they are live
+                   var liveTime = (new Date).getTime(); //time the bot sees they went live
+                   var lastLiveTime = fs.readFileSync("./user_time/" + beamInfo.token + "_time.txt", "utf-8"); //checks the last live time
+                   var timeDiff = liveTime - lastLiveTime; //gets the diff of urrent and last live times
+                  //console.log(timeDiff);
+                   if (timeDiff >= halfHour){ //if its been 30min or more
+                     console.log(beamInfo.token + " went live, as its been more tha 30min!"); //log that they went live
+                     const hook = new Discord.WebhookClient(hookID[0], hookID[1]); //sets info about a webhook
+                     hook.sendMessage("live " + beamInfo.token); //tells the webhook to send a message to a private channel that M8Bot is listening to
+                   }
+                   if (timeDiff < halfHour){ //if its been less than 30min
+                     console.log(beamInfo.token + " attempted to go live, but its been under 30min!"); //log that its been under 30min
+                   }
+                   fs.writeFile("./user_time/" + beamInfo.token + "_time.txt", liveTime); //update last live time regardless if they went live or not
                  }
                })
-
              }
            });
         }
-        if (fs.existsSync("./users/" + streamer + ".txt")){
-          var currentServers = fs.readFileSync("./users/" + streamer + ".txt", "utf-8");
-          var registered = currentServers.includes(chatID);
-          if (registered === true){
-            msg.reply("the streamer " + streamer + " is already registered!");
-          }
-          if (registered === false && !currentServers.includes(chatID)){
-            fs.writeFile("./users/" + streamer + ".txt", currentServers + ", " + chatID);
-            msg.reply("you have added  " + streamer + " to your server!");
-          }
-        }
-      }
-      else{
-        msg.reply("You do not own this server; please do not try to add a streamer!");
-      }
 
+      }
+      else{ //if the person who added the streamer is not the server owner
+        msg.reply("You do not own this server; please do not try to add a streamer!"); //tell them they cant add a streamer
+      }
   }
   if (msg.content == "!m8status"){
     msg.delete(1000);
@@ -145,28 +174,31 @@ client.on("message", msg => {
       .addField("!avatar", "Generate a new profile avatar via the adorable.io api!")
       .addField("!cn or !chuck or !chucknorris", "Pulls a random Chun Norris fact!")
       .addField("!blamecomixs", "Used whenever ComixsYT does something supid and must be blamed!")
-      .addField("!lenny", "( ͡° ͜ʖ ͡°)")
+      .addField("!lenny", "( ͡° ͜ʖ ͡°)", true)
+      .addField("!ascii", "Get your words in ASCII form!", true)
+      .addField("!urban or !define", "Get the urban definition of a word!")
+      .addField("!lmgtfy or !google", "Gets a Let Me Google That For You link for any term you want!")
+      .addField("!mfinger", "Allows you to give the finger that is located in the middle of our appendages to others!")
       msg.channel.sendEmbed(helpEmbed);
   }
-  if (msg.content.startsWith("live") && msg.author.id == hookID[0] || msg.author.id == "145367010489008128"){
-    let args = msg.content.split(" ").slice(1);
-    let beam = args[0];
-    if (fs.existsSync("./users/" + beam + ".txt")){
-      var request = require("request");
-      request("https://beam.pro/api/v1/channels/" + beam, function (error, response, body) {
-        if (!error && response.statusCode == 200) {
-           var beamInfo = JSON.parse(body);
-           console.log(beamInfo.token + " went live")
-            if (beamInfo.type == null){
-              var game = "[API ERROR]";
+  if ((msg.content.startsWith("live") && msg.author.id == hookID[0]) || //if the bot sends the message
+     (msg.author.id == "145367010489008128" && msg.channel.id == "278697660133801984")){ //if comixs sends the message (and in certian chat)
+    let args = msg.content.split(" ").slice(1); //seperare command into args
+    let beam = args[0]; //beam name is arg 0
+    if (fs.existsSync("./users/" + beam + ".txt")){ //varifies that the streamer is on record
+      var request = require("request"); //sets a var to request info
+      request("https://beam.pro/api/v1/channels/" + beam, function (error, response, body) { //request streamer's in in JSON form
+        if (!error && response.statusCode == 200) { //if there is no error
+           var beamInfo = JSON.parse(body); //sets beamInfo to the JSON data
+            if (beamInfo.type == null){ //if there is no game set to the stream
+              var game = "[API ERROR]"; //set the game to the meme game
             }
-            else{
-              var game = beamInfo.type.name;
+            else{ //if there is a game set
+              var game = beamInfo.type.name; //set the game var to the streamer's game
             }
-             //msg.channel.sendMessage(beam + " is currently live @ http://beam.pro/" + beam);
-             const liveEmbed = new Discord.RichEmbed()
-               .setTitle(beam + "\'s Stream")
-               .setAuthor(beam)
+             const liveEmbed = new Discord.RichEmbed() //start the embed message template
+               .setTitle(beamInfo.token + "\'s Stream")
+               .setAuthor(beamInfo.name)
                .setColor(0x9900FF)
                .setDescription("Hey guys, " + beam + " is live right now! Click above to watch!")
                .setFooter("Sent via M8 Bot", "https://cdn.discordapp.com/app-icons/278362996349075456/ce8868a4a1ccbe2f3f746d864f61a206.jpg")
@@ -176,13 +208,11 @@ client.on("message", msg => {
                .addField("Streaming", game, true)
                .addField("Followers", beamInfo.numFollowers, true)
                .addField("Beam Level", beamInfo.user.level, true)
-               .addField("Total Views", beamInfo.viewersTotal, true)
-             var serversAllowedRaw = fs.readFileSync("./users/" + beam + ".txt", "utf-8");
-             var serversAllowed = serversAllowedRaw.split(", ");
-             for (i=0; i < serversAllowed.length; i++){
-               //client.channels.get(serversAllowed[i]).sendMessage("@here, " + beam + " is live @ http://beam.pro/" + beam + " & is streaming " + beamInfo.type.name + "!");
-               //client.channels.get(serversAllowed[i]).sendMessage("@here");
-               client.channels.get(serversAllowed[i]).sendEmbed(liveEmbed, "@here, " + beam + " is live!");
+               .addField("Total Views", beamInfo.viewersTotal, true) //end the embed message template
+             var serversAllowedRaw = fs.readFileSync("./users/" + beam + ".txt", "utf-8"); //get the list of servers they are allowed to ne announced on
+             var serversAllowed = serversAllowedRaw.split(", "); //splits the servers into individual strings
+             for (i=0; i < serversAllowed.length; i++){ //run for the total number of servers they are allowed on
+               client.channels.get(serversAllowed[i]).sendEmbed(liveEmbed, "@here, " + beam + " is live!"); //send the live message to servers
              }
            }
        });
@@ -314,7 +344,46 @@ client.on("message", msg => {
     msg.delete(1000);
     msg.channel.sendMessage("( ͡° ͜ʖ ͡°)");
   }
-
+  if (msg.content.startsWith("!ascii")){
+    var input = msg.content.replace("!ascii ", "");
+    var request = require("request");
+    request("https://artii.herokuapp.com/make?text=" + input, function (error, response, body) {
+      if (!error && response.statusCode == 200) {
+        var ascii = body;
+        msg.channel.sendMessage("```\n " + msg.author.username + " as requested \"" + input + "\" in ASCII from! \n" + ascii + "```");
+      }
+    });
+  }
+  //Feature Requested by IronTaters
+  if (msg.content.startsWith("!define") || msg.content.startsWith("!urban")){
+    if (msg.content.startsWith("!define")){
+      var term = msg.content.replace("!define ", "");
+    }
+    if (msg.content.startsWith("!urban")){
+      var term = msg.content.replace("!urban ", "");
+    }
+    var request = require("request");
+    request("http://api.scorpstuff.com/urbandictionary.php?term=" + term, function (error, response, body) {
+      if (!error && response.statusCode == 200) {
+        var def = body;
+        msg.channel.sendMessage(def);
+      }
+    });
+  }
+  if (msg.content.startsWith("!lmgtfy") || msg.content.startsWith("!google")){
+    if (msg.content.startsWith("!lmgtfy")){
+      var term = msg.content.replace("!lmgtfy ", "");
+    }
+    if (msg.content.startsWith("!google")){
+      var term = msg.content.replace("!google ", "");
+    }
+    msg.channel.sendMessage("Here's your google link " + msg.author.username + " - http://lmgtfy.com/?q=" + term);
+  }
+  //requested by Pot4tus
+  if (msg.content == "!mfinger"){
+    var mFingerASCII = fs.readFileSync("./ascii/mFinger.txt", "utf-8");
+    msg.channel.sendMessage("```\n Sent by " + msg.author.username + ".\n" + mFingerASCII + "\n```");
+  }
 });
 
 client.on("guildMemberAdd", member => {
