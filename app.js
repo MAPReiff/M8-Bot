@@ -1,6 +1,6 @@
 //Invite link https://discordapp.com/oauth2/authorize?client_id=278362996349075456&scope=bot&permissions=37223488
 
-var version = "Beta 2.5.2";
+var version = "Beta 2.5.3";
 var website = "http://comixsyt.space";
 
 var fs = require("fs");
@@ -50,7 +50,7 @@ for (i=0; i<streamerCount; i++){  //Run for the # of streamers
            var timeDiff = liveTime - lastLiveTime; //gets the diff of urrent and last live times
           //console.log(timeDiff);
            if (timeDiff >= halfHour){ //if its been 30min or more
-             console.log(beamInfo.token + " went live, as its been more tha 30min!"); //log that they went live
+             console.log(beamInfo.token + " went live, as its been more than 30min!"); //log that they went live
              const hook = new Discord.WebhookClient(hookID[0], hookID[1]); //sets info about a webhook
              hook.sendMessage("live " + beamInfo.token); //tells the webhook to send a message to a private channel that M8Bot is listening to
            }
@@ -121,7 +121,7 @@ client.on("message", msg => {
                    var timeDiff = liveTime - lastLiveTime; //gets the diff of urrent and last live times
                   //console.log(timeDiff);
                    if (timeDiff >= halfHour){ //if its been 30min or more
-                     console.log(beamInfo.token + " went live, as its been more tha 30min!"); //log that they went live
+                     console.log(beamInfo.token + " went live, as its been more than 30min!"); //log that they went live
                      const hook = new Discord.WebhookClient(hookID[0], hookID[1]); //sets info about a webhook
                      hook.sendMessage("live " + beamInfo.token); //tells the webhook to send a message to a private channel that M8Bot is listening to
                    }
