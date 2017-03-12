@@ -1,6 +1,6 @@
 //Invite link https://discordapp.com/oauth2/authorize?client_id=278362996349075456&scope=bot&permissions=37223488
 
-var version = "Beta 2.5.3";
+var version = "Beta 2.5.4";
 var website = "http://comixsyt.space";
 
 var fs = require("fs");
@@ -381,7 +381,7 @@ client.on("message", msg => {
       var term = msg.content.replace("!google ", "");
     }
     var input = msg.content.replace(" ", "+");
-    msg.channel.sendMessage("Here's your google link " + msg.author + " - http://lmgtfy.com/?q=" + term);
+    msg.channel.sendMessage("Here's your google link " + msg.author + " - http://lmgtfy.com/?q=" + input);
   }
   //requested by Pot4tus
   if (msg.content == "!mfinger"){
