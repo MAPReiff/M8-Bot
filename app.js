@@ -1,7 +1,8 @@
 //Invite link https://discordapp.com/oauth2/authorize?client_id=278362996349075456&scope=bot&permissions=37223488
 
-var version = "Beta 2.5.5";
+var version = "Beta 2.6";
 var website = "http://comixsyt.space";
+var embedColor = 0x9900FF;
 
 var fs = require("fs");
 
@@ -145,7 +146,7 @@ client.on("message", msg => {
           const statusEmbed = new Discord.RichEmbed()
             .setTitle("M8 Bot Status")
             .setAuthor("M8 Bot")
-            .setColor(0x9900FF)
+            .setColor(embedColor)
             .setFooter("Sent via M8 Bot", "https://cdn.discordapp.com/app-icons/278362996349075456/ce8868a4a1ccbe2f3f746d864f61a206.jpg")
             .setThumbnail("https://cdn.discordapp.com/app-icons/278362996349075456/ce8868a4a1ccbe2f3f746d864f61a206.jpg")
             .setTimestamp()
@@ -160,7 +161,7 @@ client.on("message", msg => {
     msg.delete(1000);
     const helpEmbed = new Discord.RichEmbed()
       .setTitle("M8 Bot Help")
-      .setColor(0x9900FF)
+      .setColor(embedColor)
       .setFooter("Sent via M8 Bot", "https://cdn.discordapp.com/app-icons/278362996349075456/ce8868a4a1ccbe2f3f746d864f61a206.jpg")
       .setThumbnail("https://cdn.discordapp.com/app-icons/278362996349075456/ce8868a4a1ccbe2f3f746d864f61a206.jpg")
       .setTimestamp()
@@ -179,6 +180,7 @@ client.on("message", msg => {
       .addField("!urban or !define", "Get the urban definition of a word!")
       .addField("!lmgtfy or !google", "Gets a Let Me Google That For You link for any term you want!")
       .addField("!mfinger", "Allows you to give the finger that is located in the middle of our appendages to others!")
+      .addField("!quote", "Lets you quote a message! \nUssage 1 - !quote MESSAGE_ID \nUssage 2 - !quote MESSAGE_ID CHANNEL_ID")
       msg.channel.sendEmbed(helpEmbed);
   }
   if ((msg.content.startsWith("live") && msg.author.id == hookID[0]) || //if the bot sends the message
@@ -199,7 +201,7 @@ client.on("message", msg => {
              const liveEmbed = new Discord.RichEmbed() //start the embed message template
                .setTitle(beamInfo.token + "\'s Stream")
                .setAuthor(beamInfo.name)
-               .setColor(0x9900FF)
+               .setColor(embedColor)
                .setDescription("Hey guys, " + beam + " is live right now! Click above to watch!")
                .setFooter("Sent via M8 Bot", "https://cdn.discordapp.com/app-icons/278362996349075456/ce8868a4a1ccbe2f3f746d864f61a206.jpg")
                .setThumbnail(beamInfo.user.avatarUrl)
@@ -229,7 +231,7 @@ client.on("message", msg => {
       }
     const serverEmbed = new Discord.RichEmbed()
         .setTitle(msg.guild.name)
-        .setColor(0x9900FF)
+        .setColor(embedColor)
         .setFooter("Sent via M8 Bot", "https://cdn.discordapp.com/app-icons/278362996349075456/ce8868a4a1ccbe2f3f746d864f61a206.jpg")
         .setThumbnail(iconURL)
         .setTimestamp()
@@ -249,7 +251,7 @@ client.on("message", msg => {
     msg.delete(1000);
     const meEmbed = new Discord.RichEmbed()
       .setTitle(msg.author.username)
-      .setColor(0x9900FF)
+      .setColor(embedColor)
       .setFooter("Sent via M8 Bot", "https://cdn.discordapp.com/app-icons/278362996349075456/ce8868a4a1ccbe2f3f746d864f61a206.jpg")
       .setThumbnail(msg.author.displayAvatarURL)
       .setTimestamp()
@@ -294,7 +296,7 @@ client.on("message", msg => {
     .setAuthor(stringName)
     .setFooter("Sent via M8 Bot", "https://cdn.discordapp.com/app-icons/278362996349075456/ce8868a4a1ccbe2f3f746d864f61a206.jpg")
     .setTimestamp()
-    .setColor(0x9900FF)
+    .setColor(embedColor)
     .setImage("http://belikebill.azurewebsites.net/billgen-API.php?default=1&name=" + stringName + "&")
     msg.channel.sendEmbed(billCustomEmbed);
   }
@@ -335,7 +337,7 @@ client.on("message", msg => {
       .setTitle("ComixsYT\'s Birthday!")
       .setFooter("Sent via M8 Bot", "https://cdn.discordapp.com/app-icons/278362996349075456/ce8868a4a1ccbe2f3f746d864f61a206.jpg")
       .setTimestamp()
-      .setColor(0x9900FF)
+      .setColor(embedColor)
       .setThumbnail("http://i.imgur.com/WkMgJ1Q.png")
       .addField("What is this?", "I don\'t know about you, but I care about my master, ComixsYT. \nSo in this automated message, I would like to wish my master a \nsuper fantabulous birthday!");
       msg.channel.sendEmbed(bDayEmbed, "Hey @here");
@@ -387,6 +389,37 @@ client.on("message", msg => {
   if (msg.content == "!mfinger"){
     var mFingerASCII = fs.readFileSync("./ascii/mFinger.txt", "utf-8");
     msg.channel.sendMessage("```\n Sent by " + msg.author.username + ".\n" + mFingerASCII + "\n```");
+  }
+  if (msg.content.startsWith("!quote")){
+    msg.delete(1000);
+    var input = msg.content.replace("!quote ", "");
+    let args = input.split(" ");
+    var msgID = args[0];
+    var chatID = args[1];
+    var senderChat = msg.channel.id
+    //msg.reply(msgID);
+    //msg.channel.fetchMessage(msgID).then(msg => console.log(msg.content))
+    if (typeof chatID === "undefined"){
+      var chatID = msg.channel.id;
+    }
+    client.channels.get(chatID).fetchMessage(msgID).then(message => fs.writeFile("./quoteInfo.txt", message.author.username + " ππ!π "
+      + message.content + " ππ!π " + message.author.displayAvatarURL + " ππ!π " + message.createdTimestamp));
+      let qargs = fs.readFileSync("./quoteInfo.txt", "utf-8").split(" ππ!π ")
+      var author = qargs[0];
+      var msgContent = qargs[1];
+      var authorIcon = qargs[2];
+      var time = qargs[3]
+      var timeINT = parseInt(time);
+      var date = new Date(timeINT);
+      //msg.reply(author + ", " + msgContent + ", " + authorIcon + ", " + timeStamp);
+      const quoteEmbed = new Discord.RichEmbed()
+        .setAuthor(author, authorIcon)
+        .setTimestamp(date)
+        .setFooter("Requested by " + msg.author.username, msg.author.avatarURL)
+        //.setFooter("Sent on " + date)
+        .setDescription(msgContent)
+        .setColor(embedColor)
+      msg.channel.sendEmbed(quoteEmbed);
   }
 });
 
