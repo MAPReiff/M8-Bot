@@ -1,6 +1,6 @@
 //Invite link https://discordapp.com/oauth2/authorize?client_id=278362996349075456&scope=bot&permissions=37223488
 
-var version = "Beta 2.5.1";
+var version = "Beta 2.5.2";
 var website = "http://comixsyt.space";
 
 var fs = require("fs");
@@ -345,6 +345,7 @@ client.on("message", msg => {
     msg.channel.sendMessage("( ͡° ͜ʖ ͡°)");
   }
   if (msg.content.startsWith("!ascii")){
+    msg.delete(1000);
     var input = msg.content.replace("!ascii ", "");
     var request = require("request");
     request("https://artii.herokuapp.com/make?text=" + input, function (error, response, body) {
@@ -356,6 +357,7 @@ client.on("message", msg => {
   }
   //Feature Requested by IronTaters
   if (msg.content.startsWith("!define") || msg.content.startsWith("!urban")){
+    msg.delete(1000);
     if (msg.content.startsWith("!define")){
       var term = msg.content.replace("!define ", "");
     }
@@ -371,13 +373,15 @@ client.on("message", msg => {
     });
   }
   if (msg.content.startsWith("!lmgtfy") || msg.content.startsWith("!google")){
+    msg.delete(1000);
     if (msg.content.startsWith("!lmgtfy")){
       var term = msg.content.replace("!lmgtfy ", "");
     }
     if (msg.content.startsWith("!google")){
       var term = msg.content.replace("!google ", "");
     }
-    msg.channel.sendMessage("Here's your google link " + msg.author.username + " - http://lmgtfy.com/?q=" + term);
+    var input = msg.content.replace(" ", "+");
+    msg.channel.sendMessage("Here's your google link " + msg.author + " - http://lmgtfy.com/?q=" + term);
   }
   //requested by Pot4tus
   if (msg.content == "!mfinger"){
