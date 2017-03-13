@@ -1,4 +1,4 @@
-//Invite link https://discordapp.com/oauth2/authorize?client_id=278362996349075456&scope=bot&permissions=37223488
+//Invite link https://discordapp.com/oauth2/authorize?permissions=305658952&scope=bot&client_id=278362996349075456
 
 var version = "Beta 2.6";
 var website = "http://comixsyt.space";
