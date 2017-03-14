@@ -1,6 +1,6 @@
 //Invite link https://discordapp.com/oauth2/authorize?permissions=305658952&scope=bot&client_id=278362996349075456
 
-var version = "Beta 2.6";
+var version = "Beta 2.6.1";
 var website = "http://comixsyt.space";
 var embedColor = 0x9900FF;
 
@@ -180,6 +180,9 @@ client.on("message", msg => {
       .addField("!urban or !define", "Get the urban definition of a word!")
       .addField("!lmgtfy or !google", "Gets a Let Me Google That For You link for any term you want!")
       .addField("!mfinger", "Allows you to give the finger that is located in the middle of our appendages to others!")
+      .addField("!fail", "For when someone serriously fails!")
+      .addField("!pepe", "Who doesnt love Pepe?")
+      .addField("!tank", "GTFO of my way I got a fucking tank!")
       .addField("!quote", "Lets you quote a message! \nUssage 1 - !quote MESSAGE_ID \nUssage 2 - !quote MESSAGE_ID CHANNEL_ID")
       msg.channel.sendEmbed(helpEmbed);
   }
@@ -387,8 +390,24 @@ client.on("message", msg => {
   }
   //requested by Pot4tus
   if (msg.content == "!mfinger"){
+    msg.delete(1000);
     var mFingerASCII = fs.readFileSync("./ascii/mFinger.txt", "utf-8");
-    msg.channel.sendMessage("```\n Sent by " + msg.author.username + ".\n" + mFingerASCII + "\n```");
+    msg.channel.sendMessage("```\nSent by " + msg.author.username + ".\n" + mFingerASCII + "\n```");
+  }
+  if (msg.content == "!fail"){
+    msg.delete(1000);
+    var failASCII = fs.readFileSync("./ascii/fail.txt", "utf-8");
+    msg.channel.sendMessage("```\nSent by " + msg.author.username + ".\n" + failASCII + "\n```");
+  }
+  if (msg.content == "!pepe"){
+    msg.delete(1000);
+    var pepeASCII = fs.readFileSync("./ascii/pepe.txt", "utf-8");
+    msg.channel.sendMessage("```\nSent by " + msg.author.username + ".\n" + pepeASCII + "\n```");
+  }
+  if (msg.content == "!tank"){
+    msg.delete(1000);
+    var tankASCII = fs.readFileSync("./ascii/tank.txt", "utf-8");
+    msg.channel.sendMessage("```\nSent by " + msg.author.username + ".\n" + tankASCII + "\n```");
   }
   if (msg.content.startsWith("!quote")){
     msg.delete(1000);
