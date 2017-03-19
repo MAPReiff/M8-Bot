@@ -1,6 +1,6 @@
 //Invite link https://discordapp.com/oauth2/authorize?permissions=305658952&scope=bot&client_id=278362996349075456
 
-var version = "Beta 2.6.1";
+var version = "Beta 2.6.2";
 var website = "http://comixsyt.space";
 var embedColor = 0x9900FF;
 
@@ -152,8 +152,8 @@ client.on("message", msg => {
             .setTimestamp()
             .addField("Version", version, true)
             .addField("Website", "http://comixsyt.space", true)
-            .addField("Servers", serverCount, true)
-            .addField("Users", userCount, true)
+            .addField("Servers", client.guilds.size, true)
+            .addField("Users", client.users.size, true)
             .addField("Times Comixs Was Blamed", fs.readFileSync("./blameComixs.txt", "utf-8"));
             msg.channel.sendEmbed(statusEmbed);
   }
