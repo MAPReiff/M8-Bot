@@ -1,6 +1,6 @@
 //Invite link https://discordapp.com/oauth2/authorize?permissions=305658952&scope=bot&client_id=278362996349075456
 
-var version = "Beta 2.6.4";
+var version = "Beta 2.6.5";
 var website = "http://comixsyt.space";
 var embedColor = 0x9900FF;
 
@@ -432,6 +432,7 @@ client.on("message", msg => {
       msg.channel.sendEmbed(quoteEmbed);
   }
   if (msg.content.startsWith("!hugs ") || msg.content.startsWith("!hug ")){
+    msg.delete(1000);
     if(msg.content.startsWith("!hugs ")){
       var who = msg.content.replace("!hugs ","")
     }
