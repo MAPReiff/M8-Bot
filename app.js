@@ -1,6 +1,6 @@
 //Invite link https://discordapp.com/oauth2/authorize?permissions=305658952&scope=bot&client_id=278362996349075456
 
-var version = "Beta 2.6.2";
+var version = "Beta 2.6.4";
 var website = "http://comixsyt.space";
 var embedColor = 0x9900FF;
 
@@ -154,7 +154,8 @@ client.on("message", msg => {
             .addField("Website", "http://comixsyt.space", true)
             .addField("Servers", client.guilds.size, true)
             .addField("Users", client.users.size, true)
-            .addField("Times Comixs Was Blamed", fs.readFileSync("./blameComixs.txt", "utf-8"));
+            .addField("Times Comixs Was Blamed", fs.readFileSync("./blameComixs.txt", "utf-8"), true)
+            .addField("Hugs Given", fs.readFileSync("./hugcount.txt", "utf-8"), true)
             msg.channel.sendEmbed(statusEmbed);
   }
   if (msg.content == "!help m8bot"){
@@ -184,6 +185,7 @@ client.on("message", msg => {
       .addField("!pepe", "Who doesnt love Pepe?")
       .addField("!tank", "GTFO of my way I got a fucking tank!")
       .addField("!quote", "Lets you quote a message! \nUssage 1 - !quote MESSAGE_ID \nUssage 2 - !quote MESSAGE_ID CHANNEL_ID")
+      .addField("!hug or !hugs", "Wanna give someone a hug? Do it then! \nUssage1 - !hugs name \nUssage 2 - !hug name")
       msg.channel.sendEmbed(helpEmbed);
   }
   if ((msg.content.startsWith("live") && msg.author.id == hookID[0]) || //if the bot sends the message
@@ -334,17 +336,6 @@ client.on("message", msg => {
   // if (msg.content == "!wow"){
   //   msg.channel.sendMessage("Wow").then(msg => msg.edit("No!"));
   // }
-  if (msg.content == "!bday" && msg.author.id == "145367010489008128"){
-    msg.delete(1000);
-    const bDayEmbed = new Discord.RichEmbed()
-      .setTitle("ComixsYT\'s Birthday!")
-      .setFooter("Sent via M8 Bot", "https://cdn.discordapp.com/app-icons/278362996349075456/ce8868a4a1ccbe2f3f746d864f61a206.jpg")
-      .setTimestamp()
-      .setColor(embedColor)
-      .setThumbnail("http://i.imgur.com/WkMgJ1Q.png")
-      .addField("What is this?", "I don\'t know about you, but I care about my master, ComixsYT. \nSo in this automated message, I would like to wish my master a \nsuper fantabulous birthday!");
-      msg.channel.sendEmbed(bDayEmbed, "Hey @here");
-  }
   if (msg.content == "!lenny"){
     msg.delete(1000);
     msg.channel.sendMessage("( ͡° ͜ʖ ͡°)");
@@ -439,6 +430,18 @@ client.on("message", msg => {
         .setDescription(msgContent)
         .setColor(embedColor)
       msg.channel.sendEmbed(quoteEmbed);
+  }
+  if (msg.content.startsWith("!hugs ") || msg.content.startsWith("!hug ")){
+    if(msg.content.startsWith("!hugs ")){
+      var who = msg.content.replace("!hugs ","")
+    }
+    if(msg.content.startsWith("!hug ")){
+      var who = msg.content.replace("!hug ","")
+    }
+    msg.channel.sendMessage(msg.author + " gave " + who + " a nice, big, hug!");
+    var currentHugs = fs.readFileSync("./hugcount.txt", "utf-8");
+    var newHugs = parseInt(currentHugs) + 1;
+    fs.writeFile("./hugcount.txt", newHugs);
   }
 });
 
