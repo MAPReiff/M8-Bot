@@ -1,6 +1,6 @@
 # M8 Bot
 
-M8 Bot is a Discord chat bot designed for [ComixsYT] (a close friend). It contains a few commands, including a way for livestreamers to better spread their message. Commands currently include:
+M8 Bot is a Discord chat bot designed for beam streamers. It contains a few commands, including a way for livestreamers to better spread their message. Commands currently include:
   - Ping/Pong - a simple command to test if the bot is listening
   - !help m8 - shows a help message with command list
   - !m8status - shows a status report with server count and streamer counts
@@ -14,6 +14,7 @@ M8 Bot is a Discord chat bot designed for [ComixsYT] (a close friend). It contai
   - !lmgtfy/!google - gets a lmgtfy link for any search term provided!
   - !mfinger - requested by Pot4tus, allows you to give the finger that is located in the middle of our appendages to others!
   - !quote - used to quote a message!
+  - !hug/!hugs - Wanna give someone a hug? Do it then!
 
 ### [Click Here to Add the bot to your server!]
 
