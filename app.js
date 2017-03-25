@@ -1,6 +1,6 @@
 //Invite link https://discordapp.com/oauth2/authorize?permissions=305658952&scope=bot&client_id=278362996349075456
 
-var version = "Beta 2.7";
+var version = "Beta 2.7.1";
 var website = "http://comixsyt.space";
 var embedColor = 0x9900FF;
 
@@ -223,7 +223,14 @@ client.on("message", msg => {
              for (i=0; i < serversAllowed.length; i++){ //run for the total number of servers they are allowed on
                client.channels.get(serversAllowed[i]).sendEmbed(liveEmbed, "@here, " + beam + " is live!"); //send the live message to servers
              }
-             var tweetMessage = beamInfo.preferences.sharetext.replace("%URL%", "http://beam.pro/" + beamInfo.token)
+
+             var shareMessage = beamInfo.preferences.sharetext.replace("%URL%", "http://beam.pro/" + beamInfo.token)
+             if (shareMessage.includes("%USER%")) {
+               tweetMessage = shareMessage.replace("%USER%", beamInfo.token)
+             }
+             if (!shareMessage.includes("%USER%")) {
+               tweetMessage = shareMessage;
+             }
              tweetClient.post('statuses/update', {status: tweetMessage})
            }
        });
