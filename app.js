@@ -1,10 +1,12 @@
 //Invite link https://discordapp.com/oauth2/authorize?permissions=305658952&scope=bot&client_id=278362996349075456
 
-var version = "Beta 2.6.5";
+var version = "Beta 2.7";
 var website = "http://comixsyt.space";
 var embedColor = 0x9900FF;
 
 var fs = require("fs");
+
+var Twitter = require('twitter');
 
 const Discord = require("discord.js");
 const client = new Discord.Client();
@@ -221,13 +223,16 @@ client.on("message", msg => {
              for (i=0; i < serversAllowed.length; i++){ //run for the total number of servers they are allowed on
                client.channels.get(serversAllowed[i]).sendEmbed(liveEmbed, "@here, " + beam + " is live!"); //send the live message to servers
              }
+             var tweetMessage = beamInfo.preferences.sharetext.replace("%URL%", "http://beam.pro/" + beamInfo.token)
+             tweetClient.post('statuses/update', {status: tweetMessage})
            }
        });
       }
     }
   if (msg.content == "!server"){
     msg.delete(1000);
-    if (msg.guild.available){
+    if (msg.guild.available = true){
+      console.log("Nice Meme")
       if (msg.guild.iconURL = null){
         var iconURL = "https://newagesoldier.com/wp-content/uploads/2016/12/masbot.png";
       }
@@ -250,6 +255,9 @@ client.on("message", msg => {
         .addField("Joined Server At", msg.guild.joinedAt)
         msg.channel.sendEmbed(serverEmbed);
         //msg.channel.sendMessage();
+    }
+    else{
+      msg.reply
     }
   }
   if (msg.content == "!me"){
@@ -460,6 +468,30 @@ client.on("guildMemberAdd", member => {
     member.addRole(guild.roles.find('name', 'Citizens of Townsville'));
   }
 });
+
+//Tweet template
+//tweetClient.post('statuses/update', {status: 'Stuff Here!'})
+
+var twitterInfo = fs.readFileSync("./twitterInfo.txt", "utf-8").split(", ");
+var consumerKey = twitterInfo[0];
+var consumerSecret = twitterInfo[1];
+var accessTokenKey = twitterInfo[2];
+var accessTokenSecret = twitterInfo[3];
+
+var tweetClient = new Twitter({
+  consumer_key: consumerKey,
+  consumer_secret: consumerSecret,
+  access_token_key: accessTokenKey,
+  access_token_secret: accessTokenSecret
+});
+
+// tweetClient.post('statuses/update', {status: 'I Love Twitter'})
+// .then(function (tweet) {
+//   console.log(tweet);
+// })
+// .catch(function (error) {
+//   throw error;
+// })
 
 var token = fs.readFileSync("./token.txt", "utf-8");
 
