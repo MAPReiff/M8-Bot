@@ -1,7 +1,10 @@
 //Invite link https://discordapp.com/oauth2/authorize?permissions=305658952&scope=bot&client_id=278362996349075456
 
-var version = "Beta 2.8.1";
+var version = "Beta 2.8.2";
+
 var website = "http://comixsyt.space";
+var botTwitter = "https://twitter.com/M8_Bot"
+var officialDiscord = "https://discord.gg/JBrAVYD"
 var embedColor = 0x9900FF;
 
 var fs = require("fs");
@@ -153,11 +156,13 @@ client.on("message", msg => {
             .setThumbnail("https://cdn.discordapp.com/app-icons/278362996349075456/ce8868a4a1ccbe2f3f746d864f61a206.jpg")
             .setTimestamp()
             .addField("Version", version, true)
-            .addField("Website", "http://comixsyt.space", true)
+            .addField("Website", website, true)
             .addField("Servers", client.guilds.size, true)
             .addField("Users", client.users.size, true)
-            .addField("Times Comixs Was Blamed", fs.readFileSync("./blameComixs.txt", "utf-8"), true)
+            .addField("Comixs Was Blamed", fs.readFileSync("./blameComixs.txt", "utf-8") + " times", true)
             .addField("Hugs Given", fs.readFileSync("./hugcount.txt", "utf-8"), true)
+            .addField("Twitter", botTwitter, true)
+            .addField("Discord Server", officialDiscord, true)
             msg.channel.sendEmbed(statusEmbed);
   }
   if (msg.content == "!help m8bot"){
