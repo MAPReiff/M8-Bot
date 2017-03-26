@@ -13,9 +13,9 @@ M8 Bot is a Discord chat bot designed for beam streamers. It contains a few comm
   - !urban/!define - requested by IronTaters, will get the definition of a word or phrase!
   - !lmgtfy/!google - gets a lmgtfy link for any search term provided!
   - !mfinger - requested by Pot4tus, allows you to give the finger that is located in the middle of our appendages to others!
-  - !quote - used to quote a message!
   - !hug/!hugs - Wanna give someone a hug? Do it then!
-  - !copypasta - Gets a random, 100% supid, copypasta!
+  - !copypasta - Gets a random, 100% stupid, copypasta!
+  - !m8bug - Returns a link to report bugs
 
 ### [Click Here to Add the bot to your server!]
 
