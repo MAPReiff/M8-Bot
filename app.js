@@ -1,6 +1,6 @@
 //Invite link https://discordapp.com/oauth2/authorize?permissions=305658952&scope=bot&client_id=278362996349075456
 
-var version = "Beta 2.8";
+var version = "Beta 2.8.1";
 var website = "http://comixsyt.space";
 var embedColor = 0x9900FF;
 
@@ -465,7 +465,6 @@ client.on("message", msg => {
     var copyPastasRaw = fs.readFileSync("./copyPastas.txt", "utf-8")
     var copyPastas = copyPastasRaw.split("_-_-")
     var randomPasta = copyPastas[Math.floor(Math.random() * copyPastas.length)];
-    msg.channel.sendMessage("Wow")
     msg.channel.sendMessage("```\nRequested by " + msg.author.username + "!\n\n" + randomPasta + "\n```")
   }
 });
