@@ -1,6 +1,6 @@
 //Invite link https://discordapp.com/oauth2/authorize?permissions=305658952&scope=bot&client_id=278362996349075456
 
-var version = "Beta 2.7.1";
+var version = "Beta 2.8";
 var website = "http://comixsyt.space";
 var embedColor = 0x9900FF;
 
@@ -188,6 +188,7 @@ client.on("message", msg => {
       .addField("!tank", "GTFO of my way I got a fucking tank!")
       .addField("!quote", "Lets you quote a message! \nUssage 1 - !quote MESSAGE_ID \nUssage 2 - !quote MESSAGE_ID CHANNEL_ID")
       .addField("!hug or !hugs", "Wanna give someone a hug? Do it then! \nUssage1 - !hugs name \nUssage 2 - !hug name")
+      .addField("!copypasta", "Gets a random, 100% supid, copypasta!")
       msg.channel.sendEmbed(helpEmbed);
   }
   if ((msg.content.startsWith("live") && msg.author.id == hookID[0]) || //if the bot sends the message
@@ -458,6 +459,14 @@ client.on("message", msg => {
     var currentHugs = fs.readFileSync("./hugcount.txt", "utf-8");
     var newHugs = parseInt(currentHugs) + 1;
     fs.writeFile("./hugcount.txt", newHugs);
+  }
+  if (msg.content == "!copypasta"){
+    msg.delete(1000)
+    var copyPastasRaw = fs.readFileSync("./copyPastas.txt", "utf-8")
+    var copyPastas = copyPastasRaw.split("_-_-")
+    var randomPasta = copyPastas[Math.floor(Math.random() * copyPastas.length)];
+    msg.channel.sendMessage("Wow")
+    msg.channel.sendMessage("```\nRequested by " + msg.author.username + "!\n\n" + randomPasta + "\n```")
   }
 });
 
