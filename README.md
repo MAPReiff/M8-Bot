@@ -15,6 +15,7 @@ M8 Bot is a Discord chat bot designed for beam streamers. It contains a few comm
   - !mfinger - requested by Pot4tus, allows you to give the finger that is located in the middle of our appendages to others!
   - !quote - used to quote a message!
   - !hug/!hugs - Wanna give someone a hug? Do it then!
+  - !copypasta - Gets a random, 100% supid, copypasta!
 
 ### [Click Here to Add the bot to your server!]
 
