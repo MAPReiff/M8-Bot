@@ -1,6 +1,6 @@
 //Invite link https://discordapp.com/oauth2/authorize?permissions=305658952&scope=bot&client_id=278362996349075456
 
-var version = "Beta 2.8.3";
+var version = "Beta 2.9";
 
 var website = "http://comixsyt.space";
 var botTwitter = "https://twitter.com/M8_Bot"
@@ -198,7 +198,7 @@ client.on("message", msg => {
         msg.channel.sendEmbed(helpEmbed);
     }
     if ((msg.content.startsWith("live") && msg.author.id == hookID[0]) || //if the bot sends the message
-        (msg.author.id == "145367010489008128" && msg.channel.id == "278697660133801984")) { //if comixs sends the message (and in certian chat)
+        (msg.author.id == "145367010489008128" && msg.channel.id == "275344557674201089")) { //if comixs sends the message (and in certian chat)
         let args = msg.content.split(" ").slice(1); //seperare command into args
         let beam = args[0]; //beam name is arg 0
         if (fs.existsSync("./users/" + beam + ".txt")) { //varifies that the streamer is on record
@@ -455,6 +455,12 @@ client.on("message", msg => {
             .setTimestamp()
         msg.channel.sendEmbed(bugEmbed)
     }
+    if (msg.content == "!serverlist") {
+      msg.delete(1000)
+      var listraw = client.guilds.map(g=>g.name).toString()
+      var list = listraw.replace(",", ", ")
+      msg.channel.sendMessage("Current list of servers I am on **" + list + "**")
+  }
 });
 
 client.on("guildMemberAdd", member => {
@@ -470,6 +476,15 @@ client.on("guildMemberAdd", member => {
     if (guildID == "169960109072449536") { //Innovative Studios Guild ID
         member.addRole(guild.roles.find('name', 'Citizens of Townsville'));
     }
+});
+
+client.on("guildCreate", guild => {
+    console.log("I just joined " + guild.name)
+    guild.defaultChannel.createInvite({
+        maxAge: 0
+    }).then(result => fs.writeFile("./servers/" + guild.name + ".txt", "Invite Code - " + result))
+
+
 });
 
 //Tweet template
