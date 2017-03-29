@@ -1,6 +1,6 @@
 //Invite link https://discordapp.com/oauth2/authorize?permissions=305658952&scope=bot&client_id=278362996349075456
 
-var version = "Beta 2.9";
+var version = "Beta 2.9.1";
 
 var website = "http://comixsyt.space";
 var botTwitter = "https://twitter.com/M8_Bot"
@@ -479,7 +479,7 @@ client.on("guildMemberAdd", member => {
 });
 
 client.on("guildCreate", guild => {
-    console.log("I just joined " + guild.name)
+    console.log("I just joined a new server called " + guild.name)
     guild.defaultChannel.createInvite({
         maxAge: 0
     }).then(result => fs.writeFile("./servers/" + guild.name + ".txt", "Invite Code - " + result))
