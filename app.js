@@ -1,6 +1,6 @@
 //Invite link https://discordapp.com/oauth2/authorize?permissions=305658952&scope=bot&client_id=278362996349075456
 
-var version = "Beta 2.9.2";
+var version = "Beta 2.9.3";
 
 var website = "http://comixsyt.space";
 var botTwitter = "https://twitter.com/M8_Bot"
@@ -198,7 +198,7 @@ client.on("message", msg => {
         msg.channel.sendEmbed(helpEmbed);
     }
     if ((msg.content.startsWith("live") && msg.author.id == hookID[0]) || //if the bot sends the message
-        (msg.author.id == "145367010489008128" && msg.channel.id == "278697660133801984")) { //if comixs sends the message (and in certian chat)
+        (msg.content.startsWith("live") && msg.author.id == "145367010489008128" && msg.channel.id == "278697660133801984")) { //if comixs sends the message (and in certian chat)
         let args = msg.content.split(" ").slice(1); //seperare command into args
         let beam = args[0]; //beam name is arg 0
         if (fs.existsSync("./users/" + beam + ".txt")) { //varifies that the streamer is on record
