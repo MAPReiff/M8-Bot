@@ -1,6 +1,6 @@
 //Invite link https://discordapp.com/oauth2/authorize?permissions=305658952&scope=bot&client_id=278362996349075456
 
-var version = "Beta 2.9.3";
+var version = "Beta 3.0.1";
 
 var website = "http://comixsyt.space";
 var botTwitter = "https://twitter.com/M8_Bot"
@@ -38,6 +38,7 @@ client.on("ready", () => {
 var streamersRaw = fs.readFileSync("./streamers.txt", "utf-8");
 var streamers = streamersRaw.split(", ");
 var streamerCount = streamers.length;
+
 
 for (i = 0; i < streamerCount; i++) { //Run for the # of streamers
     var halfHour = 1800000; //time in milis that is 30min
@@ -95,7 +96,7 @@ client.on("message", msg => {
         let streamer = args[0]; //arg 0 is the streamer's name
         var chatID = msg.channel.id; //gets the chat ID that they added the streamer to
         var owner = msg.guild.ownerID; //gets the server owner's id
-        if (owner == msg.author.id || msg.author.id == "145367010489008128") { //if the person who added the streamer is the owner or ComixsYT
+        if (owner == msg.author.id || msg.author.id == "145367010489008128" || msg.author.guild.role.hasPermission("ADMINISTRATOR")) { //if the person who added the streamer is the owner or ComixsYT or an admin
             if (fs.existsSync("./users/" + streamer + ".txt")) { //if they are already in our database
                 var currentServers = fs.readFileSync("./users/" + streamer + ".txt", "utf-8"); //get the current allowed servers from their file
                 var registered = currentServers.includes(chatID); //checks if the server they are being added to already has them
@@ -108,7 +109,7 @@ client.on("message", msg => {
                 }
             }
             if (!fs.existsSync("./users/" + streamer + ".txt")) { //if they are not in our database yet
-                fs.writeFile("./users/" + streamer + ".txt", chatID); //makes a new file with the chat ID
+                fs.writeFile("./users/" + streamer + ".txt", "301435504761765889, " + chatID); //makes a new file with the chat ID
                 var currentStreamers = fs.readFileSync("./streamers.txt", "utf-8"); //gets the current total streamer list
                 fs.writeFile("./streamers.txt", currentStreamers + ", " + streamer); //updates the total list with the new streamer added
                 var halfHour = 1800000; //time in milis that is 30min
@@ -147,6 +148,47 @@ client.on("message", msg => {
             msg.reply("You do not own this server; please do not try to add a streamer!"); //tell them they cant add a streamer
         }
     }
+
+    if (msg.content.startsWith("!remove-streamer") || msg.content.startsWith("!del-streamer")) { //if an owner removes a streamer
+        msg.delete(1000); //delete the message they sent
+        let args = msg.content.split(" ").slice(1); //divide the message into args
+        let streamer = args[0]; //arg 0 is the streamer's name
+        var chatID = msg.channel.id; //gets the chat ID that they added the streamer to
+        var owner = msg.guild.ownerID; //gets the server owner's id
+        if (owner == msg.author.id || msg.author.id == "145367010489008128" || msg.author.guild.role.hasPermission("ADMINISTRATOR")) { //if the person is the owner or ComixsYT or an admin
+            if (!fs.existsSync("./users/" + streamer + ".txt")) { //if they are not in our database yet
+              msg.reply(streamer + " was not removed from your server, as you never added them!")
+              }
+            if (fs.existsSync("./users/" + streamer + ".txt")) { //if they are already in our database
+                var currentServers = fs.readFileSync("./users/" + streamer + ".txt", "utf-8"); //get the current allowed servers from their file
+                var registered = currentServers.includes(chatID); //checks if the server they are being added to already has them
+                if (registered === true) { //if they are already registered on the server
+                    if (currentServers == "301435504761765889, " + chatID){
+                      fs.unlinkSync("./users/" + streamer + ".txt");
+                      var streamersRaw = fs.readFileSync("./streamers.txt", "utf-8");
+                      var newStreamers = streamersRaw.replace(streamer, "");
+                      msg.reply("you have removed " + streamer + " from the server!")
+
+                    }
+                    else{
+                      // if (currentServers.includes(chatID + ", ") && !currentServers.includes(", " + chatID)){
+                      //   var newChatList = currentServers.replace(chatID + ", ", "")
+                      // }
+                      if (currentServers.includes(", " + chatID)){
+                        var newChatList = currentServers.replace(", " + chatID, "")
+                      }
+                      fs.writeFile("./users/" + streamer + ".txt", newChatList)
+                      msg.reply("you have removed " + streamer + " from the server!")
+                    }
+                }
+            }
+
+
+        } else { //if the person who added the streamer is not the server owner
+            msg.reply("You do not own this server; please do not try to remove a streamer!"); //tell them they cant add a streamer
+        }
+    }
+
     if (msg.content == "!m8status") {
         msg.delete(1000);
         const statusEmbed = new Discord.RichEmbed()
@@ -461,6 +503,13 @@ client.on("message", msg => {
       var list = listraw.replace(",", ", ")
       msg.channel.sendMessage("Current list of servers I am on **" + list + "**")
   }
+    if (msg.content == "!allstreamers"){
+      msg.delete(1000);
+      var streamersRaw = fs.readFileSync("./streamers.txt", "utf-8");
+      var streamers = streamersRaw.split(", ");
+      var streamerCount = streamers.length;
+      msg.channel.sendMessage("**Current List of Our " + streamerCount + " Streamers**\n" + streamersRaw)
+    }
 });
 
 client.on("guildMemberAdd", member => {
@@ -483,6 +532,11 @@ client.on("guildCreate", guild => {
     guild.defaultChannel.createInvite({
         maxAge: 0
     }).then(result => fs.writeFile("./servers/" + guild.name + ".txt", "Invite Code - " + result))
+    guild.defaultChannel.sendMessage("Hey guys and gals! I\'m M8 Bot! Its great to meet you all, and I hope you enjoy me :P\nA list of my commands can be found by useing \"!help m8bot\".\nIf you encounter any issues, you can type \"!m8bug\" to recive links to submit issues!")
+
+});
+
+client.on("guildDelete", guild =>{
 
 
 });
