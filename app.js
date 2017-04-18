@@ -1,6 +1,6 @@
 //Invite link https://discordapp.com/oauth2/authorize?permissions=305658952&scope=bot&client_id=278362996349075456
 
-var version = "Beta 3.0.1";
+var version = "Beta 3.1.0";
 
 var website = "http://comixsyt.space";
 var botTwitter = "https://twitter.com/M8_Bot"
@@ -157,28 +157,27 @@ client.on("message", msg => {
         var owner = msg.guild.ownerID; //gets the server owner's id
         if (owner == msg.author.id || msg.author.id == "145367010489008128" || msg.author.guild.role.hasPermission("ADMINISTRATOR")) { //if the person is the owner or ComixsYT or an admin
             if (!fs.existsSync("./users/" + streamer + ".txt")) { //if they are not in our database yet
-              msg.reply(streamer + " was not removed from your server, as you never added them!")
-              }
+                msg.reply(streamer + " was not removed from your server, as you never added them!")
+            }
             if (fs.existsSync("./users/" + streamer + ".txt")) { //if they are already in our database
                 var currentServers = fs.readFileSync("./users/" + streamer + ".txt", "utf-8"); //get the current allowed servers from their file
                 var registered = currentServers.includes(chatID); //checks if the server they are being added to already has them
                 if (registered === true) { //if they are already registered on the server
-                    if (currentServers == "301435504761765889, " + chatID){
-                      fs.unlinkSync("./users/" + streamer + ".txt");
-                      var streamersRaw = fs.readFileSync("./streamers.txt", "utf-8");
-                      var newStreamers = streamersRaw.replace(streamer, "");
-                      msg.reply("you have removed " + streamer + " from the server!")
+                    if (currentServers == "301435504761765889, " + chatID) {
+                        fs.unlinkSync("./users/" + streamer + ".txt");
+                        var streamersRaw = fs.readFileSync("./streamers.txt", "utf-8");
+                        var newStreamers = streamersRaw.replace(streamer, "");
+                        msg.reply("you have removed " + streamer + " from the server!")
 
-                    }
-                    else{
-                      // if (currentServers.includes(chatID + ", ") && !currentServers.includes(", " + chatID)){
-                      //   var newChatList = currentServers.replace(chatID + ", ", "")
-                      // }
-                      if (currentServers.includes(", " + chatID)){
-                        var newChatList = currentServers.replace(", " + chatID, "")
-                      }
-                      fs.writeFile("./users/" + streamer + ".txt", newChatList)
-                      msg.reply("you have removed " + streamer + " from the server!")
+                    } else {
+                        // if (currentServers.includes(chatID + ", ") && !currentServers.includes(", " + chatID)){
+                        //   var newChatList = currentServers.replace(chatID + ", ", "")
+                        // }
+                        if (currentServers.includes(", " + chatID)) {
+                            var newChatList = currentServers.replace(", " + chatID, "")
+                        }
+                        fs.writeFile("./users/" + streamer + ".txt", newChatList)
+                        msg.reply("you have removed " + streamer + " from the server!")
                     }
                 }
             }
@@ -237,6 +236,10 @@ client.on("message", msg => {
             .addField("!hug or !hugs", "Wanna give someone a hug? Do it then! \nUssage1 - !hugs name \nUssage 2 - !hug name")
             .addField("!copypasta", "Gets a random, 100% supid, copypasta!")
             .addField("!m8bug", "Returns a link to report bugs!")
+            .addField("!add-streamer & !del-streamer", "Used to add or delete streamers from that chat channel. Can only be run by the server owner or anyone with the \"ADMINISTRATOR\" permission.")
+            .addField("!allstreamers", "Lists all the streamers that the bot stalks.")
+            .addField("!mystreamers", "Lists all streamers in that channel.")
+            .addField("!beam", "Gets info about a beam user. Usage - !beam NAME")
         msg.channel.sendEmbed(helpEmbed);
     }
     if ((msg.content.startsWith("live") && msg.author.id == hookID[0]) || //if the bot sends the message
@@ -498,17 +501,65 @@ client.on("message", msg => {
         msg.channel.sendEmbed(bugEmbed)
     }
     if (msg.content == "!serverlist") {
-      msg.delete(1000)
-      var listraw = client.guilds.map(g=>g.name).toString()
-      var list = listraw.replace(",", ", ")
-      msg.channel.sendMessage("Current list of servers I am on **" + list + "**")
-  }
-    if (msg.content == "!allstreamers"){
-      msg.delete(1000);
-      var streamersRaw = fs.readFileSync("./streamers.txt", "utf-8");
-      var streamers = streamersRaw.split(", ");
-      var streamerCount = streamers.length;
-      msg.channel.sendMessage("**Current List of Our " + streamerCount + " Streamers**\n" + streamersRaw)
+        msg.delete(1000)
+        var listraw = client.guilds.map(g => g.name).toString()
+        var list = listraw.replace(",", ", ")
+        msg.channel.sendMessage("Current list of servers I am on **" + list + "**")
+    }
+    if (msg.content == "!allstreamers") {
+        msg.delete(1000);
+        var streamersRaw = fs.readFileSync("./streamers.txt", "utf-8");
+        var streamers = streamersRaw.split(", ");
+        var streamerCount = streamers.length;
+        msg.channel.sendMessage("**Current List of Our " + streamerCount + " Streamers**\n" + streamersRaw)
+    }
+    if (msg.content.startsWith("!beam ")) {
+        msg.delete(1000)
+        var beam = msg.content.replace("!beam ", "")
+        var request = require("request"); //the var to request details on the streamer
+        request("https://beam.pro/api/v1/channels/" + beam, function(error, response, body) { //set info for the streamer in JSON
+            if (!error && response.statusCode == 200) { //if there is no error checking
+                var beamInfo = JSON.parse(body); //setting a var for the JSON info
+                const beamStuff = new Discord.RichEmbed()
+                    .setColor(embedColor)
+                    .setTitle(beamInfo.token)
+                    .setFooter("Sent via M8 Bot", "https://cdn.discordapp.com/app-icons/278362996349075456/ce8868a4a1ccbe2f3f746d864f61a206.jpg")
+                    .setTimestamp()
+                    .setThumbnail(beamInfo.user.avatarUrl)
+                    .setURL("http://beam.pro/" + beam)
+                    .addField("Online", beamInfo.online, true)
+                    .addField("Followers", beamInfo.numFollowers, true)
+                    .addField("Beam Level", beamInfo.user.level, true)
+                    .addField("Total Views", beamInfo.viewersTotal, true)
+                    .addField("Joined Beam", beamInfo.createdAt, true)
+                    .addField("Audience", beamInfo.audience, true)
+                    .addField("Partnered", beamInfo.partnered, true)
+                msg.channel.sendEmbed(beamStuff)
+            }
+            else{
+                msg.reply("error finding that streamer, are you sure that was the correct name?")
+            }
+        });
+    }
+    if (msg.content == "!mystreamers") {
+        const streamerFolder = './users/';
+        const fs = require('fs');
+        var chatID = msg.channel.id;
+        fs.readdir(streamerFolder, (err, files) => {
+            files.forEach(file => {
+                var files = file
+            });
+            var fileCount = files.length
+            var myStreamers = "Current Streamer List:\n"
+            for (i = 0; i < fileCount; i++) {
+                var serverList = fs.readFileSync("./users/" + files[i])
+                if (serverList.includes(chatID)) {
+                  var name = files[i].replace(".txt", "")
+                  var myStreamers = myStreamers + name + "\n"
+                }
+            }
+            msg.channel.sendMessage(myStreamers)
+        })
     }
 });
 
@@ -536,7 +587,7 @@ client.on("guildCreate", guild => {
 
 });
 
-client.on("guildDelete", guild =>{
+client.on("guildDelete", guild => {
 
 
 });
