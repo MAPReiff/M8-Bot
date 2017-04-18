@@ -1,6 +1,6 @@
 //Invite link https://discordapp.com/oauth2/authorize?permissions=305658952&scope=bot&client_id=278362996349075456
 
-var version = "Beta 3.1.0";
+var version = "Beta 3.1.1";
 
 var website = "http://comixsyt.space";
 var botTwitter = "https://twitter.com/M8_Bot"
@@ -542,6 +542,7 @@ client.on("message", msg => {
         });
     }
     if (msg.content == "!mystreamers") {
+        msg.delete(1000)
         const streamerFolder = './users/';
         const fs = require('fs');
         var chatID = msg.channel.id;
