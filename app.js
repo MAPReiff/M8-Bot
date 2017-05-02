@@ -1,6 +1,6 @@
 //Invite link https://discordapp.com/oauth2/authorize?client_id=278362996349075456&scope=bot&permissions=2117598327
 
-var version = "Beta 4.0.0";
+var version = "Beta 4.0.2";
 
 var website = "http://comixsyt.space";
 var botTwitter = "https://twitter.com/M8_Bot"
@@ -220,7 +220,9 @@ client.on("message", msg => {
             .addField("Hugs Given", fs.readFileSync("./hugcount.txt", "utf-8"), true)
             .addField("Twitter", botTwitter, true)
             .addField("Discord Server", officialDiscord, true)
-        msg.channel.send({embed: statusEmbed});
+        msg.channel.send({
+            embed: statusEmbed
+        });
     }
     if (msg.content == "!help m8bot") {
         msg.delete(1000);
@@ -255,8 +257,10 @@ client.on("message", msg => {
             .addField("!allstreamers", "Lists all the streamers that the bot stalks.")
             .addField("!mystreamers", "Lists all streamers in that channel.")
             .addField("!beam", "Gets info about a beam user. Usage - !beam NAME")
-            .addField("!ping on/off", "Allows a server owner/admin to decide wether or not M8 Bot can use @here that chat. Default is on.")
-        msg.channel.send({embed: helpEmbed});
+            .addField("!ping on/off", "Allows a server owner/admin to decide whether or not M8 Bot can use @here in that channel. Default is on.")
+        msg.channel.send({
+            embed: helpEmbed
+        });
     }
     if ((msg.content.startsWith("live") && msg.author.id == hookID[0]) || //if the bot sends the message
         (msg.content.startsWith("live") && msg.author.id == "145367010489008128" && msg.channel.id == "278697660133801984")) { //if comixs sends the message (and in certian chat)
@@ -328,7 +332,9 @@ client.on("message", msg => {
                 .addField("Channels", msg.guild.channels.size, true)
                 .addField("Created At", msg.guild.createdAt)
                 .addField("Joined Server At", msg.guild.joinedAt)
-            msg.channel.send({embed: serverEmbed});
+            msg.channel.send({
+                embed: serverEmbed
+            });
             //msg.channel.sendMessage();
         } else {
             msg.reply
@@ -345,7 +351,9 @@ client.on("message", msg => {
             .addField("ID", msg.author.id, true)
             .addField("Bot", msg.author.bot, true)
             .addField("Registered", msg.author.createdAt)
-        msg.channel.send({embed: meEmbed});
+        msg.channel.send({
+            embed: meEmbed
+        });
     }
     if (msg.content == "!pun" || msg.content == "!dadjoke") {
         msg.delete(1000);
@@ -364,7 +372,9 @@ client.on("message", msg => {
             .setFooter("Sent via M8 Bot", botLogo)
             .setTimestamp()
             .setImage("http://belikebill.azurewebsites.net/billgen-API.php?default=1")
-        msg.channel.send({embed: billEmbed});
+        msg.channel.send({
+            embed: billEmbed
+        });
     }
     if (msg.content == "!billme") {
         msg.delete(1000);
@@ -373,7 +383,9 @@ client.on("message", msg => {
             .setFooter("Sent via M8 Bot", botLogo)
             .setTimestamp()
             .setImage("http://belikebill.azurewebsites.net/billgen-API.php?default=1&name=" + msg.author.username + "&")
-        msg.channel.send({embed: billMeEmbed});
+        msg.channel.send({
+            embed: billMeEmbed
+        });
     }
     if (msg.content.startsWith("!bill ") && msg.content != "!billme" && msg.content != "bill") {
         msg.delete(1000);
@@ -385,7 +397,9 @@ client.on("message", msg => {
             .setTimestamp()
             .setColor(embedColor)
             .setImage("http://belikebill.azurewebsites.net/billgen-API.php?default=1&name=" + stringName + "&")
-        msg.channel.send({embed: billCustomEmbed});
+        msg.channel.send({
+            embed: billCustomEmbed
+        });
     }
     if (msg.content == "!avatar" || msg.content == "!icon") {
         msg.delete(1000);
@@ -396,7 +410,9 @@ client.on("message", msg => {
             .setImage("https://api.adorable.io/avatars/" + random)
             .setFooter("Sent via M8 Bot", botLogo)
             .setTimestamp()
-        msg.channel.send({embed: avatarEmbed});
+        msg.channel.send({
+            embed: avatarEmbed
+        });
     }
     if (msg.content == "!cn" || msg.content == "!chuck" || msg.content == "!chucknorris") {
         msg.delete(1000);
@@ -514,7 +530,9 @@ client.on("message", msg => {
             .setThumbnail(botLogo)
             .setFooter("Sent via M8 Bot", botLogo)
             .setTimestamp()
-        msg.channel.send({embed: bugEmbed})
+        msg.channel.send({
+            embed: bugEmbed
+        })
     }
     if (msg.content == "!serverlist") {
         msg.delete(1000)
@@ -527,7 +545,9 @@ client.on("message", msg => {
         var streamersRaw = fs.readFileSync("./streamers.txt", "utf-8");
         var streamers = streamersRaw.split(", ");
         var streamerCount = streamers.length;
-        msg.channel.send("**Current List of Our " + streamerCount + " Streamers**\n" + streamersRaw)
+        msg.channel.send("**Current List of Our " + streamerCount + " Streamers**\n", {
+            file: "./streamers.txt"
+        })
     }
     if (msg.content.startsWith("!beam ")) {
         msg.delete(1000)
@@ -550,7 +570,9 @@ client.on("message", msg => {
                     .addField("Joined Beam", beamInfo.createdAt, true)
                     .addField("Audience", beamInfo.audience, true)
                     .addField("Partnered", beamInfo.partnered, true)
-                msg.channel.send({embed: beamStuff})
+                msg.channel.send({
+                    embed: beamStuff
+                })
             } else {
                 msg.reply("error finding that streamer, are you sure that was the correct name?")
             }
@@ -577,27 +599,27 @@ client.on("message", msg => {
             msg.channel.send(myStreamers)
         })
     }
-    if (msg.content == "!ping off"){
-      if (msg.author.id == msg.guild.ownerID || msg.author.guild.role.hasPermission("ADMINISTRATOR")){
-        msg.channel.overwritePermissions("278362996349075456", {
-          "MENTION_EVERYONE": false,
-        })
-        msg.reply("the @-here ping has been disabled in this channel.")
-      }
-      else{
-        msg.reply("you do not have permission to run this command!")
-      }
+    //Feature Requested by DelboyDylan
+    if (msg.content == "!ping off") {
+        if (msg.author.id == msg.guild.ownerID || msg.author.guild.role.hasPermission("ADMINISTRATOR")) {
+            msg.channel.overwritePermissions("278362996349075456", {
+                "MENTION_EVERYONE": false,
+            })
+            msg.reply("the @-here ping has been disabled in this channel.")
+        } else {
+            msg.reply("you do not have permission to run this command!")
+        }
     }
-    if (msg.content == "!ping on"){
-      if (msg.author.id == msg.guild.ownerID || msg.author.guild.role.hasPermission("ADMINISTRATOR")){
-        msg.channel.overwritePermissions("278362996349075456", {
-          "MENTION_EVERYONE": true,
-        })
-        msg.reply("the @-here ping has been enabled in this channel.")
-      }
-      else{
-        msg.reply("you do not have permission to run this command!")
-      }
+    //Feature Requested by DelboyDylan
+    if (msg.content == "!ping on") {
+        if (msg.author.id == msg.guild.ownerID || msg.author.guild.role.hasPermission("ADMINISTRATOR")) {
+            msg.channel.overwritePermissions("278362996349075456", {
+                "MENTION_EVERYONE": true,
+            })
+            msg.reply("the @-here ping has been enabled in this channel.")
+        } else {
+            msg.reply("you do not have permission to run this command!")
+        }
     }
     // if (msg.content.startsWith("!yt")) {
     //     msg.delete(1000)
