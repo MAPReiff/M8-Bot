@@ -1,5 +1,0 @@
-To Do:
-YT Search
-YTG streams
-Twitch streams
-picarto.tv streams (https://docs.picarto.tv/api/#/channel)
