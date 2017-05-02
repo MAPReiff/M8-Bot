@@ -15,7 +15,11 @@ M8 Bot is a Discord chat bot designed for beam streamers. It contains a few comm
   - !mfinger - requested by Pot4tus, allows you to give the finger that is located in the middle of our appendages to others!
   - !hug/!hugs - Wanna give someone a hug? Do it then!
   - !copypasta - Gets a random, 100% stupid, copypasta!
-  - !m8bug - Returns a link to report bugs
+  - !m8bug - Returns a link to report bugs!
+  - !allstreamers - Returns a list of all streamers the bot stalks!
+  - !mystreamers - Returns a list of streamers assigned to that channel!
+  - !beam - Used to lookup info about a beam user!
+  - !ping on/off - Allows a server owner/admin to decide whether or not M8 Bot can use @here in that channel! Default is on.
 
 ### [Click Here to Add the bot to your server!]
 
