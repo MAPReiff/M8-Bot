@@ -1,15 +1,25 @@
-//Invite link https://discordapp.com/oauth2/authorize?permissions=305658952&scope=bot&client_id=278362996349075456
+//Invite link https://discordapp.com/oauth2/authorize?client_id=278362996349075456&scope=bot&permissions=2117598327
 
-var version = "Beta 3.1.1";
+var version = "Beta 4.0.0";
 
 var website = "http://comixsyt.space";
 var botTwitter = "https://twitter.com/M8_Bot"
 var officialDiscord = "https://discord.gg/JBrAVYD"
 var embedColor = 0x9900FF;
+var botLogo = "http://i.imgur.com/nXvRJXM.png";
 
 var fs = require("fs");
 
 var Twitter = require('twitter');
+
+// var search = require('youtube-search');
+//
+// var opts = {
+//     maxResults: 1,
+//     key: fs.readFileSync("./YTAPI.txt", "utf-8"),
+//     type: "video"
+// };
+
 
 const Discord = require("discord.js");
 const client = new Discord.Client();
@@ -33,6 +43,11 @@ client.on("ready", () => {
     client.user.setGame(version);
     console.log("Bot is on " + serverCount + " servers!");
     console.log("Those " + serverCount + " servers have a total of " + userCount + " members!");
+    fs.writeFile("./chatIDList.txt", client.channels.map(c => c.id))
+    //console.log(client.channels.map(c => c.id))
+
+
+
 });
 
 var streamersRaw = fs.readFileSync("./streamers.txt", "utf-8");
@@ -84,7 +99,7 @@ client.on("message", msg => {
     }
     if (msg.content == "!rawr") {
         msg.delete(1000);
-        msg.channel.sendMessage("http://i.imgur.com/CVHyMXt.png");
+        msg.channel.send("http://i.imgur.com/CVHyMXt.png");
     }
     if (msg.content == "!add-streamer") {
         msg.delete(1000);
@@ -194,8 +209,8 @@ client.on("message", msg => {
             .setTitle("M8 Bot Status")
             .setAuthor("M8 Bot")
             .setColor(embedColor)
-            .setFooter("Sent via M8 Bot", "https://cdn.discordapp.com/app-icons/278362996349075456/ce8868a4a1ccbe2f3f746d864f61a206.jpg")
-            .setThumbnail("https://cdn.discordapp.com/app-icons/278362996349075456/ce8868a4a1ccbe2f3f746d864f61a206.jpg")
+            .setFooter("Sent via M8 Bot", botLogo)
+            .setThumbnail(botLogo)
             .setTimestamp()
             .addField("Version", version, true)
             .addField("Website", website, true)
@@ -205,15 +220,15 @@ client.on("message", msg => {
             .addField("Hugs Given", fs.readFileSync("./hugcount.txt", "utf-8"), true)
             .addField("Twitter", botTwitter, true)
             .addField("Discord Server", officialDiscord, true)
-        msg.channel.sendEmbed(statusEmbed);
+        msg.channel.send({embed: statusEmbed});
     }
     if (msg.content == "!help m8bot") {
         msg.delete(1000);
         const helpEmbed = new Discord.RichEmbed()
             .setTitle("M8 Bot Help")
             .setColor(embedColor)
-            .setFooter("Sent via M8 Bot", "https://cdn.discordapp.com/app-icons/278362996349075456/ce8868a4a1ccbe2f3f746d864f61a206.jpg")
-            .setThumbnail("https://cdn.discordapp.com/app-icons/278362996349075456/ce8868a4a1ccbe2f3f746d864f61a206.jpg")
+            .setFooter("Sent via M8 Bot", botLogo)
+            .setThumbnail(botLogo)
             .setTimestamp()
             .addField("!help m8bot", "Sends this Help Message")
             .addField("ping/pong", "Send ping or pong to test if the bot is listening")
@@ -240,7 +255,8 @@ client.on("message", msg => {
             .addField("!allstreamers", "Lists all the streamers that the bot stalks.")
             .addField("!mystreamers", "Lists all streamers in that channel.")
             .addField("!beam", "Gets info about a beam user. Usage - !beam NAME")
-        msg.channel.sendEmbed(helpEmbed);
+            .addField("!ping on/off", "Allows a server owner/admin to decide wether or not M8 Bot can use @here that chat. Default is on.")
+        msg.channel.send({embed: helpEmbed});
     }
     if ((msg.content.startsWith("live") && msg.author.id == hookID[0]) || //if the bot sends the message
         (msg.content.startsWith("live") && msg.author.id == "145367010489008128" && msg.channel.id == "278697660133801984")) { //if comixs sends the message (and in certian chat)
@@ -261,7 +277,7 @@ client.on("message", msg => {
                         .setAuthor(beamInfo.name)
                         .setColor(embedColor)
                         .setDescription("Hey guys, " + beam + " is live right now! Click above to watch!")
-                        .setFooter("Sent via M8 Bot", "https://cdn.discordapp.com/app-icons/278362996349075456/ce8868a4a1ccbe2f3f746d864f61a206.jpg")
+                        .setFooter("Sent via M8 Bot", botLogo)
                         .setThumbnail(beamInfo.user.avatarUrl)
                         .setTimestamp()
                         .setURL("http://beam.pro/" + beam)
@@ -301,7 +317,7 @@ client.on("message", msg => {
             const serverEmbed = new Discord.RichEmbed()
                 .setTitle(msg.guild.name)
                 .setColor(embedColor)
-                .setFooter("Sent via M8 Bot", "https://cdn.discordapp.com/app-icons/278362996349075456/ce8868a4a1ccbe2f3f746d864f61a206.jpg")
+                .setFooter("Sent via M8 Bot", botLogo)
                 .setThumbnail(iconURL)
                 .setTimestamp()
                 .addField("Server ID", msg.guild.id, true)
@@ -312,7 +328,7 @@ client.on("message", msg => {
                 .addField("Channels", msg.guild.channels.size, true)
                 .addField("Created At", msg.guild.createdAt)
                 .addField("Joined Server At", msg.guild.joinedAt)
-            msg.channel.sendEmbed(serverEmbed);
+            msg.channel.send({embed: serverEmbed});
             //msg.channel.sendMessage();
         } else {
             msg.reply
@@ -323,13 +339,13 @@ client.on("message", msg => {
         const meEmbed = new Discord.RichEmbed()
             .setTitle(msg.author.username)
             .setColor(embedColor)
-            .setFooter("Sent via M8 Bot", "https://cdn.discordapp.com/app-icons/278362996349075456/ce8868a4a1ccbe2f3f746d864f61a206.jpg")
+            .setFooter("Sent via M8 Bot", botLogo)
             .setThumbnail(msg.author.displayAvatarURL)
             .setTimestamp()
             .addField("ID", msg.author.id, true)
             .addField("Bot", msg.author.bot, true)
             .addField("Registered", msg.author.createdAt)
-        msg.channel.sendEmbed(meEmbed);
+        msg.channel.send({embed: meEmbed});
     }
     if (msg.content == "!pun" || msg.content == "!dadjoke") {
         msg.delete(1000);
@@ -337,7 +353,7 @@ client.on("message", msg => {
         request("http://www.murfguy.com/puns.php", function(error, response, body) {
             if (!error && response.statusCode == 200) {
                 var pun = body;
-                msg.channel.sendMessage(pun);
+                msg.channel.send(pun);
             }
         });
     }
@@ -345,19 +361,19 @@ client.on("message", msg => {
         msg.delete(1000);
         const billEmbed = new Discord.RichEmbed()
             .setAuthor("Bill")
-            .setFooter("Sent via M8 Bot", "https://cdn.discordapp.com/app-icons/278362996349075456/ce8868a4a1ccbe2f3f746d864f61a206.jpg")
+            .setFooter("Sent via M8 Bot", botLogo)
             .setTimestamp()
             .setImage("http://belikebill.azurewebsites.net/billgen-API.php?default=1")
-        msg.channel.sendEmbed(billEmbed);
+        msg.channel.send({embed: billEmbed});
     }
     if (msg.content == "!billme") {
         msg.delete(1000);
         const billMeEmbed = new Discord.RichEmbed()
             .setAuthor(msg.author.username)
-            .setFooter("Sent via M8 Bot", "https://cdn.discordapp.com/app-icons/278362996349075456/ce8868a4a1ccbe2f3f746d864f61a206.jpg")
+            .setFooter("Sent via M8 Bot", botLogo)
             .setTimestamp()
             .setImage("http://belikebill.azurewebsites.net/billgen-API.php?default=1&name=" + msg.author.username + "&")
-        msg.channel.sendEmbed(billMeEmbed);
+        msg.channel.send({embed: billMeEmbed});
     }
     if (msg.content.startsWith("!bill ") && msg.content != "!billme" && msg.content != "bill") {
         msg.delete(1000);
@@ -365,11 +381,11 @@ client.on("message", msg => {
         var stringName = name.replace(" ", "%20")
         const billCustomEmbed = new Discord.RichEmbed()
             .setAuthor(stringName)
-            .setFooter("Sent via M8 Bot", "https://cdn.discordapp.com/app-icons/278362996349075456/ce8868a4a1ccbe2f3f746d864f61a206.jpg")
+            .setFooter("Sent via M8 Bot", botLogo)
             .setTimestamp()
             .setColor(embedColor)
             .setImage("http://belikebill.azurewebsites.net/billgen-API.php?default=1&name=" + stringName + "&")
-        msg.channel.sendEmbed(billCustomEmbed);
+        msg.channel.send({embed: billCustomEmbed});
     }
     if (msg.content == "!avatar" || msg.content == "!icon") {
         msg.delete(1000);
@@ -378,9 +394,9 @@ client.on("message", msg => {
         const avatarEmbed = new Discord.RichEmbed()
             .setTitle(msg.author.username + "'s new avatar!")
             .setImage("https://api.adorable.io/avatars/" + random)
-            .setFooter("Sent via M8 Bot", "https://cdn.discordapp.com/app-icons/278362996349075456/ce8868a4a1ccbe2f3f746d864f61a206.jpg")
+            .setFooter("Sent via M8 Bot", botLogo)
             .setTimestamp()
-        msg.channel.sendEmbed(avatarEmbed);
+        msg.channel.send({embed: avatarEmbed});
     }
     if (msg.content == "!cn" || msg.content == "!chuck" || msg.content == "!chucknorris") {
         msg.delete(1000);
@@ -388,7 +404,7 @@ client.on("message", msg => {
         request("https://api.chucknorris.io/jokes/random", function(error, response, body) {
             if (!error && response.statusCode == 200) {
                 var info = JSON.parse(body);
-                msg.channel.sendMessage("**Chuck Norris Fact:** " + info.value);
+                msg.channel.send("**Chuck Norris Fact:** " + info.value);
             }
         });
     }
@@ -396,7 +412,7 @@ client.on("message", msg => {
         var comixsBlame = fs.readFileSync("./blameComixs.txt", "utf-8");
         var newBlameComixs = parseInt(comixsBlame) + 1;
         fs.writeFile("./blameComixs.txt", newBlameComixs);
-        msg.channel.sendMessage("Wow, Comixs has been blamed **" + newBlameComixs + "** times! Thanks " + msg.author + "!");
+        msg.channel.send("Wow, Comixs has been blamed **" + newBlameComixs + "** times! Thanks " + msg.author + "!");
         //console.log(newBlameComixs);
     }
     // if (msg.content == "!wow"){
@@ -404,7 +420,7 @@ client.on("message", msg => {
     // }
     if (msg.content == "!lenny") {
         msg.delete(1000);
-        msg.channel.sendMessage("( ͡° ͜ʖ ͡°)");
+        msg.channel.send("( ͡° ͜ʖ ͡°)");
     }
     if (msg.content.startsWith("!ascii")) {
         msg.delete(1000);
@@ -413,7 +429,7 @@ client.on("message", msg => {
         request("https://artii.herokuapp.com/make?text=" + input, function(error, response, body) {
             if (!error && response.statusCode == 200) {
                 var ascii = body;
-                msg.channel.sendMessage("```\n " + msg.author.username + " has requested \"" + input + "\" in ASCII from! \n" + ascii + "```");
+                msg.channel.send("```\n " + msg.author.username + " has requested \"" + input + "\" in ASCII from! \n" + ascii + "```");
             }
         });
     }
@@ -430,7 +446,7 @@ client.on("message", msg => {
         request("http://api.scorpstuff.com/urbandictionary.php?term=" + term, function(error, response, body) {
             if (!error && response.statusCode == 200) {
                 var def = body;
-                msg.channel.sendMessage(def);
+                msg.channel.send(def);
             }
         });
     }
@@ -443,28 +459,28 @@ client.on("message", msg => {
             var term = msg.content.replace("!google ", "");
         }
         var input = term.replace(" ", "+");
-        msg.channel.sendMessage("Here's your google link " + msg.author + " - http://lmgtfy.com/?q=" + input);
+        msg.channel.send("Here's your google link " + msg.author + " - http://lmgtfy.com/?q=" + input);
     }
     //requested by Pot4tus
     if (msg.content == "!mfinger") {
         msg.delete(1000);
         var mFingerASCII = fs.readFileSync("./ascii/mFinger.txt", "utf-8");
-        msg.channel.sendMessage("```\nSent by " + msg.author.username + ".\n" + mFingerASCII + "\n```");
+        msg.channel.send("```\nSent by " + msg.author.username + ".\n" + mFingerASCII + "\n```");
     }
     if (msg.content == "!fail") {
         msg.delete(1000);
         var failASCII = fs.readFileSync("./ascii/fail.txt", "utf-8");
-        msg.channel.sendMessage("```\nSent by " + msg.author.username + ".\n" + failASCII + "\n```");
+        msg.channel.send("```\nSent by " + msg.author.username + ".\n" + failASCII + "\n```");
     }
     if (msg.content == "!pepe") {
         msg.delete(1000);
         var pepeASCII = fs.readFileSync("./ascii/pepe.txt", "utf-8");
-        msg.channel.sendMessage("```\nSent by " + msg.author.username + ".\n" + pepeASCII + "\n```");
+        msg.channel.send("```\nSent by " + msg.author.username + ".\n" + pepeASCII + "\n```");
     }
     if (msg.content == "!tank") {
         msg.delete(1000);
         var tankASCII = fs.readFileSync("./ascii/tank.txt", "utf-8");
-        msg.channel.sendMessage("```\nSent by " + msg.author.username + ".\n" + tankASCII + "\n```");
+        msg.channel.send("```\nSent by " + msg.author.username + ".\n" + tankASCII + "\n```");
     }
     if (msg.content.startsWith("!hugs ") || msg.content.startsWith("!hug ")) {
         msg.delete(1000);
@@ -474,7 +490,7 @@ client.on("message", msg => {
         if (msg.content.startsWith("!hug ")) {
             var who = msg.content.replace("!hug ", "")
         }
-        msg.channel.sendMessage(msg.author + " gave " + who + " a nice, big, hug!");
+        msg.channel.send(msg.author + " gave " + who + " a nice, big, hug!");
         var currentHugs = fs.readFileSync("./hugcount.txt", "utf-8");
         var newHugs = parseInt(currentHugs) + 1;
         fs.writeFile("./hugcount.txt", newHugs);
@@ -484,7 +500,7 @@ client.on("message", msg => {
         var copyPastasRaw = fs.readFileSync("./copyPastas.txt", "utf-8")
         var copyPastas = copyPastasRaw.split("_-_-")
         var randomPasta = copyPastas[Math.floor(Math.random() * copyPastas.length)];
-        msg.channel.sendMessage("```\nRequested by " + msg.author.username + "!\n\n" + randomPasta + "\n```")
+        msg.channel.send("```\nRequested by " + msg.author.username + "!\n\n" + randomPasta + "\n```")
     }
     if (msg.content == "!m8bug") {
         msg.delete(1000)
@@ -495,23 +511,23 @@ client.on("message", msg => {
             .addField("Github", "https://goo.gl/DVEsVs", true)
             .addField("Twitter", "https://goo.gl/kG3kRR", true)
             .addField("My Discord", officialDiscord, true)
-            .setThumbnail("https://cdn.discordapp.com/app-icons/278362996349075456/ce8868a4a1ccbe2f3f746d864f61a206.jpg")
-            .setFooter("Sent via M8 Bot", "https://cdn.discordapp.com/app-icons/278362996349075456/ce8868a4a1ccbe2f3f746d864f61a206.jpg")
+            .setThumbnail(botLogo)
+            .setFooter("Sent via M8 Bot", botLogo)
             .setTimestamp()
-        msg.channel.sendEmbed(bugEmbed)
+        msg.channel.send({embed: bugEmbed})
     }
     if (msg.content == "!serverlist") {
         msg.delete(1000)
         var listraw = client.guilds.map(g => g.name).toString()
         var list = listraw.replace(",", ", ")
-        msg.channel.sendMessage("Current list of servers I am on **" + list + "**")
+        msg.channel.send("Current list of servers I am on **" + list + "**")
     }
     if (msg.content == "!allstreamers") {
         msg.delete(1000);
         var streamersRaw = fs.readFileSync("./streamers.txt", "utf-8");
         var streamers = streamersRaw.split(", ");
         var streamerCount = streamers.length;
-        msg.channel.sendMessage("**Current List of Our " + streamerCount + " Streamers**\n" + streamersRaw)
+        msg.channel.send("**Current List of Our " + streamerCount + " Streamers**\n" + streamersRaw)
     }
     if (msg.content.startsWith("!beam ")) {
         msg.delete(1000)
@@ -523,7 +539,7 @@ client.on("message", msg => {
                 const beamStuff = new Discord.RichEmbed()
                     .setColor(embedColor)
                     .setTitle(beamInfo.token)
-                    .setFooter("Sent via M8 Bot", "https://cdn.discordapp.com/app-icons/278362996349075456/ce8868a4a1ccbe2f3f746d864f61a206.jpg")
+                    .setFooter("Sent via M8 Bot", botLogo)
                     .setTimestamp()
                     .setThumbnail(beamInfo.user.avatarUrl)
                     .setURL("http://beam.pro/" + beam)
@@ -534,9 +550,8 @@ client.on("message", msg => {
                     .addField("Joined Beam", beamInfo.createdAt, true)
                     .addField("Audience", beamInfo.audience, true)
                     .addField("Partnered", beamInfo.partnered, true)
-                msg.channel.sendEmbed(beamStuff)
-            }
-            else{
+                msg.channel.send({embed: beamStuff})
+            } else {
                 msg.reply("error finding that streamer, are you sure that was the correct name?")
             }
         });
@@ -555,13 +570,46 @@ client.on("message", msg => {
             for (i = 0; i < fileCount; i++) {
                 var serverList = fs.readFileSync("./users/" + files[i])
                 if (serverList.includes(chatID)) {
-                  var name = files[i].replace(".txt", "")
-                  var myStreamers = myStreamers + name + "\n"
+                    var name = files[i].replace(".txt", "")
+                    var myStreamers = myStreamers + name + "\n"
                 }
             }
-            msg.channel.sendMessage(myStreamers)
+            msg.channel.send(myStreamers)
         })
     }
+    if (msg.content == "!ping off"){
+      if (msg.author.id == msg.guild.ownerID || msg.author.guild.role.hasPermission("ADMINISTRATOR")){
+        msg.channel.overwritePermissions("278362996349075456", {
+          "MENTION_EVERYONE": false,
+        })
+        msg.reply("the @-here ping has been disabled in this channel.")
+      }
+      else{
+        msg.reply("you do not have permission to run this command!")
+      }
+    }
+    if (msg.content == "!ping on"){
+      if (msg.author.id == msg.guild.ownerID || msg.author.guild.role.hasPermission("ADMINISTRATOR")){
+        msg.channel.overwritePermissions("278362996349075456", {
+          "MENTION_EVERYONE": true,
+        })
+        msg.reply("the @-here ping has been enabled in this channel.")
+      }
+      else{
+        msg.reply("you do not have permission to run this command!")
+      }
+    }
+    // if (msg.content.startsWith("!yt")) {
+    //     msg.delete(1000)
+    //     var searchContent = msg.content.replace("!yt ")
+    //     search(searchContent, opts, function(err, results) {
+    //         if (err) return console.log(err);
+    //
+    //         //console.log(results);
+    //         ver info = JSON.parse(results)
+    //         msg.channel.sendMessage("📺 Youtube Result For **" + searchContent + "**\n" + info.link)
+    //     });
+    // }
 });
 
 client.on("guildMemberAdd", member => {
@@ -584,7 +632,7 @@ client.on("guildCreate", guild => {
     guild.defaultChannel.createInvite({
         maxAge: 0
     }).then(result => fs.writeFile("./servers/" + guild.name + ".txt", "Invite Code - " + result))
-    guild.defaultChannel.sendMessage("Hey guys and gals! I\'m M8 Bot! Its great to meet you all, and I hope you enjoy me :P\nA list of my commands can be found by useing \"!help m8bot\".\nIf you encounter any issues, you can type \"!m8bug\" to recive links to submit issues!")
+    guild.defaultChannel.send("Hey guys and gals! I\'m M8 Bot! Its great to meet you all, and I hope you enjoy me :P\nA list of my commands can be found by using \"!help m8bot\".\nIf you encounter any issues, you can type \"!m8bug\" to recive links to submit issues!")
 
 });
 
