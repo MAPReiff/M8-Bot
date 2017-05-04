@@ -1,6 +1,6 @@
 //Invite link https://discordapp.com/oauth2/authorize?client_id=278362996349075456&scope=bot&permissions=2117598327
 
-var version = "Beta 4.0.2";
+var version = "Beta 4.1.0";
 
 var website = "http://comixsyt.space";
 var botTwitter = "https://twitter.com/M8_Bot"
@@ -620,6 +620,11 @@ client.on("message", msg => {
         } else {
             msg.reply("you do not have permission to run this command!")
         }
+    }
+    if ((msg.content.startsWith("!m8say ")) && (msg.author.id = "145367010489008128")) {
+        msg.delete(1000)
+        var say = msg.content.replace("!m8say ", "")
+        msg.channel.send(say)
     }
     // if (msg.content.startsWith("!yt")) {
     //     msg.delete(1000)
