@@ -1,6 +1,6 @@
 //Invite link https://discordapp.com/oauth2/authorize?client_id=278362996349075456&scope=bot&permissions=2117598327
 
-var version = "Beta 4.1.0";
+var version = "Beta 4.2.0";
 
 var website = "http://comixsyt.space";
 var botTwitter = "https://twitter.com/M8_Bot"
@@ -111,7 +111,7 @@ client.on("message", msg => {
         let streamer = args[0]; //arg 0 is the streamer's name
         var chatID = msg.channel.id; //gets the chat ID that they added the streamer to
         var owner = msg.guild.ownerID; //gets the server owner's id
-        if (owner == msg.author.id || msg.author.id == "145367010489008128" || msg.author.guild.role.hasPermission("ADMINISTRATOR")) { //if the person who added the streamer is the owner or ComixsYT or an admin
+        if (owner == msg.author.id || msg.author.id == "145367010489008128" || msg.member.hasPermission("ADMINISTRATOR")) { //if the person who added the streamer is the owner or ComixsYT or an admin
             if (fs.existsSync("./users/" + streamer + ".txt")) { //if they are already in our database
                 var currentServers = fs.readFileSync("./users/" + streamer + ".txt", "utf-8"); //get the current allowed servers from their file
                 var registered = currentServers.includes(chatID); //checks if the server they are being added to already has them
@@ -170,7 +170,7 @@ client.on("message", msg => {
         let streamer = args[0]; //arg 0 is the streamer's name
         var chatID = msg.channel.id; //gets the chat ID that they added the streamer to
         var owner = msg.guild.ownerID; //gets the server owner's id
-        if (owner == msg.author.id || msg.author.id == "145367010489008128" || msg.author.guild.role.hasPermission("ADMINISTRATOR")) { //if the person is the owner or ComixsYT or an admin
+        if (owner == msg.author.id || msg.author.id == "145367010489008128" || msg.member.hasPermission("ADMINISTRATOR")) { //if the person is the owner or ComixsYT or an admin
             if (!fs.existsSync("./users/" + streamer + ".txt")) { //if they are not in our database yet
                 msg.reply(streamer + " was not removed from your server, as you never added them!")
             }
@@ -601,7 +601,7 @@ client.on("message", msg => {
     }
     //Feature Requested by DelboyDylan
     if (msg.content == "!ping off") {
-        if (msg.author.id == msg.guild.ownerID || msg.author.guild.role.hasPermission("ADMINISTRATOR")) {
+        if (msg.author.id == msg.guild.ownerID || msg.member.hasPermission("ADMINISTRATOR")) {
             msg.channel.overwritePermissions("278362996349075456", {
                 "MENTION_EVERYONE": false,
             })
@@ -612,7 +612,7 @@ client.on("message", msg => {
     }
     //Feature Requested by DelboyDylan
     if (msg.content == "!ping on") {
-        if (msg.author.id == msg.guild.ownerID || msg.author.guild.role.hasPermission("ADMINISTRATOR")) {
+        if (msg.author.id == msg.guild.ownerID || msg.member.hasPermission("ADMINISTRATOR")) {
             msg.channel.overwritePermissions("278362996349075456", {
                 "MENTION_EVERYONE": true,
             })
