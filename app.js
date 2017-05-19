@@ -1,6 +1,6 @@
 //Invite link https://discordapp.com/oauth2/authorize?client_id=278362996349075456&scope=bot&permissions=2117598327
 
-var version = "Beta 5.0.0";
+var version = "Beta 5.0.1";
 
 var website = "http://comixsyt.space";
 var botTwitter = "https://twitter.com/M8_Bot"
@@ -269,7 +269,7 @@ client.on("message", msg => {
       .addField("!mystreamers", "Lists all streamers in that channel.")
       .addField("!beam", "Gets info about a beam user. Usage - !beam NAME")
       .addField("!ping on/off", "Allows a server owner/admin to decide whether or not M8 Bot can use @here in that channel. Default is on.")
-      .addField("!play YT-LINK", "Plays the audio of a youtube link in a voice chat. User must be in a voice channel to use the command.")
+      //.addField("!play YT-LINK", "Plays the audio of a youtube link in a voice chat. User must be in a voice channel to use the command.")
     msg.channel.send({
       embed: helpEmbed
     });
