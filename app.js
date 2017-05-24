@@ -1,6 +1,6 @@
 //Invite link https://discordapp.com/oauth2/authorize?client_id=278362996349075456&scope=bot&permissions=2117598327
 
-var version = "Beta 5.0.1";
+var version = "Beta 5.1.0";
 
 var website = "http://comixsyt.space";
 var botTwitter = "https://twitter.com/M8_Bot"
@@ -682,10 +682,28 @@ client.on("guildCreate", guild => {
   }).then(result => fs.writeFile("./servers/" + guild.name + ".txt", "Invite Code - " + result))
   guild.defaultChannel.send("Hey guys and gals! I\'m M8 Bot! Its great to meet you all, and I hope you enjoy me :P\nA list of my commands can be found by using \"!help m8bot\".\nIf you encounter any issues, you can type \"!m8bug\" to recive links to submit issues!")
 
+  const joinedEmbed = new Discord.RichEmbed()
+    .setColor(0x00FF00)
+    .setTitle("Joined " + guild.name)
+    .setFooter("Sent via M8 Bot", botLogo)
+    .setTimestamp()
+    .setThumbnail(guild.iconURL)
+    .addField("Members", guild.memberCount, true)
+    .addField("Owner", guild.owner, true)
+  client.channels.get("316741092554833931").sendEmbed(joinedEmbed)
+
 });
 
 client.on("guildDelete", guild => {
-
+  const leftEmbed = new Discord.RichEmbed()
+    .setColor(0xFF0000)
+    .setTitle("Left " + guild.name)
+    .setFooter("Sent via M8 Bot", botLogo)
+    .setTimestamp()
+    .setThumbnail(guild.iconURL)
+    .addField("Members", guild.memberCount, true)
+    .addField("Owner", guild.owner, true)
+  client.channels.get("316741092554833931").sendEmbed(leftEmbed)
 
 });
 
