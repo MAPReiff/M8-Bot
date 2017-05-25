@@ -1,6 +1,6 @@
 //Invite link https://discordapp.com/oauth2/authorize?client_id=278362996349075456&scope=bot&permissions=2117598327
 
-var version = "Beta 6.0.0";
+var version = "Beta 6.0.1";
 
 var website = "http://comixsyt.space";
 var botTwitter = "https://twitter.com/M8_Bot"
@@ -66,25 +66,25 @@ for (i = 0; i < streamerCount; i++) { //Run for the # of streamers
   var request = require("request"); //the var to request details on the streamer
   request("https://mixer.com/api/v1/channels/" + streamers[i], function(error, response, body) { //ste info for the streamer in JSON
     if (!error && response.statusCode == 200) { //if there is no error checking
-      var beamInfo = JSON.parse(body); //setting a var for the JSON info
-      const beamID = beamInfo.id; //getting the ID of the streamer
-      console.log("Now stalking " + beamInfo.token + " on beam!"); //logs that the bot is watching for the streamer to go live
-      ca.subscribe(`channel:${beamID}:update`, data => { //subscribing to the streamer
-        var beamStatus = data.online //checks if they are online (its a double check just incase the above line miss fires)
-        if (beamStatus == true) { //if the bam info JSON says they are live
+      var mixerInfo = JSON.parse(body); //setting a var for the JSON info
+      const mixerID = mixerInfo.id; //getting the ID of the streamer
+      console.log("Now stalking " + mixerInfo.token + " on mixer!"); //logs that the bot is watching for the streamer to go live
+      ca.subscribe(`channel:${mixerID}:update`, data => { //subscribing to the streamer
+        var mixerStatus = data.online //checks if they are online (its a double check just incase the above line miss fires)
+        if (mixerStatus == true) { //if the bam info JSON says they are live
           var liveTime = (new Date).getTime(); //time the bot sees they went live
-          var lastLiveTime = fs.readFileSync("./user_time/" + beamInfo.token + "_time.txt", "utf-8"); //checks the last live time
+          var lastLiveTime = fs.readFileSync("./user_time/" + mixerInfo.token + "_time.txt", "utf-8"); //checks the last live time
           var timeDiff = liveTime - lastLiveTime; //gets the diff of urrent and last live times
           //console.log(timeDiff);
           if (timeDiff >= halfHour) { //if its been 30min or more
-            console.log(beamInfo.token + " went live, as its been more than 30min!"); //log that they went live
+            console.log(mixerInfo.token + " went live, as its been more than 30min!"); //log that they went live
             const hook = new Discord.WebhookClient(hookID[0], hookID[1]); //sets info about a webhook
-            hook.sendMessage("live " + beamInfo.token); //tells the webhook to send a message to a private channel that M8Bot is listening to
+            hook.sendMessage("live " + mixerInfo.token); //tells the webhook to send a message to a private channel that M8Bot is listening to
           }
           if (timeDiff < halfHour) { //if its been less than 30min
-            console.log(beamInfo.token + " attempted to go live, but its been under 30min!"); //log that its been under 30min
+            console.log(mixerInfo.token + " attempted to go live, but its been under 30min!"); //log that its been under 30min
           }
-          fs.writeFile("./user_time/" + beamInfo.token + "_time.txt", liveTime); //update last live time regardless if they went live or not
+          fs.writeFile("./user_time/" + mixerInfo.token + "_time.txt", liveTime); //update last live time regardless if they went live or not
         }
       })
     }
@@ -106,7 +106,7 @@ client.on("message", msg => {
   }
   if (msg.content == "!add-streamer") {
     msg.delete(1000);
-    msg.reply("You need to specify a streamer's beam ID. For example '!add-streamer STREAMER_ID'.");
+    msg.reply("You need to specify a streamer's mixer ID. For example '!add-streamer STREAMER_ID'.");
   }
   if (msg.content.startsWith("!add-streamer")) { //if an owner adds a streamer
     msg.delete(1000); //delete the message they sent
@@ -137,25 +137,25 @@ client.on("message", msg => {
         var request = require("request"); //the var to request details on the streamer
         request("https://mixer.com/api/v1/channels/" + streamer, function(error, response, body) { //ste info for the streamer in JSON
           if (!error && response.statusCode == 200) { //if there is no error checking
-            var beamInfo = JSON.parse(body); //setting a var for the JSON info
-            const beamID = beamInfo.id; //getting the ID of the streamer
-            console.log("Now stalking " + beamInfo.token + " on beam!"); //logs that the bot is watching for the streamer to go live
-            ca.subscribe(`channel:${beamID}:update`, data => { //subscribing to the streamer
-              var beamStatus = data.online //checks if they are online (its a double check just incase the above line miss fires)
-              if (beamStatus == true) { //if the bam info JSON says they are live
+            var mixerInfo = JSON.parse(body); //setting a var for the JSON info
+            const mixerID = mixerInfo.id; //getting the ID of the streamer
+            console.log("Now stalking " + mixerInfo.token + " on mixer!"); //logs that the bot is watching for the streamer to go live
+            ca.subscribe(`channel:${mixerID}:update`, data => { //subscribing to the streamer
+              var mixerStatus = data.online //checks if they are online (its a double check just incase the above line miss fires)
+              if (mixerStatus == true) { //if the bam info JSON says they are live
                 var liveTime = (new Date).getTime(); //time the bot sees they went live
-                var lastLiveTime = fs.readFileSync("./user_time/" + beamInfo.token + "_time.txt", "utf-8"); //checks the last live time
+                var lastLiveTime = fs.readFileSync("./user_time/" + mixerInfo.token + "_time.txt", "utf-8"); //checks the last live time
                 var timeDiff = liveTime - lastLiveTime; //gets the diff of urrent and last live times
                 //console.log(timeDiff);
                 if (timeDiff >= halfHour) { //if its been 30min or more
-                  console.log(beamInfo.token + " went live, as its been more than 30min!"); //log that they went live
+                  console.log(mixerInfo.token + " went live, as its been more than 30min!"); //log that they went live
                   const hook = new Discord.WebhookClient(hookID[0], hookID[1]); //sets info about a webhook
-                  hook.sendMessage("live " + beamInfo.token); //tells the webhook to send a message to a private channel that M8Bot is listening to
+                  hook.sendMessage("live " + mixerInfo.token); //tells the webhook to send a message to a private channel that M8Bot is listening to
                 }
                 if (timeDiff < halfHour) { //if its been less than 30min
-                  console.log(beamInfo.token + " attempted to go live, but its been under 30min!"); //log that its been under 30min
+                  console.log(mixerInfo.token + " attempted to go live, but its been under 30min!"); //log that its been under 30min
                 }
-                fs.writeFile("./user_time/" + beamInfo.token + "_time.txt", liveTime); //update last live time regardless if they went live or not
+                fs.writeFile("./user_time/" + mixerInfo.token + "_time.txt", liveTime); //update last live time regardless if they went live or not
               }
             })
           }
@@ -267,7 +267,7 @@ client.on("message", msg => {
       .addField("!add-streamer & !del-streamer", "Used to add or delete streamers from that chat channel. Can only be run by the server owner or anyone with the \"ADMINISTRATOR\" permission.")
       .addField("!allstreamers", "Lists all the streamers that the bot stalks.")
       .addField("!mystreamers", "Lists all streamers in that channel.")
-      .addField("!beam", "Gets info about a beam user. Usage - !beam NAME")
+      .addField("!mixer", "Gets info about a mixer user. Usage - !mixer NAME")
       .addField("!ping on/off", "Allows a server owner/admin to decide whether or not M8 Bot can use @here in that channel. Default is on.")
       //.addField("!play YT-LINK", "Plays the audio of a youtube link in a voice chat. User must be in a voice channel to use the command.")
     msg.channel.send({
@@ -277,39 +277,39 @@ client.on("message", msg => {
   if ((msg.content.startsWith("live") && msg.author.id == hookID[0]) || //if the bot sends the message
     (msg.content.startsWith("live") && msg.author.id == "145367010489008128" && msg.channel.id == "278697660133801984")) { //if comixs sends the message (and in certian chat)
     let args = msg.content.split(" ").slice(1); //seperare command into args
-    let beam = args[0]; //beam name is arg 0
-    if (fs.existsSync("./users/" + beam + ".txt")) { //varifies that the streamer is on record
+    let mixer = args[0]; //mixer name is arg 0
+    if (fs.existsSync("./users/" + mixer + ".txt")) { //varifies that the streamer is on record
       var request = require("request"); //sets a var to request info
-      request("https://mixer.com/api/v1/channels/" + beam, function(error, response, body) { //request streamer's in in JSON form
+      request("https://mixer.com/api/v1/channels/" + mixer, function(error, response, body) { //request streamer's in in JSON form
         if (!error && response.statusCode == 200) { //if there is no error
-          var beamInfo = JSON.parse(body); //sets beamInfo to the JSON data
-          if (beamInfo.type == null) { //if there is no game set to the stream
+          var mixerInfo = JSON.parse(body); //sets mixerInfo to the JSON data
+          if (mixerInfo.type == null) { //if there is no game set to the stream
             var game = "[API ERROR]"; //set the game to the meme game
           } else { //if there is a game set
-            var game = beamInfo.type.name; //set the game var to the streamer's game
+            var game = mixerInfo.type.name; //set the game var to the streamer's game
           }
           const liveEmbed = new Discord.RichEmbed() //start the embed message template
-            .setTitle(beamInfo.token + "\'s Stream")
-            .setAuthor(beamInfo.name)
+            .setTitle(mixerInfo.token + "\'s Stream")
+            .setAuthor(mixerInfo.name)
             .setColor(embedColor)
-            .setDescription("Hey guys, " + beam + " is live right now! Click above to watch!")
+            .setDescription("Hey guys, " + mixer + " is live right now! Click above to watch!")
             .setFooter("Sent via M8 Bot", botLogo)
-            .setThumbnail(beamInfo.user.avatarUrl)
+            .setThumbnail(mixerInfo.user.avatarUrl)
             .setTimestamp()
-            .setURL("http://mixer.com/" + beam)
+            .setURL("http://mixer.com/" + mixer)
             .addField("Streaming", game, true)
-            .addField("Followers", beamInfo.numFollowers, true)
-            .addField("Beam Level", beamInfo.user.level, true)
-            .addField("Total Views", beamInfo.viewersTotal, true) //end the embed message template
-          var serversAllowedRaw = fs.readFileSync("./users/" + beam + ".txt", "utf-8"); //get the list of servers they are allowed to ne announced on
+            .addField("Followers", mixerInfo.numFollowers, true)
+            .addField("mixer Level", mixerInfo.user.level, true)
+            .addField("Total Views", mixerInfo.viewersTotal, true) //end the embed message template
+          var serversAllowedRaw = fs.readFileSync("./users/" + mixer + ".txt", "utf-8"); //get the list of servers they are allowed to ne announced on
           var serversAllowed = serversAllowedRaw.split(", "); //splits the servers into individual strings
           for (i = 0; i < serversAllowed.length; i++) { //run for the total number of servers they are allowed on
-            client.channels.get(serversAllowed[i]).sendEmbed(liveEmbed, "@here, " + beam + " is live!"); //send the live message to servers
+            client.channels.get(serversAllowed[i]).sendEmbed(liveEmbed, "@here, " + mixer + " is live!"); //send the live message to servers
           }
 
-          var shareMessage = beamInfo.preferences.sharetext.replace("%URL%", "http://mixer.com/" + beamInfo.token)
+          var shareMessage = mixerInfo.preferences.sharetext.replace("%URL%", "http://mixer.com/" + mixerInfo.token)
           if (shareMessage.includes("%USER%")) {
-            tweetMessage = shareMessage.replace("%USER%", beamInfo.token)
+            tweetMessage = shareMessage.replace("%USER%", mixerInfo.token)
           }
           if (!shareMessage.includes("%USER%")) {
             tweetMessage = shareMessage;
@@ -562,29 +562,29 @@ client.on("message", msg => {
       file: "./streamers.txt"
     })
   }
-  if (msg.content.startsWith("!beam ")) {
+  if (msg.content.startsWith("!mixer ")) {
     msg.delete(1000)
-    var beam = msg.content.replace("!beam ", "")
+    var mixer = msg.content.replace("!mixer ", "")
     var request = require("request"); //the var to request details on the streamer
-    request("https://mixer.com/api/v1/channels/" + beam, function(error, response, body) { //set info for the streamer in JSON
+    request("https://mixer.com/api/v1/channels/" + mixer, function(error, response, body) { //set info for the streamer in JSON
       if (!error && response.statusCode == 200) { //if there is no error checking
-        var beamInfo = JSON.parse(body); //setting a var for the JSON info
-        const beamStuff = new Discord.RichEmbed()
+        var mixerInfo = JSON.parse(body); //setting a var for the JSON info
+        const mixerStuff = new Discord.RichEmbed()
           .setColor(embedColor)
-          .setTitle(beamInfo.token)
+          .setTitle(mixerInfo.token)
           .setFooter("Sent via M8 Bot", botLogo)
           .setTimestamp()
-          .setThumbnail(beamInfo.user.avatarUrl)
-          .setURL("http://mixer.com/" + beam)
-          .addField("Online", beamInfo.online, true)
-          .addField("Followers", beamInfo.numFollowers, true)
-          .addField("Beam Level", beamInfo.user.level, true)
-          .addField("Total Views", beamInfo.viewersTotal, true)
-          .addField("Joined Beam", beamInfo.createdAt, true)
-          .addField("Audience", beamInfo.audience, true)
-          .addField("Partnered", beamInfo.partnered, true)
+          .setThumbnail(mixerInfo.user.avatarUrl)
+          .setURL("http://mixer.com/" + mixer)
+          .addField("Online", mixerInfo.online, true)
+          .addField("Followers", mixerInfo.numFollowers, true)
+          .addField("mixer Level", mixerInfo.user.level, true)
+          .addField("Total Views", mixerInfo.viewersTotal, true)
+          .addField("Joined mixer", mixerInfo.createdAt, true)
+          .addField("Audience", mixerInfo.audience, true)
+          .addField("Partnered", mixerInfo.partnered, true)
         msg.channel.send({
-          embed: beamStuff
+          embed: mixerStuff
         })
       } else {
         msg.reply("error finding that streamer, are you sure that was the correct name?")
