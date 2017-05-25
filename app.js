@@ -1,6 +1,6 @@
 //Invite link https://discordapp.com/oauth2/authorize?client_id=278362996349075456&scope=bot&permissions=2117598327
 
-var version = "Beta 5.1.0";
+var version = "Beta 6.0.0";
 
 var website = "http://comixsyt.space";
 var botTwitter = "https://twitter.com/M8_Bot"
@@ -64,7 +64,7 @@ for (i = 0; i < streamerCount; i++) { //Run for the # of streamers
   var halfHourAgo = bootTime - 1800000; //get the time 30min before the boot
   fs.writeFile("./user_time/" + streamers[i] + "_time.txt", halfHourAgo); //write a file with
   var request = require("request"); //the var to request details on the streamer
-  request("https://beam.pro/api/v1/channels/" + streamers[i], function(error, response, body) { //ste info for the streamer in JSON
+  request("https://mixer.com/api/v1/channels/" + streamers[i], function(error, response, body) { //ste info for the streamer in JSON
     if (!error && response.statusCode == 200) { //if there is no error checking
       var beamInfo = JSON.parse(body); //setting a var for the JSON info
       const beamID = beamInfo.id; //getting the ID of the streamer
@@ -135,7 +135,7 @@ client.on("message", msg => {
         var halfHourAgo = addedTime - 1800000; //get the time 30min before they were added
         fs.writeFile("./user_time/" + streamer + "_time.txt", halfHourAgo); //write a file with
         var request = require("request"); //the var to request details on the streamer
-        request("https://beam.pro/api/v1/channels/" + streamer, function(error, response, body) { //ste info for the streamer in JSON
+        request("https://mixer.com/api/v1/channels/" + streamer, function(error, response, body) { //ste info for the streamer in JSON
           if (!error && response.statusCode == 200) { //if there is no error checking
             var beamInfo = JSON.parse(body); //setting a var for the JSON info
             const beamID = beamInfo.id; //getting the ID of the streamer
@@ -280,7 +280,7 @@ client.on("message", msg => {
     let beam = args[0]; //beam name is arg 0
     if (fs.existsSync("./users/" + beam + ".txt")) { //varifies that the streamer is on record
       var request = require("request"); //sets a var to request info
-      request("https://beam.pro/api/v1/channels/" + beam, function(error, response, body) { //request streamer's in in JSON form
+      request("https://mixer.com/api/v1/channels/" + beam, function(error, response, body) { //request streamer's in in JSON form
         if (!error && response.statusCode == 200) { //if there is no error
           var beamInfo = JSON.parse(body); //sets beamInfo to the JSON data
           if (beamInfo.type == null) { //if there is no game set to the stream
@@ -296,7 +296,7 @@ client.on("message", msg => {
             .setFooter("Sent via M8 Bot", botLogo)
             .setThumbnail(beamInfo.user.avatarUrl)
             .setTimestamp()
-            .setURL("http://beam.pro/" + beam)
+            .setURL("http://mixer.com/" + beam)
             .addField("Streaming", game, true)
             .addField("Followers", beamInfo.numFollowers, true)
             .addField("Beam Level", beamInfo.user.level, true)
@@ -307,7 +307,7 @@ client.on("message", msg => {
             client.channels.get(serversAllowed[i]).sendEmbed(liveEmbed, "@here, " + beam + " is live!"); //send the live message to servers
           }
 
-          var shareMessage = beamInfo.preferences.sharetext.replace("%URL%", "http://beam.pro/" + beamInfo.token)
+          var shareMessage = beamInfo.preferences.sharetext.replace("%URL%", "http://mixer.com/" + beamInfo.token)
           if (shareMessage.includes("%USER%")) {
             tweetMessage = shareMessage.replace("%USER%", beamInfo.token)
           }
@@ -566,7 +566,7 @@ client.on("message", msg => {
     msg.delete(1000)
     var beam = msg.content.replace("!beam ", "")
     var request = require("request"); //the var to request details on the streamer
-    request("https://beam.pro/api/v1/channels/" + beam, function(error, response, body) { //set info for the streamer in JSON
+    request("https://mixer.com/api/v1/channels/" + beam, function(error, response, body) { //set info for the streamer in JSON
       if (!error && response.statusCode == 200) { //if there is no error checking
         var beamInfo = JSON.parse(body); //setting a var for the JSON info
         const beamStuff = new Discord.RichEmbed()
@@ -575,7 +575,7 @@ client.on("message", msg => {
           .setFooter("Sent via M8 Bot", botLogo)
           .setTimestamp()
           .setThumbnail(beamInfo.user.avatarUrl)
-          .setURL("http://beam.pro/" + beam)
+          .setURL("http://mixer.com/" + beam)
           .addField("Online", beamInfo.online, true)
           .addField("Followers", beamInfo.numFollowers, true)
           .addField("Beam Level", beamInfo.user.level, true)
