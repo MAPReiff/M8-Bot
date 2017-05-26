@@ -1,6 +1,6 @@
 //Invite link https://discordapp.com/oauth2/authorize?client_id=278362996349075456&scope=bot&permissions=2117598327
 
-var version = "Beta 6.0.1";
+var version = "Beta 6.0.2";
 
 var website = "http://comixsyt.space";
 var botTwitter = "https://twitter.com/M8_Bot"
@@ -299,7 +299,7 @@ client.on("message", msg => {
             .setURL("http://mixer.com/" + mixer)
             .addField("Streaming", game, true)
             .addField("Followers", mixerInfo.numFollowers, true)
-            .addField("mixer Level", mixerInfo.user.level, true)
+            .addField("Mixer Level", mixerInfo.user.level, true)
             .addField("Total Views", mixerInfo.viewersTotal, true) //end the embed message template
           var serversAllowedRaw = fs.readFileSync("./users/" + mixer + ".txt", "utf-8"); //get the list of servers they are allowed to ne announced on
           var serversAllowed = serversAllowedRaw.split(", "); //splits the servers into individual strings
@@ -578,7 +578,7 @@ client.on("message", msg => {
           .setURL("http://mixer.com/" + mixer)
           .addField("Online", mixerInfo.online, true)
           .addField("Followers", mixerInfo.numFollowers, true)
-          .addField("mixer Level", mixerInfo.user.level, true)
+          .addField("Mixer Level", mixerInfo.user.level, true)
           .addField("Total Views", mixerInfo.viewersTotal, true)
           .addField("Joined mixer", mixerInfo.createdAt, true)
           .addField("Audience", mixerInfo.audience, true)
