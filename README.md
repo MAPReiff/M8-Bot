@@ -1,6 +1,6 @@
 # M8 Bot
 
-M8 Bot is a Discord chat bot designed for beam streamers. It contains a few commands, including a way for livestreamers to better spread their message. Commands currently include:
+M8 Bot is a Discord chat bot designed for mixer streamers. It contains a few commands, including a way for livestreamers to better spread their message. Commands currently include:
   - Ping/Pong - a simple command to test if the bot is listening
   - !help m8 - shows a help message with command list
   - !m8status - shows a status report with server count and streamer counts
@@ -18,7 +18,7 @@ M8 Bot is a Discord chat bot designed for beam streamers. It contains a few comm
   - !m8bug - Returns a link to report bugs!
   - !allstreamers - Returns a list of all streamers the bot stalks!
   - !mystreamers - Returns a list of streamers assigned to that channel!
-  - !beam - Used to lookup info about a beam user!
+  - !mixer - Used to lookup info about a mixer user!
   - !ping on/off - Allows a server owner/admin to decide whether or not M8 Bot can use @here in that channel! Default is on.
 
 ### [Click Here to Add the bot to your server!]
