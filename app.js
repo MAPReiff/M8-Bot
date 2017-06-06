@@ -1,6 +1,6 @@
 //Invite link https://discordapp.com/oauth2/authorize?client_id=278362996349075456&scope=bot&permissions=2117598327
 
-var version = "Beta 6.0.2";
+var version = "Beta 7.0.0";
 
 var website = "http://comixsyt.space";
 var botTwitter = "https://twitter.com/M8_Bot"
@@ -238,41 +238,16 @@ client.on("message", msg => {
   if (msg.content == "!help m8bot") {
     msg.delete(1000);
     const helpEmbed = new Discord.RichEmbed()
-      .setTitle("M8 Bot Help")
+      .setTitle("M8 Bot Help Version " + version)
       .setColor(embedColor)
       .setFooter("Sent via M8 Bot", botLogo)
       .setThumbnail(botLogo)
       .setTimestamp()
-      .addField("!help m8bot", "Sends this Help Message")
-      .addField("ping/pong", "Send ping or pong to test if the bot is listening")
-      //.addField("!live", "Sends out a fancy live message if you are a registered streamer")
-      .addField("!m8status", "Sends a status report of the bot")
-      .addField("!me", "Sends user info about themself")
-      .addField("!pun or !dadjoke", "Sends a funny pun courtesy of murfGUY's dadjoke database")
-      .addField("!bill, !billme & !bill NAME", "Creates a be like bill meme. If you do !billme, your name will be in there. If you do !bill NAME, the name you put will be in there.")
-      .addField("!avatar", "Generate a new profile avatar via the adorable.io api!")
-      .addField("!cn or !chuck or !chucknorris", "Pulls a random Chun Norris fact!")
-      .addField("!blamecomixs", "Used whenever ComixsYT does something stupid and must be blamed!")
-      .addField("!lenny", "( ͡° ͜ʖ ͡°)", true)
-      .addField("!ascii", "Get your words in ASCII form!", true)
-      .addField("!urban or !define", "Get the urban definition of a word!")
-      .addField("!lmgtfy or !google", "Gets a Let Me Google That For You link for any term you want!")
-      .addField("!mfinger", "Allows you to give the finger that is located in the middle of our appendages to others!")
-      .addField("!fail", "For when someone serriously fails!")
-      .addField("!pepe", "Who doesnt love Pepe?")
-      .addField("!tank", "GTFO of my way I got a fucking tank!")
-      .addField("!hug or !hugs", "Wanna give someone a hug? Do it then! \nUssage1 - !hugs name \nUssage 2 - !hug name")
-      .addField("!copypasta", "Gets a random, 100% supid, copypasta!")
-      .addField("!m8bug", "Returns a link to report bugs!")
-      .addField("!add-streamer & !del-streamer", "Used to add or delete streamers from that chat channel. Can only be run by the server owner or anyone with the \"ADMINISTRATOR\" permission.")
-      .addField("!allstreamers", "Lists all the streamers that the bot stalks.")
-      .addField("!mystreamers", "Lists all streamers in that channel.")
-      .addField("!mixer", "Gets info about a mixer user. Usage - !mixer NAME")
-      .addField("!ping on/off", "Allows a server owner/admin to decide whether or not M8 Bot can use @here in that channel. Default is on.")
-      //.addField("!play YT-LINK", "Plays the audio of a youtube link in a voice chat. User must be in a voice channel to use the command.")
+      .addField("Help Page", "A full list of commands can be found at https://github.com/MAPReiff/M8-Bot/wiki/Bot-Commands")
     msg.channel.send({
       embed: helpEmbed
     });
+
   }
   if ((msg.content.startsWith("live") && msg.author.id == hookID[0]) || //if the bot sends the message
     (msg.content.startsWith("live") && msg.author.id == "145367010489008128" && msg.channel.id == "278697660133801984")) { //if comixs sends the message (and in certian chat)
@@ -443,6 +418,17 @@ client.on("message", msg => {
       if (!error && response.statusCode == 200) {
         var count = body;
         msg.channel.send("Wow, Comixs has been blamed **" + count + "** times! Thanks " + msg.author + "!");
+      }
+    });
+  }
+
+  if (msg.content == "!unblamecomixs") {
+    msg.delete(1000)
+    var request = require("request");
+    request("https://comixsyt.space/blamecomixs/unblamecomixs.php", function(error, response, body) {
+      if (!error && response.statusCode == 200) {
+        var count = body;
+        msg.channel.send("Wow, thanks for unblaming Comixs. The current blame count is now only " + count + ". You are truly a good person " + msg.author + "!");
       }
     });
   }

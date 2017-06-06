@@ -1,0 +1,35 @@
+{
+  "name": "m8-bot",
+  "version": "6.0.2",
+  "description": "Discord Bot that announces Mixer Streams",
+  "main": "app.js",
+  "dependencies": {
+    "carina": "^0.5.4",
+    "discord": "^0.8.2",
+    "discord.js": "^11.1.0",
+    "google-auth-library": "^0.10.0",
+    "googleapis": "^16.1.0",
+    "random-number": "^0.0.7",
+    "request": "^2.79.0",
+    "twitter": "^1.7.0",
+    "ws": "^2.0.3",
+    "youtube-dl": "^1.11.1",
+    "youtube-search": "^1.0.9",
+    "ytdl": "^0.6.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "github.com/MAPReiff/M8-Bot.git"
+  },
+  "keywords": [
+    "discord",
+    "bot",
+    "mixer"
+  ],
+  "author": "Mitchell Reiff",
+  "license": "ISC"
+}
