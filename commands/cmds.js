@@ -21,7 +21,7 @@ exports.run = (client, message, params) => {
 exports.conf = {
   enabled: true,
   guildOnly: false,
-  aliases: ['c', 'commands'],
+  aliases: ['c', 'commands', 'help', 'help m8bot'],
   permLevel: 0
 };
 
