@@ -1,9 +1,0 @@
-*.swp
-/build
-/deps/build
-*.pcm
-*.opus
-.vscode
-.gitignore
-.jshintrc
-.travis.yml
