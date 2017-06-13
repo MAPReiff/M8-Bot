@@ -303,5 +303,6 @@ exports.end = [
 	'maggot',
 	'hipster',
 	'gargabe',
+	'taters',
 	'jerkstore'
 ];

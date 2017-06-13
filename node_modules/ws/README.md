@@ -16,6 +16,28 @@ reference to a back end with the role of a client in the WebSocket
 communication. Browser clients must use the native
 [`WebSocket`](https://developer.mozilla.org/en-US/docs/Web/API/WebSocket) object.
 
+## Table of Contents
+
+* [Protocol support](#protocol-support)
+* [Installing](#installing)
+  + [Opt-in for performance and spec compliance](#opt-in-for-performance-and-spec-compliance)
+* [API docs](#api-docs)
+* [WebSocket compression](#websocket-compression)
+* [Usage examples](#usage-examples)
+  + [Sending and receiving text data](#sending-and-receiving-text-data)
+  + [Sending binary data](#sending-binary-data)
+  + [Server example](#server-example)
+  + [Broadcast example](#broadcast-example)
+  + [ExpressJS example](#expressjs-example)
+  + [echo.websocket.org demo](#echowebsocketorg-demo)
+  + [Other examples](#other-examples)
+* [Error handling best practices](#error-handling-best-practices)
+* [FAQ](#faq)
+  + [How to get the IP address of the client?](#how-to-get-the-ip-address-of-the-client)
+  + [How to detect and close broken connections?](#how-to-detect-and-close-broken-connections)
+* [Changelog](#changelog)
+* [License](#license)
+
 ## Protocol support
 
 * **HyBi drafts 07-12** (Use the option `protocolVersion: 8`)
@@ -40,10 +62,9 @@ necessarily need to have a C++ compiler installed on your machine.
 - `npm install --save-optional utf-8-validate`: Allows to efficiently check
   if a message contains valid UTF-8 as required by the spec.
 
-## API Docs
+## API docs
 
-See [`/doc/ws.md`](https://github.com/websockets/ws/blob/master/doc/ws.md)
-for Node.js-like docs for the ws classes.
+See [`/doc/ws.md`](./doc/ws.md) for Node.js-like docs for the ws classes.
 
 ## WebSocket compression
 
@@ -52,23 +73,13 @@ enables the client and server to negotiate a compression algorithm and its
 parameters, and then selectively apply it to the data payloads of each
 WebSocket message.
 
-The extension is enabled by default but adds a significant overhead in terms of
-performance and memory comsumption. We suggest to use WebSocket compression
-only if it is really needed.
+The extension is disabled by default on the server and enabled by default on
+the client. It adds a significant overhead in terms of performance and memory
+comsumption so we suggest to enable it only if it is really needed.
 
-To disable the extension you can set the `perMessageDeflate` option to `false`.
-On the server:
-
-```js
-const WebSocket = require('ws');
-
-const wss = new WebSocket.Server({
-  perMessageDeflate: false,
-  port: 8080
-});
-```
-
-On the client:
+The client will only use the extension if it is supported and enabled on the
+server. To always disable the extension on the client set the
+`perMessageDeflate` option to `false`.
 
 ```js
 const WebSocket = require('ws');
@@ -91,9 +102,8 @@ ws.on('open', function open() {
   ws.send('something');
 });
 
-ws.on('message', function incoming(data, flags) {
-  // flags.binary will be set if a binary data is received.
-  // flags.masked will be set if the data was masked.
+ws.on('message', function incoming(data) {
+  console.log(data);
 });
 ```
 
@@ -176,10 +186,10 @@ app.use(function (req, res) {
 const server = http.createServer(app);
 const wss = new WebSocket.Server({ server });
 
-wss.on('connection', function connection(ws) {
-  const location = url.parse(ws.upgradeReq.url, true);
+wss.on('connection', function connection(ws, req) {
+  const location = url.parse(req.url, true);
   // You might use location.query.access_token to authenticate or share sessions
-  // or ws.upgradeReq.headers.cookie (see http://stackoverflow.com/a/16395220/151312)
+  // or req.headers.cookie (see http://stackoverflow.com/a/16395220/151312)
 
   ws.on('message', function incoming(message) {
     console.log('received: %s', message);
@@ -211,8 +221,8 @@ ws.on('close', function close() {
   console.log('disconnected');
 });
 
-ws.on('message', function incoming(data, flags) {
-  console.log(`Roundtrip time: ${Date.now() - data} ms`, flags);
+ws.on('message', function incoming(data) {
+  console.log(`Roundtrip time: ${Date.now() - data} ms`);
 
   setTimeout(function timeout() {
     ws.send(Date.now());
@@ -248,13 +258,74 @@ try { ws.send('something'); }
 catch (e) { /* handle error */ }
 ```
 
+## FAQ
+
+### How to get the IP address of the client?
+
+The remote IP address can be obtained from the raw socket.
+
+```js
+const WebSocket = require('ws');
+
+const wss = new WebSocket.Server({ port: 8080 });
+
+wss.on('connection', function connection(ws, req) {
+  const ip = req.connection.remoteAddress;
+});
+```
+
+When the server runs behing a proxy like NGINX, the de-facto standard is to use
+the `X-Forwarded-For` header.
+
+```js
+wss.on('connection', function connection(ws, req) {
+  const ip = req.headers['x-forwarded-for'];
+});
+```
+
+### How to detect and close broken connections?
+
+Sometimes the link between the server and the client can be interrupted in a
+way that keeps both the server and the client unware of the broken state of the
+connection (e.g. when pulling the cord).
+
+In these cases ping messages can be used as a means to verify that the remote
+endpoint is still responsive.
+
+```js
+const WebSocket = require('ws');
+
+const wss = new WebSocket.Server({ port: 8080 });
+
+function heartbeat() {
+  this.isAlive = true;
+}
+
+wss.on('connection', function connection(ws) {
+  ws.isAlive = true;
+  ws.on('pong', heartbeat);
+});
+
+const interval = setInterval(function ping() {
+  wss.clients.forEach(function each(ws) {
+    if (ws.isAlive === false) return ws.terminate();
+
+    ws.isAlive = false;
+    ws.ping('', false, true);
+  });
+}, 30000);
+```
+
+Pong messages are automatically sent in reponse to ping messages as required
+by the spec.
+
 ## Changelog
 
-We're using the GitHub [`releases`](https://github.com/websockets/ws/releases)
-for changelog entries.
+We're using the GitHub [releases][changelog] for changelog entries.
 
 ## License
 
 [MIT](LICENSE)
 
 [permessage-deflate]: https://tools.ietf.org/html/rfc7692
+[changelog]: https://github.com/websockets/ws/releases
