@@ -1,4 +1,4 @@
-var version = "2.0"
+var version = "2.1"
 var website = "http://comixsyt.space";
 var botTwitter = "https://twitter.com/M8_Bot"
 var officialDiscord = "https://discord.gg/JBrAVYD"

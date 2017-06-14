@@ -1,6 +1,5 @@
 # M8 Bot 2.0
-
-# M8 Bot
+[![](https://img.shields.io/badge/node-js-blue.svg)](https://nodejs.org/en/) [![](https://img.shields.io/badge/discord-js-blue.svg)](https://github.com/hydrabolt/discord.js) [![](https://discordapp.com/api/guilds/250354580926365697/widget.png?style=shield)](https://discord.gg/JBrAVYD)
 
 M8 Bot is a Discord chat bot designed for mixer streamers. It contains a few commands, including a way for livestreamers to better spread their message. A command list can be found at https://github.com/MAPReiff/M8-Bot/wiki/Bot-Commands.
 
