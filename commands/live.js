@@ -11,7 +11,6 @@ var timeDir = __dirname.replace("commands", "user_time")
 // //   access_token_secret: settings.access_token_secret
 // // });
 
-console.log(settings)
 
 exports.run = (client, message) => {
   const Discord = require("discord.js");
