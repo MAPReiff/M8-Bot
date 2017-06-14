@@ -1,12 +1,24 @@
+var userDir = __dirname.replace("commands", "users")
+var rootDir = __dirname.replace("commands", "")
+var timeDir = __dirname.replace("commands", "user_time")
+// var sourceFile = require('../m8botdev.js');
+// const settings = require(rootDir + '/settings.json');
+// var Twitter = require('twitter');
+// // var tweetClient = new Twitter({
+// //   consumer_key: settings.consumer_key,
+// //   consumer_secret: settings.consumer_secret,
+// //   access_token_key: settings.access_token_key,
+// //   access_token_secret: settings.access_token_secret
+// // });
+
+console.log(settings)
+
 exports.run = (client, message) => {
   const Discord = require("discord.js");
-  var userDir = __dirname.replace("commands", "users")
-  var rootDir = __dirname.replace("commands", "")
-  var timeDir = __dirname.replace("commands", "user_time")
   var fs = require("fs");
 
-  if ((message.content.startsWith("!live") && message.author.id == "278697796398481408") || //if the bot sends the message
-    (message.content.startsWith("!live") && message.author.id == "145367010489008128" && message.channel.id == "278697660133801984")) { //if comixs sends the message (and in certian chat)
+  if ((message.content.startsWith("m!live") && message.author.id == "278697796398481408") || //if the bot sends the message
+    (message.content.startsWith("m!live") && message.author.id == "145367010489008128" && message.channel.id == "278697660133801984")) { //if comixs sends the message (and in certian chat)
     let args = message.content.split(" ").slice(1); //seperate command into args
     let mixer = args[0]; //mixer name is arg 0
     if (fs.existsSync(userDir + "/" + mixer + ".txt")) { //varifies that the streamer is on record

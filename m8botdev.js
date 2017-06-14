@@ -1,4 +1,4 @@
-var version = "Alpha 2.0"
+var version = "2.0"
 var website = "http://comixsyt.space";
 var botTwitter = "https://twitter.com/M8_Bot"
 var officialDiscord = "https://discord.gg/JBrAVYD"
@@ -19,6 +19,17 @@ const fs = require('fs');
 const moment = require('moment');
 const Carina = require('carina').Carina;
 const ws = require('ws');
+
+
+// var consumer_key = settings.consumerKey
+// var consumer_secret = settings.consumerSecret
+// var access_token_key = settings.accessTokenKey
+// var access_token_secret = settings.accessTokenSecret
+
+// module.exports.consumer_key = settings.consumerKey
+// module.exports.consumer_secret = settings.consumerSecret
+// module.exports.access_token_key = settings.accessTokenKey
+// module.exports.access_token_secret = settings.accessTokenSecret
 
 const log = message => {
   console.log(`[${moment().format('YYYY-MM-DD HH:mm:ss')}] ${message}`);

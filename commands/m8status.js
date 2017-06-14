@@ -17,7 +17,7 @@ exports.run = (client, message) => {
   const statusEmbed = new Discord.RichEmbed()
     .setTitle("M8 Bot Status")
     .setAuthor("M8 Bot")
-    .setColor(sourceFile.embedColor)
+    .setColor(0x9900FF)
     .setFooter("Sent via M8 Bot", sourceFile.botLogo)
     .setThumbnail(sourceFile.botLogo)
     .setTimestamp()
