@@ -15,7 +15,7 @@ exports.run = (client, message) => {
         ] + ' ' +
         insult.end[
           Math.floor(Math.random() * insult.end.length)
-        ] + '.').catch(error => console.log(error.stack));
+        ] + '.' + " - " + message.author).catch(error => console.log(error.stack));
     }
   };
 
