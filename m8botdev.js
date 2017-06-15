@@ -1,4 +1,4 @@
-var version = "2.1"
+var version = "2.1.1"
 var website = "http://comixsyt.space";
 var botTwitter = "https://twitter.com/M8_Bot"
 var officialDiscord = "https://discord.gg/JBrAVYD"
@@ -162,5 +162,51 @@ for (i = 0; i < streamerCount; i++) { //Run for the # of streamers
     }
   });
 }
+
+client.on("guildMemberAdd", member => {
+  let guild = member.guild;
+  var guildID = member.guild.id;
+  var guildGeneral = member.guild.defaultChannel.id;
+  //console.log(guildGeneral);
+  //console.log(guildID);
+  if (guildID == "250354580926365697") { //Meme M8s Guild ID
+    member.addRole(guild.roles.find('name', 'Lil Meme'));
+    //client.channels.get(guildGeneral).sendMessage("Hey " + member.displayName + ", welcome to the **Chill Spot**! You are now a Lil Meme. Please read #welcome and enjoy your stay!");
+    //client.channels.get(guildGeneral).send("Hey " + member.name)
+  }
+  if (guildID == "169960109072449536") { //Innovative Studios Guild ID
+    member.addRole(guild.roles.find('name', 'Citizens of Townsville'));
+  }
+});
+
+client.on("guildCreate", guild => {
+  console.log("I just joined a new server called " + guild.name)
+  guild.defaultChannel.send("Hey guys and gals! I\'m M8 Bot! Its great to meet you all, and I hope you enjoy me :P\nA list of my commands can be found by using \"!help m8bot\".\nIf you encounter any issues, you can type \"!m8bug\" to recive links to submit issues!")
+
+  const joinedEmbed = new Discord.RichEmbed()
+    .setColor(0x00FF00)
+    .setTitle("Joined " + guild.name)
+    .setFooter("Sent via M8 Bot", botLogo)
+    .setTimestamp()
+    .setThumbnail(guild.iconURL)
+    .addField("Members", guild.memberCount, true)
+    .addField("Owner", guild.owner, true)
+  client.channels.get("316741092554833931").sendEmbed(joinedEmbed)
+
+});
+
+client.on("guildDelete", guild => {
+  const leftEmbed = new Discord.RichEmbed()
+    .setColor(0xFF0000)
+    .setTitle("Left " + guild.name)
+    .setFooter("Sent via M8 Bot", botLogo)
+    .setTimestamp()
+    .setThumbnail(guild.iconURL)
+    .addField("Members", guild.memberCount, true)
+    .addField("Owner", guild.owner, true)
+  client.channels.get("316741092554833931").sendEmbed(leftEmbed)
+
+});
+
 
 client.login(settings.token);
