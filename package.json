@@ -17,8 +17,11 @@
   },
   "homepage": "https://github.com/MAPReiff/M8-Bot#readme",
   "dependencies": {
-    "discord.js": "github:hydrabolt/discord.js#master",
+    "discord.js": "github:discordjs/discord.js",
+    "fs": "0.0.1-security",
     "klasa": "github:dirigeants/klasa",
+    "node-fetch": "^2.3.0",
     "rethinkdbdash": "^2.3.31"
-  }
+  },
+  "devDependencies": {}
 }
