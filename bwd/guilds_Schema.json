@@ -1,0 +1,20 @@
+{
+    "prefix": {
+        "type": "String",
+        "default": "-",
+        "array": false,
+        "sql": "TEXT NOT NULL DEFAULT '-'"
+    },
+    "language": {
+        "type": "Language",
+        "default": "en-US",
+        "array": false,
+        "sql": "TEXT NOT NULL DEFAULT 'en-US'"
+    },
+    "disabledCommands": {
+        "type": "Command",
+        "default": [],
+        "array": true,
+        "sql": "TEXT DEFAULT '[]'"
+    }
+}

@@ -1,0 +1,24 @@
+{
+  "name": "m8-bot",
+  "version": "1.0.0",
+  "description": "[![](https://img.shields.io/badge/node-js-blue.svg)](https://nodejs.org/en/) [![](https://img.shields.io/badge/discord-js-blue.svg)](https://github.com/hydrabolt/discord.js) [![](https://discordapp.com/api/guilds/352984490693623829/widget.png?style=shield)](https://discord.gg/JhyZARH)",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MAPReiff/M8-Bot.git"
+  },
+  "author": "Mitchell Reiff",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MAPReiff/M8-Bot/issues"
+  },
+  "homepage": "https://github.com/MAPReiff/M8-Bot#readme",
+  "dependencies": {
+    "discord.js": "github:hydrabolt/discord.js#master",
+    "klasa": "github:dirigeants/klasa",
+    "rethinkdbdash": "^2.3.31"
+  }
+}
