@@ -1,8 +1,4 @@
 const {
-    token
-} = require('./config.json');
-
-const {
     KlasaClient,
     Schema
 } = require('klasa');
@@ -20,6 +16,7 @@ const client = new KlasaClient({
         readyMessage: (client) => `Successfully initialized. Ready to serve ${client.guilds.size} guilds.`
 });
 
+client.config = require("./config.js");
 
 
 //Default Server Config
@@ -39,4 +36,4 @@ KlasaClient.defaultClientSchema.add('points', 'float', {
 });
 
 
-client.login(token);
+client.login(client.config.token);
