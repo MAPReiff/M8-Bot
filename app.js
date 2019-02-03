@@ -1,3 +1,7 @@
+var version = "12.0.0"
+// module.exports.version = version;
+
+
 const {
     KlasaClient,
     Schema
@@ -11,22 +15,29 @@ require('discord.js-aliases');
 
 const fs = require('fs');
 
+const config = require("./config.js");
 
 
 const client = new KlasaClient({
-    prefix: '-',
+
+    prefix: config.prefix,
     providers: {
         default: 'rethinkdb'
     },
     ownerID: '145367010489008128',
     fetchAllMembers: false,
-    prefix: '-',
     commandEditing: true,
     typing: true,
     readyMessage: (client) => `Successfully initialized. Ready to serve ${client.guilds.size} guilds.`
 });
 
 client.config = require("./config.js");
+
+client.version = version
+
+const DBL = require("dblapi.js");
+const dbl = new DBL(client.config.discordbots_org, client);
+
 
 
 //Default Server Config
@@ -216,20 +227,24 @@ function liveTwitch(name, game, status, logo, followers, views) {
 
                 var gSettings = this.guilds.get(guild_id).settings
 
-                var channelID = gSettings.twitchLiveChannel
+                if (gSettings.twitchLiveChannel != undefined) {
+                    var channelID = gSettings.twitchLiveChannel
 
-                var liveMessage = "";
+                    var liveMessage = "";
 
-                if (gSettings.livePing == false) {
-                    var liveMessage = liveMessage
+                    if (gSettings.livePing == false) {
+                        var liveMessage = liveMessage
+                    }
+                    if (gSettings.livePing == true) {
+                        var liveMessage = liveMessage + "@here, "
+                    }
+
+                    var liveMessage = liveMessage + name + " is now live on Twitch!"
+
+                    this.channels.get(channelID).sendEmbed(liveEmbed, liveMessage); //send the live message to servers
                 }
-                if (gSettings.livePing == true) {
-                    var liveMessage = liveMessage + "@here, "
-                }
 
-                var liveMessage = liveMessage + name + " is now live on Twitch!"
 
-                this.channels.get(channelID).sendEmbed(liveEmbed, liveMessage); //send the live message to servers
 
             }
 
@@ -388,20 +403,23 @@ function liveMixer(name, game, status, logo, followers, views, level, id) {
 
                 var gSettings = this.guilds.get(guild_id).settings
 
-                var channelID = gSettings.mixerLiveChannel
+                if (gSettings.mixerLiveChannel != undefined) {
+                    var channelID = gSettings.mixerLiveChannel
 
-                var liveMessage = "";
+                    var liveMessage = "";
 
-                if (gSettings.livePing == false) {
-                    var liveMessage = liveMessage
+                    if (gSettings.livePing == false) {
+                        var liveMessage = liveMessage
+                    }
+                    if (gSettings.livePing == true) {
+                        var liveMessage = liveMessage + "@here, "
+                    }
+
+                    var liveMessage = liveMessage + name + " is now live on Mixer!"
+
+                    this.channels.get(channelID).sendEmbed(liveEmbed, liveMessage); //send the live message to servers
                 }
-                if (gSettings.livePing == true) {
-                    var liveMessage = liveMessage + "@here, "
-                }
 
-                var liveMessage = liveMessage + name + " is now live on Mixer!"
-
-                this.channels.get(channelID).sendEmbed(liveEmbed, liveMessage); //send the live message to servers
 
             }
 
