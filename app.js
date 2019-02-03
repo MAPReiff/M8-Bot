@@ -65,19 +65,6 @@ const fetch = require('node-fetch');
 var halfHour = 1800000 //30 min in ms
 
 
-// if (client.shard.id == 0) { //only the main/first shard
-//     // client.shard.broadcastEval(console.log('wa' + client.shard.id))
-//     // client.shard.broadcastEval(client.loadStreamers())
-//     // client.loadStreamers()
-
-//     // delay(12000).then(() => { //should be 60000
-//     //     client.shard.broadcastEval(client.twitchCheck());
-//     // });
-
-//     // setInterval(client.twitchCheck(), 120000); //run the check every 2min
-
-// }
-
 function checkStatus(res) {
     if (res.ok) { // res.status >= 200 && res.status < 300
         return res;
