@@ -36,7 +36,8 @@ module.exports = class extends Command {
         var args = message.content.toString().toLowerCase().replace(prefix + 'addmixer', '').split(' ')
         var streamer = args[1]
         var mixerDir = __dirname.replace("commands/Streaming", "streamers/mixer");
-        var guildID = parseInt(message.guild.id)
+        var streamerDir = __dirname.replace("commands/Streaming", "streamers");
+        var guildID = message.guild.id
 
 
         function checkStatus(res) {
@@ -58,10 +59,15 @@ module.exports = class extends Command {
                             id: mixerInfo.id,
                             userid: mixerInfo.userid,
                             liveTime: '0',
-                            guilds: [parseInt(message.guild.id)]
+                            guilds: [message.guild.id]
                         };
                         let mixerJSON = JSON.stringify(defaultMixer);
                         fs.writeFileSync(mixerDir + '/' + mixerID + '.json', mixerJSON);
+
+                        var curMixer = fs.readFileSync(streamerDir + '/mixerStreamers.txt', "utf-8")
+                        var newMixer = mixerID + ', ' + curMixer
+
+                        fs.writeFileSync(streamerDir + '/mixerStreamers.txt', newMixer)
 
                         return message.reply(`you have added ${mixerInfo.token} on Mixer to your server!`)
 

@@ -36,7 +36,7 @@ module.exports = class extends Command {
         var args = message.content.toString().toLowerCase().replace(prefix + 'addtwitch', '').split(' ')
         var streamer = args[1]
         var twitchDir = __dirname.replace("commands/Streaming", "streamers/twitch");
-        var guildID = parseInt(message.guild.id)
+        var guildID = message.guild.id
         var twitch_id = this.client.config.twitch_id
 
 

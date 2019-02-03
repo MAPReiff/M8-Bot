@@ -36,7 +36,8 @@ module.exports = class extends Command {
         var args = message.content.toString().toLowerCase().replace(prefix + 'addtwitch', '').split(' ')
         var streamer = args[1]
         var twitchDir = __dirname.replace("commands/Streaming", "streamers/twitch");
-        var guildID = parseInt(message.guild.id)
+        var streamerDir = __dirname.replace("commands/Streaming", "streamers");
+        var guildID = message.guild.id
         var twitch_id = this.client.config.twitch_id
 
 
@@ -57,12 +58,20 @@ module.exports = class extends Command {
                         let defaultTwitch = {
                             name: twitchInfo.display_name,
                             liveTime: '0',
-                            guilds: [parseInt(message.guild.id)]
+                            guilds: [message.guild.id]
                         };
                         let twitchJSON = JSON.stringify(defaultTwitch);
                         fs.writeFileSync(twitchDir + '/' + name + '.json', twitchJSON);
 
+                        var curTwitch = fs.readFileSync(streamerDir + '/twitchStreamers.txt', "utf-8")
+                        var newTwitch = name + ', ' + curTwitch
+
+                        fs.writeFileSync(streamerDir + '/twitchStreamers.txt', newTwitch)
+
                         return message.reply(`you have added ${name} on Twitch to your server!`)
+
+
+
 
                     }
                     if (fs.existsSync(twitchDir + '/' + name + '.json')) { //if they are in the database
