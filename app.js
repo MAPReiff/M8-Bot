@@ -431,14 +431,13 @@ function liveMixer(name, game, status, logo, followers, views, level, id) {
 if (client.shard.id == 0) { //only the main/first shard
     loadStreamers()
 
-
-    delay(16000).then(() => {
+    delay(30000).then(() => {
         mixerCheck();
     })
 
-    // delay(12000).then(() => {
-    //     twitchCheck();
-    // });
+    delay(60000).then(() => {
+        twitchCheck();
+    });
 
     setInterval(twitchCheck, 120000); //run the check every 2min
 
