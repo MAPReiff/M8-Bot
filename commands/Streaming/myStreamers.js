@@ -60,10 +60,10 @@ module.exports = class extends Command {
             });
             var fileCount = files.length;
             var myStreamersTwitch = "Current **Twitch** Streamer List:\n";
-            for (i = 0; i < fileCount; i++) {
-                var serverList = fs.readFileSync(userDirTwitch + "/" + files[i]);
+            for (ip = 0; ip < fileCount; ip++) {
+                var serverList = fs.readFileSync(userDirTwitch + "/" + files[ip]);
                 if (serverList.includes(guildID)) {
-                    var name = files[i].replace(".json", "");
+                    var name = files[ip].replace(".json", "");
                     var myStreamersTwitch = myStreamersTwitch + name + "\n";
                 }
             }
