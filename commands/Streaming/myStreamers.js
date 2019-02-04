@@ -30,8 +30,8 @@ module.exports = class extends Command {
     async run(message, [...params]) {
         // This is where you place the code you want to run for your command
 
-        var userDirMixer = __dirname.replace("commands/Streaming", "streamers/mixer");
-        var userDirTwitch = __dirname.replace("commands/Streaming", "streamers/twitch");
+        var userDirMixer = __dirname.replace("commands/Streaming", "streamers/mixer").replace(String.raw `\commands\Streaming`, String.raw `\streamers\mixer`)
+        var userDirTwitch = __dirname.replace("commands/Streaming", "streamers/twitch").replace(String.raw `\commands\Streaming`, String.raw `\streamers\twitch`)
         const fs = require("fs");
         var guildID = message.guild.id
 

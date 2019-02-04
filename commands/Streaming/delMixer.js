@@ -36,7 +36,7 @@ module.exports = class extends Command {
         var args = message.content.toString().toLowerCase().replace(prefix + 'addmixer', '').split(' ')
         var streamer = args[1]
         // var mixerDir = __dirname.replace("commands/Streaming", "streamers/mixer");
-        var mixerDir = __dirname.replace("commands/Streaming", "streamers/mixer").replace(String.raw `commands\Streaming`, String.raw `streamers\mixer`)
+        var mixerDir = __dirname.replace("commands/Streaming", "streamers/mixer").replace(String.raw `\commands\Streaming`, String.raw `\streamers\mixer`)
         var guildID = message.guild.id
 
 

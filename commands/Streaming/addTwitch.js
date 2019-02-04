@@ -37,7 +37,7 @@ module.exports = class extends Command {
         var streamer = args[1]
 
         var twitchDir = __dirname.replace("commands/Streaming", "streamers/twitch").replace(String.raw`\commands\Streaming`, String.raw`\streamers\twitch`)
-        var streamerDir = __dirname.replace("commands/Streaming", "streamers").replace(String.raw`\commands/Streaming`, String.raw`\streamers`);
+        var streamerDir = __dirname.replace("commands/Streaming", "streamers").replace(String.raw`\commands\Streaming`, String.raw`\streamers`);
         var guildID = message.guild.id
         var twitch_id = this.client.config.twitch_id
 
