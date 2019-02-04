@@ -60,6 +60,7 @@ module.exports = class extends Command {
             });
             var fileCount = files.length;
             var myStreamersTwitch = "Current **Twitch** Streamer List:\n";
+            var ip;
             for (ip = 0; ip < fileCount; ip++) {
                 var serverList = fs.readFileSync(userDirTwitch + "/" + files[ip]);
                 if (serverList.includes(guildID)) {
