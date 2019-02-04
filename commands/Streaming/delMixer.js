@@ -35,7 +35,8 @@ module.exports = class extends Command {
         var prefix = message.guild.settings.prefix
         var args = message.content.toString().toLowerCase().replace(prefix + 'addmixer', '').split(' ')
         var streamer = args[1]
-        var mixerDir = __dirname.replace("commands/Streaming", "streamers/mixer");
+        // var mixerDir = __dirname.replace("commands/Streaming", "streamers/mixer");
+        var mixerDir = __dirname.replace("commands/Streaming", "streamers/mixer").replace(String.raw `commands\Streaming`, String.raw `streamers\mixer`)
         var guildID = message.guild.id
 
 
@@ -69,7 +70,7 @@ module.exports = class extends Command {
                             fs.writeFileSync(mixerDir + '/' + mixerID + '.json', JSON.stringify(streamerData));
                             return message.reply(`you have removed the Mixer streamer ${mixerInfo.token} from your server!`)
                         }
-                        
+
                         if (!streamerData.guilds.includes(guildID)) { //if they are not already added to that server
                             return message.reply(`the Mixer streamer ${mixerInfo.token} was never added to your server, and thus cannot be removed!`)
                         }
