@@ -41,6 +41,7 @@ module.exports = class extends Command {
             });
             var fileCount = files.length;
             var myStreamersMixer = "Current **Mixer** Streamer List:\n";
+            var i;
             for (i = 0; i < fileCount; i++) {
                 var serverList = fs.readFileSync(userDirMixer + "/" + files[i]);
                 if (serverList.includes(guildID)) {
