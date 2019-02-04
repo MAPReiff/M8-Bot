@@ -1,4 +1,4 @@
-var version = "12.0.0"
+var version = "12.0.2"
 // module.exports.version = version;
 
 
@@ -35,12 +35,25 @@ client.config = require("./config.js");
 
 client.version = version
 
+client.on("ready", () => {
+    client.user.setActivity(`v${version} | m8bot.js.org`);
+    //client.user.setGame(`Version ${version}`)
+
+});
+
 const DBL = require("dblapi.js");
 const dbl = new DBL(client.config.discordbots_org, client);
 
 
 
 //Default Server Config
+// KlasaClient.defaultGuildSchema.add('mixerLiveChannel', 'TextChannel', {
+//     default: "general"
+// });
+// KlasaClient.defaultGuildSchema.add('twitchLiveChannel', 'TextChannel', {
+//     default: "general"
+// });
+
 KlasaClient.defaultGuildSchema.add('mixerLiveChannel', 'TextChannel');
 KlasaClient.defaultGuildSchema.add('twitchLiveChannel', 'TextChannel');
 KlasaClient.defaultGuildSchema.add('modLog', 'TextChannel');
@@ -230,18 +243,41 @@ function liveTwitch(name, game, status, logo, followers, views) {
                 if (gSettings.twitchLiveChannel != undefined) {
                     var channelID = gSettings.twitchLiveChannel
 
-                    var liveMessage = "";
+                    if (channelID == null) {
+                        var channelID = this.guilds.get(guild_id).channels.find(channel => channel.name === 'general').id;
+                        if (channelID == undefined) {
+                            return;
+                        }
+                        var liveMessage = "";
 
-                    if (gSettings.livePing == false) {
-                        var liveMessage = liveMessage
+                        if (gSettings.livePing == false) {
+                            var liveMessage = liveMessage
+                        }
+                        if (gSettings.livePing == true) {
+                            var liveMessage = liveMessage + "@here, "
+                        }
+
+                        var liveMessage = liveMessage + name + " is now live on Twitch!"
+
+                        this.channels.get(channelID).sendEmbed(liveEmbed, liveMessage); //send the live message to servers
+
+                    } else {
+                        var liveMessage = "";
+
+                        if (gSettings.livePing == false) {
+                            var liveMessage = liveMessage
+                        }
+                        if (gSettings.livePing == true) {
+                            var liveMessage = liveMessage + "@here, "
+                        }
+
+                        var liveMessage = liveMessage + name + " is now live on Twitch!"
+
+                        this.channels.get(channelID).sendEmbed(liveEmbed, liveMessage); //send the live message to servers
+
                     }
-                    if (gSettings.livePing == true) {
-                        var liveMessage = liveMessage + "@here, "
-                    }
 
-                    var liveMessage = liveMessage + name + " is now live on Twitch!"
 
-                    this.channels.get(channelID).sendEmbed(liveEmbed, liveMessage); //send the live message to servers
                 }
 
 
@@ -406,18 +442,34 @@ function liveMixer(name, game, status, logo, followers, views, level, id) {
                 if (gSettings.mixerLiveChannel != undefined) {
                     var channelID = gSettings.mixerLiveChannel
 
-                    var liveMessage = "";
+                    if (channelID == null) {
+                        //  = this.guilds.get(guild_id).channels.find("name", settings.welcomeChannel).send
+                        var channelID = this.guilds.get(guild_id).channels.find(channel => channel.name === 'general').id;
+                        var liveMessage = "";
 
-                    if (gSettings.livePing == false) {
-                        var liveMessage = liveMessage
+                        if (gSettings.livePing == false) {
+                            var liveMessage = liveMessage
+                        }
+                        if (gSettings.livePing == true) {
+                            var liveMessage = liveMessage + "@here, "
+                        }
+                        var liveMessage = liveMessage + name + " is now live on Mixer!"
+
+                        this.channels.get(channelID).sendEmbed(liveEmbed, liveMessage); //send the live message to servers
+                    } else {
+                        var liveMessage = "";
+
+                        if (gSettings.livePing == false) {
+                            var liveMessage = liveMessage
+                        }
+                        if (gSettings.livePing == true) {
+                            var liveMessage = liveMessage + "@here, "
+                        }
+                        var liveMessage = liveMessage + name + " is now live on Mixer!"
+
+                        this.channels.get(channelID).sendEmbed(liveEmbed, liveMessage); //send the live message to servers
                     }
-                    if (gSettings.livePing == true) {
-                        var liveMessage = liveMessage + "@here, "
-                    }
 
-                    var liveMessage = liveMessage + name + " is now live on Mixer!"
-
-                    this.channels.get(channelID).sendEmbed(liveEmbed, liveMessage); //send the live message to servers
                 }
 
 
