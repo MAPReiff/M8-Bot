@@ -162,7 +162,7 @@ module.exports = class extends Command {
 
                         function mixerJSONF(id) {
 
-                            var rawdata = fs.readFileSync(streamerFolderMixer + "/" + id + ".json");
+                            var rawdata = fs.readFileSync(mixerDir + "/" + id + ".json");
                             this.streamerData = JSON.parse(rawdata);
 
                             // return streamerData;
@@ -207,11 +207,11 @@ module.exports = class extends Command {
 
                                         if (mixerInfo.token == mixerD.streamerData.name) {
                                             mixerD.streamerData.liveTime = liveTime
-                                            fs.writeFileSync(streamerFolderMixer + '/' + mixerID + '.json', JSON.stringify(mixerD.streamerData));
+                                            fs.writeFileSync(mixerDir + '/' + mixerID + '.json', JSON.stringify(mixerD.streamerData));
                                         } else {
                                             mixerD.streamerData.name = mixerInfo.token
                                             mixerD.streamerData.liveTime = liveTime
-                                            fs.writeFileSync(streamerFolderMixer + '/' + mixerID + '.json', JSON.stringify(mixerD.streamerData));
+                                            fs.writeFileSync(mixerDir + '/' + mixerID + '.json', JSON.stringify(mixerD.streamerData));
                                         }
 
                                     }
