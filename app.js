@@ -1,4 +1,4 @@
-var version = "12.0.2"
+var version = "12.0.3"
 // module.exports.version = version;
 
 
@@ -109,7 +109,7 @@ function loadStreamers() {
             var allMixer = allMixer + name;
         }
         //console.log(allMixer)
-        fs.writeFile(streamerFolder + "/mixerStreamers.txt", allMixer.replace(".DS_Store", ""));
+        fs.writeFileSync(streamerFolder + "/mixerStreamers.txt", allMixer.replace(".DS_Store", ""));
     });
 
     fs.readdir(streamerFolderTwitch, (err, files) => {
@@ -123,7 +123,7 @@ function loadStreamers() {
             var allTwitch = allTwitch + name;
         }
         //console.log(allMixer)
-        fs.writeFile(streamerFolder + "/twitchStreamers.txt", allTwitch.replace(".DS_Store", ""));
+        fs.writeFileSync(streamerFolder + "/twitchStreamers.txt", allTwitch.replace(".DS_Store", ""));
     });
 }
 

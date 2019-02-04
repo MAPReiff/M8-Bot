@@ -6,6 +6,7 @@ const streamerFolderTwitch = "./streamers/twitch";
 const streamerFolderTwitchOLD = "./twitch";
 const fetch = require('node-fetch')
 const config = require("./config.js");
+const delay = require('delay')
 
 
 function convertTwitch() {
