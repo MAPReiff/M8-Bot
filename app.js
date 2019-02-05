@@ -1,4 +1,4 @@
-var version = "12.3.0"
+var version = "12.4.0"
 // module.exports.version = version;
 
 
@@ -68,6 +68,7 @@ KlasaClient.defaultGuildSchema.add('livePing', 'Boolean', {
     default: true
 })
 KlasaClient.defaultGuildSchema.add('defaultRole', 'role');
+KlasaClient.defaultGuildSchema.add('muted', 'role');
 
 //Default User Config
 KlasaClient.defaultClientSchema.add('points', 'float', {
