@@ -206,7 +206,7 @@ module.exports = class extends Command {
 
                                         var args = [mixerInfo.token, mixerInfo.type.name, mixerInfo.name, mixerInfo.user.avatarUrl, mixerInfo.numFollowers, mixerInfo.viewersTotal, mixerInfo.user.level, mixerInfo.id]
                                         var v = JSON.stringify(args)
-                                        client.shard.broadcastEval(`(${liveMixer}).apply(this, ${JSON.stringify(args)})`)
+                                        this.client.shard.broadcastEval(`(${liveMixer}).apply(this, ${JSON.stringify(args)})`)
 
                                         if (mixerInfo.token == mixerD.streamerData.name) {
                                             mixerD.streamerData.liveTime = liveTime
