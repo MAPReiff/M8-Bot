@@ -1,4 +1,4 @@
-var version = "12.1.5"
+var version = "12.2.0"
 // module.exports.version = version;
 
 
@@ -32,6 +32,11 @@ const client = new KlasaClient({
 });
 
 client.config = require("./config.js");
+
+const Idiot = require("idiotic-api");
+client.idiotAPI = new Idiot.Client(client.config.idiotKey, {
+    dev: true
+});
 
 client.version = version
 

@@ -24,6 +24,7 @@
     "discord.js": "github:discordjs/discord.js",
     "discord.js-aliases": "^1.1.6",
     "fs": "0.0.1-security",
+    "idiotic-api": "^0.2.11",
     "klasa": "github:dirigeants/klasa",
     "kurasuta": "^0.2.16",
     "moment": "^2.24.0",
