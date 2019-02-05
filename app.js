@@ -1,4 +1,4 @@
-var version = "12.4.0"
+var version = "12.5.0"
 // module.exports.version = version;
 
 
