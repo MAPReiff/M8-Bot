@@ -49,6 +49,10 @@ module.exports = class extends Command {
             return message.reply("unable to ban the user, please try again later."), console.log(err);
         });
 
+        if (reason == "") {
+            reason = 'undefined'
+        }
+
         const banEmbed = new Discord.MessageEmbed()
             .setAuthor("M8 Bot Moderation")
             .addField("Banned User", `${user} (${user.tag})`)

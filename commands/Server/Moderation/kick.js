@@ -49,6 +49,10 @@ module.exports = class extends Command {
             return message.reply("unable to kick the user, please try again later."), console.log(err);
         });
 
+        if (reason == ""){
+            reason = 'undefined'
+        }
+
         const kickEmbed = new Discord.MessageEmbed()
             .setAuthor("M8 Bot Moderation")
             .addField("Kicked User", `${user} (${user.tag})`)

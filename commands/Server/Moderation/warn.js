@@ -45,6 +45,10 @@ module.exports = class extends Command {
         if (user === message.member) return message.reply("you're a few fries short of a Happy Meal. You cant warn yourself.");
         if (user === message.guild.owner) return message.reply("you can't warn the server owner bruh...");
 
+        if (reason == "") {
+            reason = 'undefined'
+        }
+
         const warnEmbed = new Discord.MessageEmbed()
             .setAuthor("M8 Bot Moderation")
             .addField("Warned User", `${user} (${user.tag})`)
