@@ -27,6 +27,7 @@
     "idiotic-api": "^0.2.11",
     "klasa": "github:dirigeants/klasa",
     "kurasuta": "^0.2.16",
+    "mal-scraper": "^2.4.5",
     "moment": "^2.24.0",
     "moment-duration-format": "^2.2.2",
     "node-fetch": "^2.3.0",

@@ -7,7 +7,7 @@ module.exports = class extends Command {
 
 	constructor(...args) {
 		super(...args, {
-			permissionLevel: 6,
+			permissionLevel: 5,
 			requiredPermissions: ['MANAGE_ROLES'],
 			runIn: ['text'],
 			description: 'Unmutes a mentioned user.',
@@ -51,7 +51,7 @@ module.exports = class extends Command {
 			embed: unMuteEmbed
 		});
 
-		return msg.sendMessage(`${member.user.tag} was unmuted.${reason ? ` With reason of: ${reason}` : ''}`);
+		// return msg.sendMessage(`${member.user.tag} was unmuted.${reason ? ` With reason of: ${reason}` : ''}`);
 	}
 
 };

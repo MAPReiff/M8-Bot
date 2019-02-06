@@ -15,7 +15,7 @@ module.exports = class extends Command {
             aliases: [],
             guarded: false,
             nsfw: false,
-            permissionLevel: 6,
+            permissionLevel: 5,
             requiredPermissions: ['KICK_MEMBERS'],
             // requiredSettings: ['modLog'],
             subcommands: false,

@@ -1,4 +1,4 @@
-var version = "12.6.0"
+var version = "12.7.0"
 // module.exports.version = version;
 
 
@@ -69,11 +69,19 @@ KlasaClient.defaultGuildSchema.add('livePing', 'Boolean', {
 })
 KlasaClient.defaultGuildSchema.add('defaultRole', 'role');
 KlasaClient.defaultGuildSchema.add('muted', 'role');
+KlasaClient.defaultGuildSchema.add('mod', 'role')
 
 //Default User Config
 KlasaClient.defaultClientSchema.add('points', 'float', {
     default: 10
 });
+
+KlasaClient.defaultPermissionLevels
+    // Mods are lvl5
+    .add(5, ({ guild, member }) => guild && guild.settings.mod != null && member.roles.has(guild.settings.mod))
+    // Support are lvl8
+    .add(8, ({ client, author }) => client.config.botSupportTeam.includes(author.id), { fetch: true });
+
 
 
 client.login(client.config.token);
