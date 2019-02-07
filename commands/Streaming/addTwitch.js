@@ -54,7 +54,7 @@ module.exports = class extends Command {
             .then(res => res.json())
             .then(
                 twitchInfo => {
-                    const name = twitchInfo.display_name;
+                    var name = twitchInfo.display_name;
                     if (!fs.existsSync(twitchDir + '/' + name + '.json')) { //if they are not in the database
                         let defaultTwitch = {
                             name: twitchInfo.display_name,
