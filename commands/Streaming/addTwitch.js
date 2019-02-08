@@ -41,6 +41,13 @@ module.exports = class extends Command {
         var guildID = message.guild.id
         var twitch_id = this.client.config.twitch_id
 
+        function twitchJSON(id) {
+
+            var rawdata = fs.readFileSync(twitchDir + "/" + id + ".json");
+            this.streamerData = JSON.parse(rawdata);
+
+            // return streamerData;
+        }
 
         function checkStatus(res) {
             if (res.ok) { // res.status >= 200 && res.status < 300
@@ -54,7 +61,7 @@ module.exports = class extends Command {
             .then(res => res.json())
             .then(
                 twitchInfo => {
-                    var name = twitchInfo.display_name;
+                    var name = twitchInfo.name;
                     if (!fs.existsSync(twitchDir + '/' + name + '.json')) { //if they are not in the database
                         let defaultTwitch = {
                             name: twitchInfo.display_name,
@@ -76,8 +83,11 @@ module.exports = class extends Command {
 
                     }
                     if (fs.existsSync(twitchDir + '/' + name + '.json')) { //if they are in the database
-                        let rawdata = fs.readFileSync(twitchDir + '/' + name + '.json');
-                        let streamerData = JSON.parse(rawdata);
+
+                        var twitchD = new twitchJSON(name)
+
+                        // let rawdata = fs.readFileSync(twitchDir + '/' + name + '.json');
+                        let streamerData = twitchD.streamerData
                         if (streamerData.guilds.includes(guildID)) { //if they are already added to that server
                             return message.reply(`the Twitch streamer ${name} has already been added to your server!`)
                         }
