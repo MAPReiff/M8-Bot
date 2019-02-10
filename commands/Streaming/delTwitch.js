@@ -54,7 +54,7 @@ module.exports = class extends Command {
             .then(res => res.json())
             .then(
                 twitchInfo => {
-                    const name = twitchInfo.display_name;
+                    const name = twitchInfo.name;
                     if (!fs.existsSync(twitchDir + '/' + name + '.json')) { //if they are not in the database
                         return message.reply(`the Twitch streamer ${name} was never added to your server, and thus cannot be removed!`)
                     }
