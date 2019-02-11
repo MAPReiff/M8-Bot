@@ -64,7 +64,7 @@ module.exports = class extends Command {
                     var name = twitchInfo.name;
                     if (!fs.existsSync(twitchDir + '/' + name + '.json')) { //if they are not in the database
                         let defaultTwitch = {
-                            name: twitchInfo.display_name,
+                            name: twitchInfo.name,
                             liveTime: '0',
                             guilds: [message.guild.id]
                         };
