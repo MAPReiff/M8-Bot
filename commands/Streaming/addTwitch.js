@@ -44,9 +44,8 @@ module.exports = class extends Command {
         function twitchJSON(id) {
 
             var rawdata = fs.readFileSync(twitchDir + "/" + id + ".json");
-            this.streamerData = JSON.parse(rawdata);
+            this.streamerD = JSON.parse(rawdata);
 
-            // return streamerData;
         }
 
         function checkStatus(res) {
@@ -87,7 +86,7 @@ module.exports = class extends Command {
                         var twitchD = new twitchJSON(name)
 
                         // let rawdata = fs.readFileSync(twitchDir + '/' + name + '.json');
-                        let streamerData = twitchD.streamerData
+                        let streamerData = twitchD.streamerD
                         if (streamerData.guilds.includes(guildID)) { //if they are already added to that server
                             return message.reply(`the Twitch streamer ${name} has already been added to your server!`)
                         }
