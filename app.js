@@ -24,7 +24,8 @@ const client = new KlasaClient({
     providers: {
         default: 'rethinkdb'
     },
-    ownerID: '145367010489008128',
+    // ownerID: '145367010489008128', //comixs
+    ownerID: '93015586698727424', //matt
     fetchAllMembers: false,
     commandEditing: true,
     typing: true,
