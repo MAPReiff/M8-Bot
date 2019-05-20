@@ -1,4 +1,4 @@
-var version = "12.9.0"
+var version = "12.9.1"
 // module.exports.version = version;
 
 
@@ -72,10 +72,9 @@ KlasaClient.defaultGuildSchema.add('muted', 'role');
 KlasaClient.defaultGuildSchema.add('mod', 'role')
 
 //Default User Config
-KlasaClient.defaultUserSchema.add('Glix', 'number', {
+KlasaClient.defaultClientSchema.add('points', 'float', {
     default: 10
 });
-KlasaClient.defaultUserSchema.add('Location', 'string');
 
 KlasaClient.defaultPermissionLevels
     // Mods are lvl5
@@ -152,13 +151,6 @@ function loadStreamers() {
 
 
 //Start Twitch
-const TwitchHelix = require("twitch-helix")
-
-const twitchApi = new TwitchHelix({
-    clientId: config.twitch_id2,
-    clientSecret: config.twitch_secret2
-})
-
 var streamersTwitch = fs.readFileSync(streamerFolder + "/twitchStreamers.txt", "utf-8").split(", ");
 var streamerCountTwitch = streamersTwitch.length;
 
@@ -170,7 +162,7 @@ for (t = 0; t < streamerCountTwitch; t++) {
 }
 console.log(chalk.magenta(`Now stalking ${streamerCountTwitch} streamers on Twitch!`));
 
-async function twitchCheck() {
+function twitchCheck() {
     console.log(chalk.magenta("Checking Twitch!"));
     for (tc = 0; tc < streamersTwitch.length; tc++) {
         var liveTime = (new Date).getTime();
@@ -183,49 +175,36 @@ async function twitchCheck() {
             var timeDiff = liveTime - lastLiveTime;
             if (timeDiff >= halfHour) { //if its been 30min or more
 
-                twitchApi.getStreamInfoByUsername(streamersTwitch[tc]).then(twitchStream => {
+                fetch(`https://api.twitch.tv/kraken/streams/${streamersTwitch[tc]}/?client_id=${client.config.twitch_id}`)
+                    .then(checkStatus)
+                    .then(res => res.json())
+                    .then(twitchInfo => {
 
-                    if (twitchStream == null) {
-                        //nothing
-                    } else {
-                        // console.log(twitchStream)
-                        twitchApi.getTwitchUserByName(streamersTwitch[tc]).then(twitchUser => {
-
-                            var liveTime = (new Date).getTime()
-                            var streamStartTime = new Date(twitchStream.started_at);
+                        if (twitchInfo.stream == null) {
+                            // nothing
+                        } else {
+                            var liveTime = (new Date).getTime();
+                            var streamStartTime = new Date(twitchInfo.stream.created_at);
                             var streamStartMS = streamStartTime.getTime();
                             if (liveTime - streamStartMS < 1800000) {
-                                console.log(chalk.magenta(twitchStream.user_name + " went live on Twitch, as its been more than 30min!"));
+                                console.log(chalk.magenta(twitchInfo.stream.channel.name + " went live on Twitch, as its been more than 30min!"));
 
-                                if (twitchStream.game_id == "") {
+                                if (twitchInfo.stream.game == "") {
                                     var gameName = "[API ERROR]"
-                                    var args = [twitchStream.user_name, gameName, twitchStream.title, twitchUser.profile_image_url, twitchUser.view_count]
+                                    var args = [twitchInfo.stream.channel.name, gameName, twitchInfo.stream.channel.status, twitchInfo.stream.channel.logo, twitchInfo.stream.channel.followers, twitchInfo.stream.channel.views]
                                     var v = JSON.stringify(args)
 
                                     client.shard.broadcastEval(`(${liveTwitch}).apply(this, ${JSON.stringify(args)})`)
                                     streamerData.liveTime = liveTime
-                                    fs.writeFileSync(streamerFolderTwitch + '/' + witchStream.user_name + '.json', JSON.stringify(streamerData));
+                                    fs.writeFileSync(streamerFolderTwitch + '/' + twitchInfo.stream.channel.name + '.json', JSON.stringify(streamerData));
 
                                 } else {
-
-                                    fetch(`https://api.twitch.tv/helix/games?id=${twitchStream.game_id}`, {
-                                            headers: {
-                                                "Client-ID": client.config.twitch_id
-                                            }
-                                        })
-                                        .then(checkStatus)
-                                        .then(res => res.json())
-                                        .then(gameD => {
-                                            gameName = gameD[0].name
-
-                                            var args = [twitchStream.user_name, gameName, twitchStream.title, twitchUser.profile_image_url, twitchUser.view_count]
-                                            var v = JSON.stringify(args)
-                                            client.shard.broadcastEval(`(${liveTwitch}).apply(this, ${JSON.stringify(args)})`)
-                                            streamerData.liveTime = liveTime
-                                            fs.writeFileSync(streamerFolderTwitch + '/' + twitchStream.user_name + '.json', JSON.stringify(streamerData));
-
-                                        })
-
+                                    // client.shard.broadcastEval(liveTwitch(twitchInfo.stream.channel.name, twitchInfo.stream.game, twitchInfo.stream.channel.status, twitchInfo.stream.channel.logo, twitchInfo.stream.channel.followers, twitchInfo.stream.channel.views)) //should tell all shards to do the following
+                                    var args = [twitchInfo.stream.channel.name, twitchInfo.stream.game, twitchInfo.stream.channel.status, twitchInfo.stream.channel.logo, twitchInfo.stream.channel.followers, twitchInfo.stream.channel.views]
+                                    var v = JSON.stringify(args)
+                                    client.shard.broadcastEval(`(${liveTwitch}).apply(this, ${JSON.stringify(args)})`)
+                                    streamerData.liveTime = liveTime
+                                    fs.writeFileSync(streamerFolderTwitch + '/' + twitchInfo.stream.channel.name + '.json', JSON.stringify(streamerData));
 
 
                                 }
@@ -233,54 +212,8 @@ async function twitchCheck() {
 
 
                             }
-
-
-                        })
-
-
-                    }
-                })
-
-
-                // fetch(`https://api.twitch.tv/kraken/streams/${streamersTwitch[tc]}/?client_id=${client.config.twitch_id}`)
-                //     .then(checkStatus)
-                //     .then(res => res.json())
-                //     .then(twitchInfo => {
-
-                //         if (twitchInfo.stream == null) {
-                //             // nothing
-                //         } else {
-                //             var liveTime = (new Date).getTime();
-                //             var streamStartTime = new Date(twitchInfo.stream.created_at);
-                //             var streamStartMS = streamStartTime.getTime();
-                //             if (liveTime - streamStartMS < 1800000) {
-                //                 console.log(chalk.magenta(twitchInfo.stream.channel.name + " went live on Twitch, as its been more than 30min!"));
-
-                //                 if (twitchInfo.stream.game == "") {
-                //                     var gameName = "[API ERROR]"
-                //                     var args = [twitchInfo.stream.channel.name, gameName, twitchInfo.stream.channel.status, twitchInfo.stream.channel.logo, twitchInfo.stream.channel.followers, twitchInfo.stream.channel.views]
-                //                     var v = JSON.stringify(args)
-
-                //                     client.shard.broadcastEval(`(${liveTwitch}).apply(this, ${JSON.stringify(args)})`)
-                //                     streamerData.liveTime = liveTime
-                //                     fs.writeFileSync(streamerFolderTwitch + '/' + twitchInfo.stream.channel.name + '.json', JSON.stringify(streamerData));
-
-                //                 } else {
-                //                     // client.shard.broadcastEval(liveTwitch(twitchInfo.stream.channel.name, twitchInfo.stream.game, twitchInfo.stream.channel.status, twitchInfo.stream.channel.logo, twitchInfo.stream.channel.followers, twitchInfo.stream.channel.views)) //should tell all shards to do the following
-                //                     var args = [twitchInfo.stream.channel.name, twitchInfo.stream.game, twitchInfo.stream.channel.status, twitchInfo.stream.channel.logo, twitchInfo.stream.channel.followers, twitchInfo.stream.channel.views]
-                //                     var v = JSON.stringify(args)
-                //                     client.shard.broadcastEval(`(${liveTwitch}).apply(this, ${JSON.stringify(args)})`)
-                //                     streamerData.liveTime = liveTime
-                //                     fs.writeFileSync(streamerFolderTwitch + '/' + twitchInfo.stream.channel.name + '.json', JSON.stringify(streamerData));
-
-
-                //                 }
-
-
-
-                //             }
-                //         }
-                //     })
+                        }
+                    })
 
             }
         }
@@ -291,7 +224,7 @@ async function twitchCheck() {
 
 
 
-function liveTwitch(name, game, status, logo, views) {
+function liveTwitch(name, game, status, logo, followers, views) {
 
     var twitchDir = "./streamers/twitch"
     const Discord = require('discord.js');
@@ -311,7 +244,7 @@ function liveTwitch(name, game, status, logo, views) {
         .setTimestamp()
         .setURL("http://twitch.tv/" + name)
         .addField("Streaming", game)
-        // .addField("Followers", followers, true)
+        .addField("Followers", followers, true)
         .addField("Total Views", views, true); //end the embed message template
 
     var serversAllowedRaw = fs.readFileSync(twitchDir + "/" + name + ".json");
@@ -534,9 +467,6 @@ function liveMixer(name, game, status, logo, followers, views, level, id) {
                     if (channelID == null) {
                         //  = this.guilds.get(guild_id).channels.find("name", settings.welcomeChannel).send
                         var channelID = this.guilds.get(guild_id).channels.find(channel => channel.name === 'general').id;
-                        if (channelID == undefined) {
-                            return;
-                        }
                         var liveMessage = "";
 
                         if (gSettings.livePing == false) {
