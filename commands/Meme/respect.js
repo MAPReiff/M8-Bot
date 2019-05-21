@@ -1,68 +1,56 @@
-const {
-    Command
-} = require('klasa');
+import { Command } from 'klasa'
 
-module.exports = class extends Command {
+export default class extends Command {
+	constructor (...args) {
+		super(...args, {
+			name: 'respect',
+			enabled: true,
+			runIn: ['text', 'dm'],
+			cooldown: 0,
+			deletable: false,
+			bucket: 1,
+			aliases: [],
+			guarded: false,
+			nsfw: false,
+			permissionLevel: 0,
+			requiredPermissions: ['SEND_MESSAGES', 'ATTACH_FILES'],
+			requiredSettings: [],
+			subcommands: false,
+			description: 'Get a respect image.',
+			quotedStringSupport: false,
+			usageDelim: undefined,
+			extendedHelp: 'No extended help available.'
+		})
+	}
 
-    constructor(...args) {
-        super(...args, {
-            name: 'respect',
-            enabled: true,
-            runIn: ['text', 'dm'],
-            cooldown: 0,
-            deletable: false,
-            bucket: 1,
-            aliases: [],
-            guarded: false,
-            nsfw: false,
-            permissionLevel: 0,
-            requiredPermissions: ['SEND_MESSAGES', 'ATTACH_FILES'],
-            requiredSettings: [],
-            subcommands: false,
-            description: 'Get a respect image.',
-            quotedStringSupport: false,
-            // usage: '',
-            usageDelim: undefined,
-            extendedHelp: 'No extended help available.'
-        });
-    }
+	async run (message, [...params]) {
+		const {
+			MessageAttachment
+		} = require('discord.js')
 
-    async run(message, [...params]) {
+		var target = {}
+		if (message.mentions.users.size >= 1) {
+			target = message.mentions.users.first()
+		} else {
+			target = message.author
+		}
 
-        const {
-            MessageAttachment
-        } = require("discord.js");
+		let msg = await message.channel.send(`<a:loading:417323455147540490> **${target.username}**'s friends and family are paying respect...`)
 
-        if (message.mentions.users.size >= 1) {
-            var target = message.mentions.users.first()
-        } else {
-            var target = message.author;
-        }
+		await message.channel.send(new MessageAttachment(
+			await this.client.idiotAPI.respect(target.displayAvatarURL({
+				format: 'png',
+				size: 128
+			})),
+			'respect.png'))
 
-        let msg
-        msg = await message.channel.send(`<a:loading:417323455147540490> **${target.username}**'s friends and family are paying respect...`);
+		await msg.delete()
+	}
 
-
-        await message.channel.send(new MessageAttachment(
-            await this.client.idiotAPI.respect(target.displayAvatarURL({
-                format: "png",
-                size: 128
-            })),
-            "respect.png"));
-
-
-        await msg.delete();
-
-
-
-
-    }
-
-    async init() {
-        /*
+	async init () {
+		/*
          * You can optionally define this method which will be run when the bot starts
          * (after login, so discord data is available via this.client)
          */
-    }
-
-};
+	}
+}

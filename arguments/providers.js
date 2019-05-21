@@ -1,13 +1,11 @@
-const { MultiArgument } = require('klasa');
+import { MultiArgument } from 'klasa'
 
-module.exports = class extends MultiArgument {
-
-	constructor(...args) {
-		super(...args, { aliases: ['...provider'] });
+export default class extends MultiArgument {
+	constructor (...args) {
+		super(...args, { aliases: ['...provider'] })
 	}
 
-	get base() {
-		return this.store.get('provider');
+	get base () {
+		return this.store.get('provider')
 	}
-
-};
+}
