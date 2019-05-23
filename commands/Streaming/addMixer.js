@@ -1,6 +1,9 @@
-import { Command } from 'klasa'
+const {
+    Command,
+    RichDisplay
+} = require('klasa')
 
-export default class extends Command {
+module.exports = class extends Command {
 	constructor (...args) {
 		super(...args, {
 			name: 'addMixer',

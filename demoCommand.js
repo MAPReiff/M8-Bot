@@ -1,6 +1,6 @@
 import { Command } from 'klasa'
 
-export default class extends Command {
+module.exports = class extends Command {
 	constructor (...args) {
 		super(...args, {
 			name: 'yourCommandName',

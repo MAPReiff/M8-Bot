@@ -1,5 +1,5 @@
 // Copyright (c) 2017-2018 dirigeants. All rights reserved. MIT license.
-import { Task } from 'klasa'
+const { Task } = require('klasa');
 
 /*
 
@@ -8,7 +8,7 @@ import { Task } from 'klasa'
 
 */
 
-export default class extends Task {
+module.exports = class extends Task {
 	async run ({ guild, user }) {
 		const _guild = this.client.guilds.get(guild)
 		if (!_guild) return

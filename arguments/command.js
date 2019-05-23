@@ -1,6 +1,6 @@
-import { Argument } from 'klasa'
+const { Argument } = require('klasa');
 
-export default class extends Argument {
+module.exports = class extends Argument {
 	constructor (...args) {
 		super(...args, {
 			aliases: ['cmd']

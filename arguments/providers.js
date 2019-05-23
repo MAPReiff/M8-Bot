@@ -1,6 +1,6 @@
-import { MultiArgument } from 'klasa'
+const { MultiArgument } = require('klasa');
 
-export default class extends MultiArgument {
+module.exports = class extends MultiArgument {
 	constructor (...args) {
 		super(...args, { aliases: ['...provider'] })
 	}

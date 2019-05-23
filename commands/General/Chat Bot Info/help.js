@@ -1,7 +1,6 @@
-import klasa from 'klasa'
-const { Command, util: { isFunction } } = klasa
+const { Command, util: { isFunction } } = require('klasa');
 
-export default class extends Command {
+module.exports = class extends Command {
 	constructor (...args) {
 		super(...args, {
 			aliases: ['commands'],

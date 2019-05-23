@@ -40,8 +40,8 @@ client.on('ready', () => {
 	client.user.setActivity(`v${version} | m8bot.js.org`)
 })
 
-const DBL = require('dblapi.js')
-const dbl = new DBL(client.config.discordbots_org, client)
+// const DBL = require('dblapi.js')
+// const dbl = new DBL(client.config.discordbots_org, client)
 
 KlasaClient.defaultGuildSchema.add('mixerLiveChannel', 'TextChannel')
 KlasaClient.defaultGuildSchema.add('twitchLiveChannel', 'TextChannel')
@@ -92,6 +92,12 @@ function checkStatus (res) {
 
 function loadStreamers () {
 	fs.readdir(streamerFolderMixer, (err, files) => {
+
+		if(files === undefined)
+		{
+			return;
+		}
+
 		var fileCount = files.length
 		var allMixer = ''
 		for (var i = 0; i < fileCount; i++) {
@@ -106,6 +112,12 @@ function loadStreamers () {
 	})
 
 	fs.readdir(streamerFolderTwitch, (err, files) => {
+		
+		if(files === undefined)
+		{
+			return;
+		}
+
 		var fileCount = files.length
 		var allTwitch = ''
 		for (var i = 0; i < fileCount; i++) {
@@ -162,8 +174,7 @@ function twitchCheck() {
 									var v = JSON.stringify(args)
 									client.shard.broadcastEval(`(${liveTwitch}).apply(this, ${JSON.stringify(args)})`)
 									streamerData.liveTime = liveTime
-									fs.writeFileSync(streamerFolderTwitch + '/' + twitchInfo.stream.channel.name + '.json', JSON.stringify(streamerData))
-								}
+									fs.writeFileSync(streamerFolderTwitch + '/' + twitchInfo.stream.channel.name + '.json', JSON.stringify(streamerData))								}
 							}
 						}
 					})
@@ -369,15 +380,15 @@ function liveMixer (name, game, status, logo, followers, views, level, id) {
 }
 
 if (client.shard.id === 0) { // only the main/first shard
-	// loadStreamers()
+	loadStreamers()
 
-	// delay(30000).then(() => {
-	// 	mixerCheck()
-	// })
+	delay(30000).then(() => {
+		mixerCheck()
+	})
 
-	// delay(60000).then(() => {
-	// 	twitchCheck()
-	// })
+	delay(60000).then(() => {
+		twitchCheck()
+	})
 
-	// setInterval(twitchCheck, 120000) // run the check every 2min
+	setInterval(twitchCheck, 120000) // run the check every 2min
 }

@@ -1,7 +1,12 @@
-import { Command } from 'klasa'
-import { MessageEmbed } from 'discord.js'
+const {
+    Command,
+    RichDisplay
+} = require('klasa');
+const {
+    MessageEmbed
+} = require('discord.js');
 
-export default class extends Command {
+module.exports = class extends Command {
 	constructor (...args) {
 		super(...args, {
 			name: 'purge',

@@ -1,6 +1,6 @@
-import { Argument } from 'klasa'
+const { Argument } = require('klasa');
 
-export default class extends Argument {
+module.exports =  class extends Argument {
 	run (arg, possible, message) {
 		const provider = this.client.providers.get(arg)
 		if (provider) return provider

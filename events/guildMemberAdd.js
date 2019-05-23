@@ -1,6 +1,8 @@
-import { Event } from 'klasa'
+const {
+	Event
+} = require('klasa');
 
-export default class extends Event {
+module.exports = class extends Event {
 	run (member) {
 		const settings = member.guild.settings
 

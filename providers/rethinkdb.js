@@ -1,9 +1,8 @@
 // Copyright (c) 2017-2018 dirigeants. All rights reserved. MIT license.
-import klasa from 'klasa'
-import rethink from 'rethinkdbdash'
-const { Provider, util: { mergeDefault, chunk } } = klasa
+const { Provider, util: { mergeDefault, chunk } } = require('klasa')
+const rethink = require('rethinkdbdash')
 
-export default class extends Provider {
+module.exports = class extends Provider {
 	constructor (...args) {
 		super(...args)
 		this.db = rethink(mergeDefault({
