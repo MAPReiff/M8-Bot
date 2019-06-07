@@ -30,7 +30,7 @@ module.exports = class extends Command {
 		const fetch = require('node-fetch')
 
 		var prefix = message.guild.settings.prefix
-		var args = message.content.toString().toLowerCase().replace(prefix + 'addtwitch', '').split(' ')
+		var args = message.content.toString().toLowerCase().replace(prefix + 'deltwitch', '').split(' ')
 		var streamer = args[1]
 		var twitchDir = __dirname.replace('commands/Streaming', 'streamers/twitch').replace(String.raw`\commands\Streaming`, String.raw`\streamers\twitch`)
 		var guildID = message.guild.id

@@ -1,18 +1,10 @@
 var version = '12.9.1'
 
-const {
-	KlasaClient,
-	Schema
-} = require('klasa')
-
+const { KlasaClient, Schema } = require('klasa')
 const Discord = require('discord.js')
-const {
-	MessageEmbed
-} = require('discord.js')
-require('discord.js-aliases')
-
+const MessageEmbed = require('discord.js')
+const DiscordAliases = require('discord.js-aliases')
 const fs = require('fs')
-
 const config = require('./config.js')
 
 const client = new KlasaClient({
@@ -28,73 +20,76 @@ const client = new KlasaClient({
 })
 
 client.config = require('./config.js')
-
 const Idiot = require('idiotic-api')
+const delay = require('delay')
+const chalk = require('chalk')
+const fetch = require('node-fetch')
+const Carina = require('carina').Carina
+const ws = require('ws')
+
 client.idiotAPI = new Idiot.Client(client.config.idiotKey, {
 	dev: true
 })
 
-client.version = version
-
-client.on('ready', () => {
-	client.user.setActivity(`v${version} | m8bot.js.org`)
-})
-
-// const DBL = require('dblapi.js')
-// const dbl = new DBL(client.config.discordbots_org, client)
-
-KlasaClient.defaultGuildSchema.add('mixerLiveChannel', 'TextChannel')
-KlasaClient.defaultGuildSchema.add('twitchLiveChannel', 'TextChannel')
-KlasaClient.defaultGuildSchema.add('modLog', 'TextChannel')
-KlasaClient.defaultGuildSchema.add('welcomeChannel', 'TextChannel')
-KlasaClient.defaultGuildSchema.add('livePing', 'Boolean', {
-	default: true
-})
-KlasaClient.defaultGuildSchema.add('defaultRole', 'role')
-KlasaClient.defaultGuildSchema.add('muted', 'role')
-KlasaClient.defaultGuildSchema.add('mod', 'role')
-KlasaClient.defaultClientSchema.add('points', 'float', {
-	default: 10
-})
-
-KlasaClient.defaultPermissionLevels
-// Mods are lvl5
-	.add(5, ({
-		guild,
-		member
-	}) => guild && guild.settings.mod != null && member.roles.has(guild.settings.mod))
-// Support are lvl8
-	.add(8, ({
-		client,
-		author
-	}) => client.config.botSupportTeam.includes(author.id), {
-		fetch: true
-	})
-
-client.login(client.config.token)
-
+const streamerFolder = './streamers'
 const streamerFolderMixer = './streamers/mixer'
 const streamerFolderTwitch = './streamers/twitch'
-const streamerFolder = './streamers'
-const delay = require('delay')
-const chalk = require('chalk')
-const fetch = require('node-fetch')
+const halfHour = 1800000 // 30 min in ms
 
-var halfHour = 1800000 // 30 min in ms
+function configureKlasa() {
+	// Configure default guild schema for Klasa.
+	KlasaClient.defaultGuildSchema.add('mixerLiveChannel', 'TextChannel')
+	KlasaClient.defaultGuildSchema.add('twitchLiveChannel', 'TextChannel')
+	KlasaClient.defaultGuildSchema.add('modLog', 'TextChannel')
+	KlasaClient.defaultGuildSchema.add('welcomeChannel', 'TextChannel')
+	KlasaClient.defaultGuildSchema.add('livePing', 'Boolean', {
+		default: true
+	})
+	KlasaClient.defaultGuildSchema.add('defaultRole', 'role')
+	KlasaClient.defaultGuildSchema.add('muted', 'role')
+	KlasaClient.defaultGuildSchema.add('mod', 'role')
+	KlasaClient.defaultClientSchema.add('points', 'float', {
+		default: 10
+	})
 
-function checkStatus (res) {
+	// Configure default permissions levels for Klasa.
+	KlasaClient.defaultPermissionLevels
+		// Mods are lvl5
+		.add(5, ({
+			guild,
+			member
+		}) => guild && guild.settings.mod != null && member.roles.has(guild.settings.mod))
+		// Support are lvl8
+		.add(8, ({
+			client,
+			author
+		}) => client.config.botSupportTeam.includes(author.id), {
+				fetch: true
+			})
+}
+
+function configureClient() {
+	// Set the clients version.
+	client.version = version
+
+	// Set bot's activity in Discord.
+	client.on('ready', () => {
+		client.user.setActivity(`v${version} | m8bot.js.org`)
+	})
+}
+
+function checkStatus(res) {
 	if (res.ok) {
 		return res
 	} else {
+		console.log('Status not ok: ' + res);
 		// nothing
 	}
 }
 
-function loadStreamers () {
+function loadStreamers() {
 	fs.readdir(streamerFolderMixer, (err, files) => {
-
-		if(files === undefined)
-		{
+		if (files === undefined) {
 			return;
 		}
 
@@ -112,9 +107,8 @@ function loadStreamers () {
 	})
 
 	fs.readdir(streamerFolderTwitch, (err, files) => {
-		
-		if(files === undefined)
-		{
+
+		if (files === undefined) {
 			return;
 		}
 
@@ -132,66 +126,143 @@ function loadStreamers () {
 	})
 }
 
-// Start Twitch
-var streamersTwitch = fs.readFileSync(streamerFolder + '/twitchStreamers.txt', 'utf-8').split(', ')
-var streamerCountTwitch = streamersTwitch.length
-console.log(chalk.magenta(`Now stalking ${streamerCountTwitch} streamers on Twitch!`))
-
 function twitchCheck() {
-	console.log(chalk.magenta('Checking Twitch!'))
+	console.log('Initiating Twitch check.')
+	
+	var streamersTwitch = fs.readFileSync(streamerFolder + '/twitchStreamers.txt', 'utf-8').split(', ')
+	streamersTwitch.pop()
+
+	var count = 0;
+	var streamerBatches = [];
+    var streamerBatch = [];
+    var announced = [];
+
 	for (var tc = 0; tc < streamersTwitch.length; tc++) {
-		var liveTime = (new Date()).getTime()
+		var rawdata = fs.readFileSync(streamerFolderTwitch + '/' + streamersTwitch[tc] + '.json')
+		var liveTime = (new Date()).getTime();
+		var streamerData = JSON.parse(rawdata);
+		var lastLiveTime = streamerData.liveTime;
 
-		if (streamersTwitch[tc] !== '') {
-			var rawdata = fs.readFileSync(streamerFolderTwitch + '/' + streamersTwitch[tc] + '.json')
-			var streamerData = JSON.parse(rawdata)
-			var lastLiveTime = streamerData.liveTime
+		var timeDiff = liveTime - lastLiveTime;
+		if (timeDiff >= halfHour) {
+			streamerBatch.push(streamersTwitch[tc]);
+			count++;
+		}
 
-			var timeDiff = liveTime - lastLiveTime
-			if (timeDiff >= halfHour) {
-				fetch(`https://api.twitch.tv/kraken/streams/${streamersTwitch[tc]}/?client_id=${client.config.twitch_id}`)
-					.then(checkStatus)
-					.then(res => res.json())
-					.then(twitchInfo => {
-						if (twitchInfo.stream != null) {
-							var liveTime = (new Date()).getTime()
-							var streamStartTime = new Date(twitchInfo.stream.created_at)
-							var streamStartMS = streamStartTime.getTime()
-							if (liveTime - streamStartMS < 1800000) {
-								console.log(chalk.magenta(twitchInfo.stream.channel.name + ' went live on Twitch, as its been more than 30min!'))
-
-								if (twitchInfo.stream.game === '') {
-									var gameName = '[API ERROR]'
-									var args = [twitchInfo.stream.channel.name, gameName, twitchInfo.stream.channel.status, twitchInfo.stream.channel.logo, twitchInfo.stream.channel.followers, twitchInfo.stream.channel.views]
-									var v = JSON.stringify(args)
-
-									client.shard.broadcastEval(`(${liveTwitch}).apply(this, ${JSON.stringify(args)})`)
-									streamerData.liveTime = liveTime
-									fs.writeFileSync(streamerFolderTwitch + '/' + twitchInfo.stream.channel.name + '.json', JSON.stringify(streamerData))
-								} else {
-									// client.shard.broadcastEval(liveTwitch(twitchInfo.stream.channel.name, twitchInfo.stream.game, twitchInfo.stream.channel.status, twitchInfo.stream.channel.logo, twitchInfo.stream.channel.followers, twitchInfo.stream.channel.views)) //should tell all shards to do the following
-									var args = [twitchInfo.stream.channel.name, twitchInfo.stream.game, twitchInfo.stream.channel.status, twitchInfo.stream.channel.logo, twitchInfo.stream.channel.followers, twitchInfo.stream.channel.views]
-									var v = JSON.stringify(args)
-									client.shard.broadcastEval(`(${liveTwitch}).apply(this, ${JSON.stringify(args)})`)
-									streamerData.liveTime = liveTime
-									fs.writeFileSync(streamerFolderTwitch + '/' + twitchInfo.stream.channel.name + '.json', JSON.stringify(streamerData))								}
-							}
-						}
-					})
-			}
+		if (count == 75) {
+			streamerBatches.push(streamerBatch.join(','));
+			count = 0;
+			streamerBatch = [];
 		}
 	}
+	streamerBatches.push(streamerBatch.join(','));
+
+	var streamerIdBatches = [];
+
+	for (var batch = 0; batch < streamerBatches.length; batch++) {
+		var url = `https://api.twitch.tv/kraken/users?login=${streamerBatches[batch]}`;
+		var headers = {
+			'Accept': 'application/vnd.twitchtv.v5+json',
+			'Client-Id': client.config.twitch_id,
+		}
+
+		fetch(url, { method: 'GET', headers: headers })
+			.then(checkStatus)
+			.then(res => res.json())
+			.then(twitchInfo => {
+				var idList = [];
+
+				for (var user = 0; user < twitchInfo.users.length; user++) {
+					idList.push(twitchInfo.users[user]._id);
+				}
+
+				streamerIdBatches.push(idList.join(','));
+				for (var batch = 0; batch < streamerIdBatches.length; batch++) {
+					var url = `https://api.twitch.tv/kraken/streams?channel=${streamerIdBatches[batch]}`;
+					var headers = {
+						'Accept': 'application/vnd.twitchtv.v5+json',
+						'Client-Id': client.config.twitch_id,
+					}
+
+					fetch(url, { method: 'GET', headers: headers })
+						.then(checkStatus)
+						.then(res => res.json())
+						.then(twitchInfo => {
+							for (var stream = 0; stream < twitchInfo.streams.length; stream++) {
+								var liveTime = (new Date()).getTime()
+								var streamStartTime = new Date(twitchInfo.streams[stream].created_at)
+								var streamStartMS = streamStartTime.getTime()
+								
+								if (liveTime - streamStartMS < 1800000) {
+									if (twitchInfo.streams[stream].game === '') {
+										var gameName = '[API ERROR]'
+										var channelName = twitchInfo.streams[stream].channel.name;
+										var args = [
+										twitchInfo.streams[stream].channel.name,
+										gameName,
+										twitchInfo.streams[stream].channel.status,
+										twitchInfo.streams[stream].channel.logo,
+										twitchInfo.streams[stream].channel.followers,
+										twitchInfo.streams[stream].channel.views]
+										
+										delay(5000).then(() => {
+                                            if(!announced.includes(channelName))
+                                            {
+                                                console.log(`Announcing ${channelName}`);
+                                                client.shard.broadcastEval(`(${liveTwitch}).apply(this, ${JSON.stringify(args)})`)
+                                                announced.push(channelName);
+												
+												var streamerFile = fs.readFileSync(streamerFolderTwitch + '/' + channelName + '.json');
+												var goLiveTime = (new Date()).getTime();
+												var streamerJson = JSON.parse(streamerFile);
+												streamerJson.liveTime = goLiveTime;
+												fs.writeFileSync(streamerFolderTwitch + '/' + channelName + '.json', JSON.stringify(streamerJson));
+                                            }
+										});
+									}
+									else {
+										var channelName = twitchInfo.streams[stream].channel.name;
+										var args = [twitchInfo.streams[stream].channel.name,
+										twitchInfo.streams[stream].game,
+										twitchInfo.streams[stream].channel.status,
+										twitchInfo.streams[stream].channel.logo,
+										twitchInfo.streams[stream].channel.followers,
+										twitchInfo.streams[stream].channel.views]
+										
+										delay(5000).then(() => {
+                                            if(!announced.includes(channelName))
+                                            {
+                                                console.log(`Announcing ${channelName}`);
+                                                client.shard.broadcastEval(`(${liveTwitch}).apply(this, ${JSON.stringify(args)})`)
+                                                announced.push(channelName);
+												
+												var streamerFile = fs.readFileSync(streamerFolderTwitch + '/' + channelName + '.json');
+												var goLiveTime = (new Date()).getTime();
+												var streamerJson = JSON.parse(streamerFile);
+												streamerJson.liveTime = goLiveTime;
+												fs.writeFileSync(streamerFolderTwitch + '/' + channelName + '.json', JSON.stringify(streamerJson));
+                                            }
+										});
+									}
+								}
+							}
+						});
+				}
+			});
+	}
+	
+	console.log('Twitch check completed.')
 }
 
-function liveTwitch (name, game, status, logo, followers, views) {
-	var twitchDir = './streamers/twitch'
+function liveTwitch(name, game, status, logo, followers, views) {
+	const streamerFolderTwitch = './streamers/twitch'
 	const Discord = require('discord.js')
 	const {
 		MessageEmbed
 	} = require('discord.js')
 	require('discord.js-aliases')
 	const fs = require('fs')
-
+	
 	const liveEmbed = new Discord.MessageEmbed() // start the embed message template
 		.setTitle(name + "'s Stream")
 		.setAuthor(status)
@@ -205,10 +276,10 @@ function liveTwitch (name, game, status, logo, followers, views) {
 		.addField('Followers', followers, true)
 		.addField('Total Views', views, true) // end the embed message template
 
-	var serversAllowedRaw = fs.readFileSync(twitchDir + '/' + name + '.json')
+	var serversAllowedRaw = fs.readFileSync(streamerFolderTwitch + '/' + name + '.json')
 	var streamerData = JSON.parse(serversAllowedRaw)
 	var serversAllowed = streamerData.guilds.toString().split(',')
-
+	
 	var i
 	for (i = 0; i < serversAllowed.length; i++) { // run for the total number of servers they are allowed on
 		if (this.guilds.map(c => c.id).includes(serversAllowed[i])) {
@@ -225,6 +296,7 @@ function liveTwitch (name, game, status, logo, followers, views) {
 						if (channelID === undefined) {
 							return
 						}
+						
 						var liveMessage = ''
 
 						if (gSettings.livePing) {
@@ -233,7 +305,14 @@ function liveTwitch (name, game, status, logo, followers, views) {
 
 						liveMessage = liveMessage + name + ' is now live on Twitch!'
 
-						this.channels.get(channelID).sendEmbed(liveEmbed, liveMessage)
+						try{
+							this.channels.get(channelID).sendEmbed(liveEmbed, liveMessage)	
+						}
+						catch (err)
+						{
+							console.log(`Error sending message via twitch: ${err}`)
+						}
+						
 					} else {
 						var liveMessage = ''
 
@@ -243,7 +322,14 @@ function liveTwitch (name, game, status, logo, followers, views) {
 
 						liveMessage = liveMessage + name + ' is now live on Twitch!'
 
-						this.channels.get(channelID).sendEmbed(liveEmbed, liveMessage) // send the live message to servers
+						
+						try{
+							this.channels.get(channelID).sendEmbed(liveEmbed, liveMessage)	
+						}
+						catch (err)
+						{
+							console.log(`Error sending message via twitch: ${err}`)
+						}
 					}
 				}
 			}
@@ -251,30 +337,15 @@ function liveTwitch (name, game, status, logo, followers, views) {
 	}
 }
 
-// Start Mixer
-var streamersMixer = fs.readFileSync(streamerFolder + '/mixerStreamers.txt', 'utf-8').split(', ')
-var mixerStreamerCount = streamersMixer.length
-
-const Carina = require('carina').Carina
-const ws = require('ws')
-
-Carina.WebSocket = ws
-const ca = new Carina({
-	isBot: true
-}).open()
-
-class MixerJSON {
-	constructor (id) {
-		var rawdata = fs.readFileSync(streamerFolderMixer + '/' + id + '.json')
-		this.streamerData = JSON.parse(rawdata)
-	}
-}
-
-function mixerCheck () {
+function mixerCheck() {
 	for (var i = 0; i < mixerStreamerCount; i++) {
 		var halfHour = 1800000 // time in milis that is 30min
 		var bootTime = (new Date()).getTime() // get the time the bot booted up
 		var halfHourAgo = bootTime - 1800000 // get the time 30min before the boot
+
+		if (streamersMixer[i] == '') {
+			continue;
+		}
 
 		fetch(`https://mixer.com/api/v1/channels/${streamersMixer[i]}`)
 			.then(checkStatus)
@@ -315,7 +386,7 @@ function mixerCheck () {
 	console.log(chalk.cyan(`Now stalking ${mixerStreamerCount} streamers on Mixer`)) // logs that the bot is watching for the streamer to go live
 }
 
-function liveMixer (name, game, status, logo, followers, views, level, id) {
+function liveMixer(name, game, status, logo, followers, views, level, id) {
 	var mixerDir = './streamers/mixer'
 	const Discord = require('discord.js')
 	const {
@@ -379,16 +450,62 @@ function liveMixer (name, game, status, logo, followers, views, level, id) {
 	}
 }
 
-if (client.shard.id === 0) { // only the main/first shard
-	loadStreamers()
+console.log('Configuring Klasa.')
+configureKlasa();
+console.log('Klasa configured.')
 
+console.log('Logging in.')
+client.login(client.config.token)
+console.log('Logged in.')
+
+console.log('Configuring client.')
+configureClient();
+console.log('Client configured.')
+
+console.log('Loading streamers into txt from JSON.')
+// Load streamers
+loadStreamers();
+console.log('Streamers loaded into txt files.')
+
+console.log('Loading Mixer streamers into memory.')
+// Load Mixer streamers.
+var streamersMixer = fs.readFileSync(streamerFolder + '/mixerStreamers.txt', 'utf-8').split(', ')
+streamersMixer.pop()
+var mixerStreamerCount = streamersMixer.length
+console.log('Loaded Mixer streamers into memory.')
+
+console.log('Loading Twitch streamers into memory.')
+var streamersTwitch = fs.readFileSync(streamerFolder + '/twitchStreamers.txt', 'utf-8').split(', ')
+streamersTwitch.pop()
+var streamerCountTwitch = streamersTwitch.length
+console.log(chalk.magenta(`Now stalking ${streamerCountTwitch} streamers on Twitch!`))
+console.log('Loaded Twitch streamers into memory.')
+
+console.log('Connecting to Mixer Constellation and other stuffs.')
+
+Carina.WebSocket = ws
+const ca = new Carina({
+	isBot: true
+}).open()
+
+class MixerJSON {
+	constructor(id) {
+		var rawdata = fs.readFileSync(streamerFolderMixer + '/' + id + '.json')
+		this.streamerData = JSON.parse(rawdata)
+	}
+}
+
+console.log('Connected to Mixer Constellation and did other stuffs.')
+
+if (client.shard.id === 0) { // only the main/first shard
 	delay(30000).then(() => {
 		mixerCheck()
 	})
 
+	console.log('Waiting 60 seconds, then doing our initial Twitch check.')
 	delay(60000).then(() => {
 		twitchCheck()
+		
+		setInterval(twitchCheck, 120000) // run the check every 2min
 	})
-
-	setInterval(twitchCheck, 120000) // run the check every 2min
 }
