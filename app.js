@@ -1,4 +1,4 @@
-var version = '12.9.1'
+var version = '12.9.2'
 
 const { KlasaClient, Schema } = require('klasa')
 const Discord = require('discord.js')
