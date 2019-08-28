@@ -2,6 +2,7 @@
 ## Eclipse
 #################
 
+rethinkdb-2.3.6/
 *.pydevproject
 .project
 .metadata

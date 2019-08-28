@@ -3,66 +3,56 @@ const {
 } = require('klasa');
 
 module.exports = class extends Command {
+	constructor (...args) {
+		super(...args, {
+			name: 'trigger',
+			enabled: true,
+			runIn: ['text', 'dm'],
+			cooldown: 0,
+			deletable: false,
+			bucket: 1,
+			aliases: ['triggered'],
+			guarded: false,
+			nsfw: false,
+			permissionLevel: 0,
+			requiredPermissions: ['SEND_MESSAGES', 'ATTACH_FILES'],
+			requiredSettings: [],
+			subcommands: false,
+			description: 'Get a triggered gif.',
+			quotedStringSupport: false,
+			usageDelim: undefined,
+			extendedHelp: 'No extended help available.'
+		})
+	}
 
-    constructor(...args) {
-        super(...args, {
-            name: 'trigger',
-            enabled: true,
-            runIn: ['text', 'dm'],
-            cooldown: 0,
-            deletable: false,
-            bucket: 1,
-            aliases: ['triggered'],
-            guarded: false,
-            nsfw: false,
-            permissionLevel: 0,
-            requiredPermissions: ['SEND_MESSAGES', 'ATTACH_FILES'],
-            requiredSettings: [],
-            subcommands: false,
-            description: 'Get a triggered gif.',
-            quotedStringSupport: false,
-            // usage: '',
-            usageDelim: undefined,
-            extendedHelp: 'No extended help available.'
-        });
-    }
+	async run (message, [...params]) {
+		const {
+			MessageAttachment
+		} = require('discord.js')
 
-    async run(message, [...params]) {
+		var target = {}
+		if (message.mentions.users.size >= 1) {
+			target = message.mentions.users.first()
+		} else {
+			target = message.author
+		}
 
-        const {
-            MessageAttachment
-        } = require("discord.js");
+		let msg = await message.channel.send(`<a:loading:417323455147540490> Wow, **${target.username}** is really getting triggered...`)
 
-        if (message.mentions.users.size >= 1) {
-            var target = message.mentions.users.first()
-        } else {
-            var target = message.author;
-        }
+		await message.channel.send(new MessageAttachment(
+			await this.client.idiotAPI.triggered(target.displayAvatarURL({
+				format: 'png',
+				size: 128
+			})),
+			'trigger.gif'))
 
-        let msg
-        msg = await message.channel.send(`<a:loading:417323455147540490> Wow, **${target.username}** is really getting triggered...`);
+		await msg.delete()
+	}
 
-
-        await message.channel.send(new MessageAttachment(
-            await this.client.idiotAPI.triggered(target.displayAvatarURL({
-                format: "png",
-                size: 128
-            })),
-            "trigger.gif"));
-
-
-        await msg.delete();
-
-
-
-
-    }
-
-    async init() {
-        /*
+	async init () {
+		/*
          * You can optionally define this method which will be run when the bot starts
          * (after login, so discord data is available via this.client)
          */
-    }
-
-};
+	}
+}
