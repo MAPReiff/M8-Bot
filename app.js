@@ -1,4 +1,4 @@
-var version = '12.9.1'
+var version = '12.9.2'
 
 const { KlasaClient, Schema } = require('klasa')
 const Discord = require('discord.js')
@@ -345,7 +345,9 @@ function mixerCheck() {
 		}
 
 		var mixerID = streamersMixer[i];
+
 		//console.log(`Subscribing to ${mixerID}`);
+
 		// var subscribe = "{\"type\": \"method\", \"method\": \"livesubscribe\", \"params\": {\"events\": [\"channel:" + beamId + ":update\"]}, \"id\": " + beamId + "}";
 		var subscribe = {
 			"type": "method",

@@ -45,7 +45,7 @@ module.exports = class extends Command {
 		}
 
 		var headers = { 
-			'Client-Id': '0i8u575otj5efqkxfvj9ozzj1l6vqr',
+			'Client-Id': this.client.config.twitch_id,
 			'Accept': 'application/vnd.twitchtv.v5+json'
 		}
 

@@ -35,14 +35,23 @@ module.exports = class extends Command {
 			var fileCount = files.length
 			var myStreamersMixer = 'Current **Mixer** Streamer List:\n'
 			var i
+			var mixerNum = 0
+
 			for (i = 0; i < fileCount; i++) {
 				var serverList = fs.readFileSync(userDirMixer + '/' + files[i])
 				if (serverList.includes(guildID)) {
 					var name = JSON.parse(serverList).name
 					myStreamersMixer = myStreamersMixer + name + '\n'
+					mixerNum = mixerNum + 1
 				}
 			}
-			message.channel.send(myStreamersMixer)
+
+			if (mixerNum >> 0) {
+				message.channel.send(myStreamersMixer)
+			}
+			else{
+				message.channel.send('There are currently no Mixer Streamers setup in this server.')
+			}
 
 			if (err) {
 				console.log(err)
@@ -53,16 +62,23 @@ module.exports = class extends Command {
 			var fileCount = files.length
 			var myStreamersTwitch = 'Current **Twitch** Streamer List:\n'
 			var ip
+			var twitchNum = 0
 
 			for (ip = 0; ip < fileCount; ip++) {
 				var serverList = fs.readFileSync(userDirTwitch + '/' + files[ip])
 				if (serverList.includes(guildID)) {
 					var name = files[ip].replace('.json', '')
 					myStreamersTwitch = myStreamersTwitch + name + '\n'
+					twitchNum = twitchNum + 1
 				}
 			}
 
-			message.channel.send(myStreamersTwitch)
+			if (twitchNum >> 0) {
+				message.channel.send(myStreamersTwitch)
+			}
+			else{
+				message.channel.send('There are currently no Twitch Streamers setup in this server.')
+			}
 
 			if (err) {
 				console.log(err)
