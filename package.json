@@ -32,7 +32,7 @@
     "moment": "^2.24.0",
     "moment-duration-format": "^2.2.2",
     "node-fetch": "^2.3.0",
-    "npm": "^6.11.2",
+    "npm": "^6.14.6",
     "rethinkdbdash": "^2.3.31",
     "twitch-helix": "^1.0.7",
     "weather-js2": "^2.0.2",
