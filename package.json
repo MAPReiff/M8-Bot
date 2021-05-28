@@ -36,7 +36,7 @@
     "rethinkdbdash": "^2.3.31",
     "twitch-helix": "^1.0.7",
     "weather-js2": "^2.0.2",
-    "ws": "^6.1.3"
+    "ws": "^7.4.6"
   },
   "devDependencies": {}
 }
