@@ -29,7 +29,7 @@
     "klasa": "github:dirigeants/klasa",
     "kurasuta": "^0.2.16",
     "mal-scraper": "^2.6.3",
-    "moment": "^2.24.0",
+    "moment": "^2.29.2",
     "moment-duration-format": "^2.2.2",
     "node-fetch": "^2.3.0",
     "npm": "^6.11.2",
