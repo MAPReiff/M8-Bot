@@ -31,7 +31,7 @@
     "mal-scraper": "^2.6.3",
     "moment": "^2.24.0",
     "moment-duration-format": "^2.2.2",
-    "node-fetch": "^2.3.0",
+    "node-fetch": "^2.6.7",
     "npm": "^6.11.2",
     "rethinkdbdash": "^2.3.31",
     "twitch-helix": "^1.0.7",
